@@ -1,6 +1,6 @@
 {
     "name": "bpm4b",
-    "version": "2.0.0",
+    "version": "3.0.0",
     "description": "MP3 to M4B Audiobook Converter - Node.js version",
     "main": "lib/server.js",
     "bin": {
