@@ -40,7 +40,12 @@
         "bin/",
         "lib/",
         "templates/",
-        "public/"
+        "api/",
+        "vercel.json",
+        "README.md",
+        "README_NODE.md",
+        "INSTALL.md",
+        "examples/"
     ],
     "overrides": {
         "minimatch": "^10.2.1"
