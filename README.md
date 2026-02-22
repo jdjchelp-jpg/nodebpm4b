@@ -1,8 +1,41 @@
 # MP3 to M4B Audiobook Converter (bpm4b)
 
-A Flask-based web application for converting MP3 files to M4B audiobook format with chapter support.
+A web application for converting MP3 files to M4B audiobook format with chapter support.
 
-**Install and run with:** `pip install bpm4b` then `bpm4b`
+**Available in two versions:**
+- **Python** (Flask): `pip install bpm4b` then `bpm4b`
+- **Node.js** (Express): `npm install -g bpm4b` then `bpm4b`
+
+## Installation
+
+### Python Version (Original)
+```bash
+pip install bpm4b
+bpm4b web
+```
+
+### Node.js Version
+```bash
+npm install -g bpm4b
+bpm4b web
+```
+
+**Or for local development:**
+```bash
+git clone https://github.com/jdjchelp-jpg/nodebpm4b.git
+cd nodebpm4b
+npm install
+npm start
+```
+
+**Update:**
+```bash
+# Update Python version
+pip install --upgrade bpm4b
+
+# Update Node.js version
+npm update -g bpm4b
+```
 
 ## Features
 
@@ -186,6 +219,7 @@ Returns an M4B file as a download.
 
 ## Project Structure
 
+### Python Version
 ```
 .
 ├── bpm4b/              # Main package directory
@@ -204,6 +238,27 @@ Returns an M4B file as a download.
 ├── uploads/           # Temporary uploaded files (created automatically)
 ├── outputs/           # Generated files (created automatically)
 └── README.md          # This file
+```
+
+### Node.js Version
+```
+.
+├── bin/
+│   └── bpm4b.js       # CLI entry point
+├── lib/
+│   ├── core.js        # Core conversion functions
+│   └── server.js      # Express web server
+├── templates/
+│   └── index.ejs      # Frontend template
+├── api/
+│   └── index.js       # Vercel serverless function
+├── examples/          # Usage examples
+├── test/              # Unit tests
+├── package.json       # NPM package configuration
+├── vercel.json        # Vercel configuration
+├── uploads/           # Temporary uploaded files (created automatically)
+├── outputs/           # Generated files (created automatically)
+└── README_NODE.md     # Node.js specific documentation
 ```
 
 ## Notes
