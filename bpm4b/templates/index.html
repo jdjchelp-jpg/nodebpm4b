@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Converter Suite Pro | Premium Web & Audio Tools</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --secondary: #ec4899;
+            --bg-dark: #0f172a;
+            --glass: rgba(30, 41, 59, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --success: #22c55e;
+            --error: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            background-image:
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(236, 72, 153, 0.15) 0px, transparent 50%);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 2rem 1rem;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 4rem;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #818cf8, #f472b6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+            letter-spacing: -0.025em;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 1.25rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .tool-card {
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 25px 50px -12px rgba(99, 102, 241, 0.2);
+        }
+
+        .tool-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        input[type="text"],
+        input[type="url"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 0.875rem 1.25rem;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            filter: brightness(1.1);
+            transform: scale(1.02);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-success {
+            background: var(--success);
+        }
+
+        .btn-error {
+            background: var(--error);
+        }
+
+        /* Chapter Styles */
+        .chapter-section {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            border: 1px solid var(--glass-border);
+        }
+
+        .chapter-controls {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .chapter-entry {
+            display: grid;
+            grid-template-columns: 1fr 100px 48px;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .remove-chapter-btn {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .remove-chapter-btn:hover {
+            background: var(--error);
+            color: white;
+        }
+
+        /* Batch Import Area */
+        .batch-import-area {
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .batch-import-area.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        /* FFmpeg Command Area */
+        .command-preview {
+            background: #000;
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-top: 2rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            position: relative;
+            border: 1px solid var(--glass-border);
+        }
+
+        .command-preview header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            text-align: left;
+        }
+
+        .command-preview code {
+            color: #818cf8;
+            word-break: break-all;
+            display: block;
+            line-height: 1.6;
+        }
+
+        .copy-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+
+        /* Utility */
+        .file-drop-zone {
+            border: 2px dashed var(--glass-border);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .file-drop-zone:hover,
+        .file-drop-zone.active {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .progress-container {
+            margin-top: 2rem;
+            display: none;
+        }
+
+        .progress-track {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 0.875rem;
+            margin-top: 1rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Converter Suite Pro</h1>
+            <p>Professional grade tools for web archiving and audio conversion.</p>
+        </header>
+
+        <div class="tools-grid">
+            <!-- Website to ZIP -->
+            <section class="tool-card">
+                <div class="tool-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
+                    </svg>
+                </div>
+                <h2>Website to ZIP</h2>
+                <p style="color: var(--text-muted); margin-bottom: 2rem;">Archive complete websites for offline viewing
+                    with all assets preserved.</p>
+
+                <form id="websiteForm">
+                    <div class="form-group">
+                        <label for="websiteUrl">Target URL</label>
+                        <input type="url" id="websiteUrl" placeholder="https://example.com" required>
+                    </div>
+
+                    <button type="submit" class="btn" id="websiteSubmitBtn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M21 15v4c0 1.1-.9 2-2 2H5c-1.1 0-2-.9-2-2v-4M7 10l5 5 5-5M12 15V3" />
+                        </svg>
+                        Archive Website
+                    </button>
+                </form>
+
+                <div class="progress-container" id="websiteProgress">
+                    <div class="progress-track">
+                        <div class="progress-bar" id="websiteProgressFill"></div>
+                    </div>
+                    <div id="websiteStatus" class="status-badge"></div>
+                </div>
+            </section>
+
+            <!-- MP3 to M4B -->
+            <section class="tool-card">
+                <div class="tool-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                        <path d="M9 18V5l12-2v13M6 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm12-3a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+                    </svg>
+                </div>
+                <h2>MP3 to Audiobook</h2>
+                <p style="color: var(--text-muted); margin-bottom: 2rem;">Convert MP3s to M4B with chapters for the
+                    perfect listening experience.</p>
+
+                <form id="mp3Form">
+                    <div class="form-group">
+                        <label>Audio File</label>
+                        <div class="file-drop-zone" id="dropZone">
+                            <input type="file" id="mp3File" accept=".mp3" style="display: none;">
+                            <p id="fileDisplay">Click or drag MP3 here</p>
+                        </div>
+                    </div>
+
+                    <div class="chapter-section">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <label style="margin: 0;">Chapter Markers</label>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button type="button" class="btn btn-secondary"
+                                    style="width: auto; padding: 6px 12px; font-size: 0.75rem;"
+                                    id="toggleBatchBtn">Batch Import</button>
+                                <button type="button" class="btn btn-secondary"
+                                    style="width: auto; padding: 6px 12px; font-size: 0.75rem;"
+                                    id="exportChaptersBtn">Export .txt</button>
+                            </div>
+                        </div>
+
+                        <div id="chaptersContainer"></div>
+
+                        <div class="batch-import-area" id="batchArea">
+                            <textarea id="batchInput"
+                                placeholder="Paste chapter.txt content here...&#10;&#10;[CHAPTER]&#10;TIMEBASE=1/1000&#10;START=0&#10;title=Intro"
+                                style="min-height: 200px; font-family: monospace; font-size: 13px;"></textarea>
+                            <button type="button" class="btn btn-secondary" style="margin-top: 0.5rem;"
+                                id="applyBatchBtn">Apply Batch Data</button>
+                        </div>
+
+                        <button type="button" class="btn btn-secondary" style="margin-top: 1rem;" id="addChapterBtn">+
+                            Add Manual Entry</button>
+                    </div>
+
+                    <div class="command-preview">
+                        <header>
+                            <label style="margin: 0; color: #6366f1;">FFmpeg Code (Self-Service)</label>
+                            <button type="button" class="copy-btn" onclick="copyCommand()">Copy</button>
+                        </header>
+                        <code id="cmdOutput">ffmpeg -i input.mp3 -c:a aac -b:a 64k output.m4b</code>
+                    </div>
+
+                    <button type="submit" class="btn" id="mp3SubmitBtn" style="margin-top: 2rem;">
+                        Build Audiobook
+                    </button>
+                </form>
+
+                <div class="progress-container" id="mp3Progress">
+                    <div class="progress-track">
+                        <div class="progress-bar" id="mp3ProgressFill"></div>
+                    </div>
+                    <div id="mp3Status" class="status-badge"></div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const websiteForm = document.getElementById('websiteForm');
+        const mp3Form = document.getElementById('mp3Form');
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('mp3File');
+        const fileDisplay = document.getElementById('fileDisplay');
+        const chaptersContainer = document.getElementById('chaptersContainer');
+        const addChapterBtn = document.getElementById('addChapterBtn');
+        const toggleBatchBtn = document.getElementById('toggleBatchBtn');
+        const batchArea = document.getElementById('batchArea');
+        const batchInput = document.getElementById('batchInput');
+        const applyBatchBtn = document.getElementById('applyBatchBtn');
+        const exportChaptersBtn = document.getElementById('exportChaptersBtn');
+        const cmdOutput = document.getElementById('cmdOutput');
+
+        // State
+        let selectedFile = null;
+
+        // File Selection Logic
+        dropZone.onclick = () => fileInput.click();
+        dropZone.ondragover = (e) => { e.preventDefault(); dropZone.classList.add('active'); };
+        dropZone.ondragleave = () => dropZone.classList.remove('active');
+        dropZone.ondrop = (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('active');
+            handleFile(e.dataTransfer.files[0]);
+        };
+        fileInput.onchange = (e) => handleFile(e.target.files[0]);
+
+        function handleFile(file) {
+            if (file && (file.type === "audio/mpeg" || file.name.toLowerCase().endsWith('.mp3'))) {
+                selectedFile = file;
+                fileDisplay.textContent = file.name;
+                updateCommand();
+            } else {
+                alert("Please select a valid MP3 file.");
+            }
+        }
+
+        // Chapter Management
+        function createChapterEntry(title = '', start = 0) {
+            const div = document.createElement('div');
+            div.className = 'chapter-entry';
+            div.innerHTML = `
+                <input type="text" class="chap-title" placeholder="Title" value="${title}">
+                <input type="text" class="chap-start" placeholder="e.g., 390 or 6:30" value="${start}">
+                <button type="button" class="remove-chapter-btn">×</button>
+            `;
+
+            div.querySelector('.remove-chapter-btn').onclick = () => {
+                div.remove();
+                updateCommand();
+            };
+
+            div.querySelectorAll('input').forEach(input => {
+                input.oninput = updateCommand;
+            });
+
+            chaptersContainer.appendChild(div);
+            updateCommand();
+        }
+
+        addChapterBtn.onclick = () => createChapterEntry();
+
+        // Batch Import Logic
+        toggleBatchBtn.onclick = () => batchArea.classList.toggle('active');
+
+        applyBatchBtn.onclick = () => {
+            const text = batchInput.value;
+            const chapters = [];
+            const segments = text.split('[CHAPTER]');
+
+            segments.forEach(seg => {
+                const startMatch = seg.match(/START=(\d+)/);
+                const titleMatch = seg.match(/title=(.+)/);
+                if (startMatch && titleMatch) {
+                    chapters.push({
+                        title: titleMatch[1].trim(),
+                        start: parseInt(startMatch[1]) / 1000 // Convert from ms to sec
+                    });
+                }
+            });
+
+            if (chapters.length > 0) {
+                chaptersContainer.innerHTML = '';
+                chapters.forEach(c => createChapterEntry(c.title, c.start));
+                batchArea.classList.remove('active');
+                batchInput.value = '';
+            } else {
+                alert("Could not parse chapters. Make sure you use the FFMetadata format shown in example.");
+            }
+        };
+
+        // Export Chapters logic
+        exportChaptersBtn.onclick = () => {
+            const chapters = getChapters();
+            let output = ';FFMETADATA1\n';
+            chapters.forEach((c, i) => {
+                const nextStart = chapters[i + 1] ? chapters[i + 1].start_time : null;
+                output += `\n[CHAPTER]\nTIMEBASE=1/1000\nSTART=${Math.round(c.start_time * 1000)}\n`;
+                if (nextStart !== null) {
+                    output += `END=${Math.round(nextStart * 1000)}\n`;
+                }
+                output += `title=${c.title}\n`;
+            });
+
+            const blob = new Blob([output], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'chapters.txt';
+            a.click();
+            URL.revokeObjectURL(url);
+        };
+
+        // FFmpeg Command Preview
+        function updateCommand() {
+            const fileName = selectedFile ? selectedFile.name : 'input.mp3';
+            const outputName = fileName.replace('.mp3', '.m4b').replace('.MP3', '.m4b');
+            const chapters = getChapters();
+
+            let cmd = `ffmpeg -i "${fileName}" `;
+            if (chapters.length > 0) {
+                cmd += `-i chapters.txt -map_metadata 1 `;
+            }
+            cmd += `-c:a aac -b:a 64k "${outputName}"`;
+
+            cmdOutput.textContent = cmd;
+        }
+
+        function parseTimeToSeconds(timeInput) {
+            // If it's already a number or numeric string
+            const num = parseFloat(timeInput);
+            if (!isNaN(num)) {
+                return num;
+            }
+
+            // Try MM:SS or M:SS or MM:SS.sss format
+            const parts = String(timeInput).trim().split(':');
+            if (parts.length === 2) {
+                const minutes = parseFloat(parts[0]);
+                const seconds = parseFloat(parts[1]);
+                if (!isNaN(minutes) && !isNaN(seconds)) {
+                    return minutes * 60 + seconds;
+                }
+            }
+
+            // Default to 0 if invalid
+            console.warn(`Invalid time format: ${timeInput}. Using 0.`);
+            return 0;
+        }
+
+        function getChapters() {
+            return Array.from(document.querySelectorAll('.chapter-entry'))
+                .map(entry => ({
+                    title: entry.querySelector('.chap-title').value,
+                    start_time: parseTimeToSeconds(entry.querySelector('.chap-start').value || 0)
+                }))
+                .sort((a, b) => a.start_time - b.start_time);
+        }
+
+        function copyCommand() {
+            navigator.clipboard.writeText(cmdOutput.textContent);
+            const copyBtn = document.querySelector('.copy-btn');
+            copyBtn.textContent = 'Copied!';
+            setTimeout(() => copyBtn.textContent = 'Copy', 2000);
+        }
+
+        // Form Submissions
+        websiteForm.onsubmit = async (e) => {
+            e.preventDefault();
+            const url = document.getElementById('websiteUrl').value;
+            const btn = document.getElementById('websiteSubmitBtn');
+            const progress = document.getElementById('websiteProgress');
+            const fill = document.getElementById('websiteProgressFill');
+            const status = document.getElementById('websiteStatus');
+
+            btn.disabled = true;
+            progress.style.display = 'block';
+            fill.style.width = '20%';
+            status.textContent = 'Analyzing Site...';
+            status.style.background = 'rgba(99, 102, 241, 0.1)';
+
+            try {
+                const res = await fetch('/api/website-to-zip', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url })
+                });
+
+                if (!res.ok) {
+                    const errorData = await res.json();
+                    throw new Error(errorData.error || 'Failed to convert website');
+                }
+
+                fill.style.width = '100%';
+                status.textContent = 'Success!';
+                status.style.background = 'rgba(34, 197, 94, 0.1)';
+
+                const blob = await res.blob();
+                const dUrl = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = dUrl;
+                a.download = `archive_${Date.now()}.zip`;
+                a.click();
+            } catch (err) {
+                status.textContent = 'Error: ' + err.message;
+                status.style.background = 'rgba(239, 68, 68, 0.1)';
+            } finally {
+                btn.disabled = false;
+                setTimeout(() => progress.style.display = 'none', 5000);
+            }
+        };
+
+        mp3Form.onsubmit = async (e) => {
+            e.preventDefault();
+            if (!selectedFile) return alert("Select a file first");
+
+            const btn = document.getElementById('mp3SubmitBtn');
+            const progress = document.getElementById('mp3Progress');
+            const fill = document.getElementById('mp3ProgressFill');
+            const status = document.getElementById('mp3Status');
+
+            const chapters = getChapters();
+            const formData = new FormData();
+            formData.append('mp3_file', selectedFile);
+            formData.append('chapters', JSON.stringify(chapters));
+
+            btn.disabled = true;
+            progress.style.display = 'block';
+            fill.style.width = '15%';
+            status.textContent = 'Processing Audio...';
+
+            try {
+                const res = await fetch('/api/mp3-to-m4b', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!res.ok) {
+                    const errorData = await res.json();
+                    throw new Error(errorData.error || 'Failed to convert audio');
+                }
+
+                fill.style.width = '100%';
+                status.textContent = 'Conversion Complete!';
+
+                const blob = await res.blob();
+                const dUrl = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = dUrl;
+                a.download = selectedFile.name.replace('.mp3', '.m4b').replace('.MP3', '.m4b');
+                a.click();
+            } catch (err) {
+                status.textContent = 'Error: ' + err.message;
+            } finally {
+                btn.disabled = false;
+                setTimeout(() => progress.style.display = 'none', 5000);
+            }
+        };
+
+        // Initialize one chapter
+        createChapterEntry('Introduction', 0);
+        updateCommand();
+    </script>
+</body>
+
+</html>

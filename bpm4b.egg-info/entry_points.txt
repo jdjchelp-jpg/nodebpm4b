@@ -1,0 +1,2 @@
+[console_scripts]
+bpm4b = bpm4b.cli:main

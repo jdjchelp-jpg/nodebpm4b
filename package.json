@@ -1,0 +1,45 @@
+{
+    "name": "bpm4b",
+    "version": "2.0.0",
+    "description": "MP3 to M4B Audiobook Converter - Node.js version",
+    "main": "lib/server.js",
+    "bin": {
+        "bpm4b": "./bin/bpm4b.js"
+    },
+    "scripts": {
+        "start": "node bin/bpm4b.js web",
+        "web": "node bin/bpm4b.js web",
+        "convert": "node bin/bpm4b.js convert",
+        "test": "node test/basic-test.js"
+    },
+    "keywords": [
+        "mp3",
+        "m4b",
+        "audiobook",
+        "converter",
+        "ffmpeg"
+    ],
+    "author": "JDJCHELP",
+    "email": "JDJCHELP@proton.me",
+    "license": "MIT",
+    "dependencies": {
+        "express": "^4.18.2",
+        "multer": "^1.4.5-lts.1",
+        "commander": "^11.1.0",
+        "uuid": "^9.0.1",
+        "ejs": "^3.1.9"
+    },
+    "engines": {
+        "node": ">=14.0.0"
+    },
+    "repository": {
+        "type": "git",
+        "url": "."
+    },
+    "files": [
+        "bin/",
+        "lib/",
+        "templates/",
+        "public/"
+    ]
+}
