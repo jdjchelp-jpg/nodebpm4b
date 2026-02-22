@@ -48,10 +48,14 @@ npm update -g bpm4b
 
 ## Prerequisites
 
+### Node.js Version
+**No additional prerequisites needed!** FFmpeg is bundled with the Node.js version, so it works out of the box.
+
+### Python Version (Original)
 - Python 3.8+
 - FFmpeg (required for MP3 to M4B conversion)
 
-### Installing FFmpeg
+### Installing FFmpeg (Python Version Only)
 
 **Windows:**
 1. Go to https://www.gyan.dev/ffmpeg/builds/ (recommended Windows builds)
@@ -79,7 +83,7 @@ sudo apt-get update
 sudo apt-get install ffmpeg
 ```
 
-**Note:** The MP3 to M4B conversion requires FFmpeg. Without it, the converter will not work.
+**Note:** The Python version requires FFmpeg. The Node.js version includes FFmpeg automatically.
 
 ## Usage
 

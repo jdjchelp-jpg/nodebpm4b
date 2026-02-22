@@ -93,6 +93,10 @@ nodebpm4b/
 
 ## Prerequisites
 
+### Node.js Version
+**Good news!** FFmpeg is automatically bundled with the Node.js version. No separate installation needed. Just install the package and it works!
+
+### Python Version
 **FFmpeg is required** for MP3 to M4B conversion. Install it first:
 
 - **Windows**: Download from https://www.gyan.dev/ffmpeg/builds/

@@ -86,12 +86,13 @@ program
         fs.mkdirSync(outputDir, { recursive: true });
       }
 
-      // Check FFmpeg
+      // Check FFmpeg (bundled)
       try {
         await checkFFmpeg();
       } catch (error) {
-        console.error('Error: FFmpeg is not installed or not in PATH');
-        console.error('Install FFmpeg: https://ffmpeg.org/download.html');
+        console.error('Error: FFmpeg is not available');
+        console.error('The bundled FFmpeg binary could not be loaded.');
+        console.error('Please reinstall the package or report this issue.');
         process.exit(1);
       }
 

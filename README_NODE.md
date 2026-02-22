@@ -19,37 +19,9 @@ A Node.js web application for converting MP3 files to M4B audiobook format with 
 ## Prerequisites
 
 - Node.js 14+
-- FFmpeg (required for MP3 to M4B conversion)
 
-### Installing FFmpeg
+**Good news!** FFmpeg is now automatically bundled with bpm4b. No separate FFmpeg installation needed. Just install the package and it works out of the box on:
 
-**Windows:**
-1. Go to https://www.gyan.dev/ffmpeg/builds/ (recommended Windows builds)
-2. Download "ffmpeg-git-full.7z" or "ffmpeg-release-full.7z"
-3. Extract the archive using 7-Zip or similar
-4. Open the extracted folder, navigate to the `bin` folder
-5. Copy the path to the `bin` folder (contains ffmpeg.exe)
-6. Add to PATH:
-   - Press Win + X, select "System"
-   - Click "Advanced system settings"
-   - Click "Environment Variables"
-   - Under "System variables", find and select "Path", click "Edit"
-   - Click "New" and paste the path to the `bin` folder
-   - Click OK on all windows
-7. Open a new command prompt and verify: `ffmpeg -version`
-
-**macOS:**
-```bash
-brew install ffmpeg
-```
-
-**Ubuntu/Debian:**
-```bash
-sudo apt-get update
-sudo apt-get install ffmpeg
-```
-
-**Note:** The MP3 to M4B conversion requires FFmpeg. Without it, the converter will not work.
 
 ## Installation
 
@@ -228,4 +200,4 @@ MIT
 
 ## Original Python Project
 
-This is a Node.js port of the original Python project by JDJCHELP.
+This is a Node.js port of the original Python project by Me.
