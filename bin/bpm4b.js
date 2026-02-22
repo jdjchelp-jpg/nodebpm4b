@@ -15,7 +15,7 @@ const program = new Command();
 program
   .name('bpm4b')
   .description('MP3 to M4B Audiobook Converter')
-  .version('5.0.0');
+  .version('6.0.0');
 
 // Web command
 program
@@ -27,7 +27,7 @@ program
   .action(async (options) => {
     console.log(`
 ╔═══════════════════════════════════════════════════════════════╗
-║              MP3 to M4B Converter v5.0.0                      ║
+║              MP3 to M4B Converter v6.0.0                      ║
 ║                                                               ║
 ║  Web interface starting...                                    ║
 ║  URL: http://${options.host !== '0.0.0.0' ? options.host : 'localhost'}:${options.port}                    ║

@@ -4,7 +4,7 @@ A Node.js web application for converting MP3 files to M4B audiobook format with 
 
 **Install and run with:** `npm install -g bpm4b` then `bpm4b`
 
-**Version:** 5.0.0
+**Version:** 6.0.0
 
 ## Features
 
