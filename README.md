@@ -1,6 +1,6 @@
-# MP3 to M4B Audiobook Converter (bpm4b)
+# BPM4B - Professional Multimedia Converter (v7.0.0)
 
-A web application for converting MP3 files to M4B audiobook format with chapter support.
+A professional multimedia processing tool for converting MP3 to M4B and M3U8 to MKV with automatic chapter support.
 
 **Available in two versions:**
 - **Python** (Flask): `pip install bpm4b` then `bpm4b`
@@ -39,12 +39,50 @@ npm update -g bpm4b
 
 ## Features
 
-### MP3 to M4B Converter
-- Upload MP3 files
-- Add custom chapter markers with titles and timestamps
-- Automatically converts to M4B format (iTunes/Apple Books compatible)
-- Uses FFmpeg for high-quality AAC audio (64kbps)
-- Simple web interface
+### 🎯 Unified Smart Mode
+- Single toggle switch: Conversion Mode vs Chapter Builder Only
+- Automatic chapter attachment to MKV/M4B output when conversion mode is ON
+- Standalone timestamp generator when mode is OFF
+
+### 📁 File Conversion Section
+- **MP3 to M4B**: Convert MP3 files to audiobook format with embedded chapters
+- **M3U8 to MKV**: Stream conversion with chapter embedding (NEW in v7)
+- Drag-and-drop file upload with visual feedback
+- Real-time file validation
+- Visual progress bar with status updates
+
+### ⏱ Automatic Chapter Builder
+- **Always enabled** - core functionality
+- Enter chapter title and duration (minutes or seconds toggle)
+- System automatically:
+  - Converts input to proper format
+  - Accumulates duration to cumulative total
+  - Calculates next chapter start timestamp
+  - Generates proper HH:MM:SS format
+- No manual math required - all timestamps auto-generate
+- Batch import/export chapter lists
+- Real-time preview updates
+
+### ⚙ Settings Panel
+- Dark / Light mode toggle
+- Modern toggle switches (not checkboxes)
+- Glassmorphism card design
+- Smooth animations and transitions
+- Responsive layout optimized for desktop
+
+### 🚀 Performance Improvements
+- Faster parsing with optimized algorithms
+- Non-blocking UI with background conversion
+- Proper error handling and validation
+- File size validation before processing
+- Automatic cleanup of temporary files
+
+### 📋 Professional Features
+- Copy-to-clipboard buttons for generated commands
+- Real-time updating preview panel
+- FFmpeg command preview (self-service mode)
+- Export chapters to .txt format
+- Modern, clean, professional SaaS-like interface
 
 ## Prerequisites
 
@@ -197,10 +235,15 @@ http://localhost:5000
 
 Once the server is running:
 
-**MP3 to M4B**: Upload an MP3 file, optionally add chapter markers, and click "Convert to M4B"
+**MP3 to M4B**: Upload an MP3 file, add chapters using the automatic chapter builder, and click "Convert to M4B"
 - Automatically converts to M4B format (iTunes/Apple Books compatible)
-- Add custom chapter titles and timestamps
+- Chapters automatically embedded with titles and timestamps
 - Uses FFmpeg for high-quality AAC audio (64kbps)
+
+**M3U8 to MKV**: Upload an M3U8 stream file, build chapters, and click "Convert to MKV with Chapters"
+- Downloads the HLS stream and converts to MKV container
+- Chapters automatically embedded into MKV metadata
+- Perfect for preserving chapter markers from streaming sources
 
 ## API Endpoints
 
@@ -217,6 +260,20 @@ Converts an MP3 file to M4B with optional chapters.
   {"title": "Chapter 3", "start_time": 3600}
 ]
 ```
+
+### POST /api/m3u8-to-mkv
+Converts an M3U8 HLS stream to MKV with embedded chapters.
+
+**Form Data:**
+- `m3u8_file`: The M3U8 file (can be local file or URL in content)
+- `chapters` (optional): JSON array of chapter objects with same format as MP3 endpoint
+- `smart_mode` (optional): If "chapters-only", only generates chapter timestamps without conversion
+
+**Response:**
+Returns an MKV file as a download with chapters embedded in the container.
+
+### GET /api/health
+Health check endpoint. Returns JSON with status and FFmpeg availability.
 
 **Response:**
 Returns an M4B file as a download.

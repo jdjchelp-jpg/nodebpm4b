@@ -9,21 +9,48 @@
     </title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
+            /* Light mode (default) */
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f1f5f9;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
             --primary: #6366f1;
             --primary-hover: #4f46e5;
             --secondary: #ec4899;
-            --bg-dark: #0f172a;
-            --glass: rgba(30, 41, 59, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
+            --accent: #8b5cf6;
             --success: #22c55e;
             --error: #ef4444;
+            --warning: #f59e0b;
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --glass-bg: rgba(30, 41, 59, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
         }
 
         * {
@@ -34,87 +61,223 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--bg-dark);
-            background-image:
-                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(236, 72, 153, 0.15) 0px, transparent 50%);
-            color: var(--text-main);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
             min-height: 100vh;
             padding: 2rem 1rem;
-            line-height: 1.5;
+            line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            background-image: 
+                radial-gradient(at 20% 20%, rgba(99, 102, 241, 0.08) 0px, transparent 50%),
+                radial-gradient(at 80% 80%, rgba(236, 72, 153, 0.08) 0px, transparent 50%);
+        }
+
+        [data-theme="dark"] body {
+            background-image: 
+                radial-gradient(at 20% 20%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+                radial-gradient(at 80% 80%, rgba(236, 72, 153, 0.15) 0px, transparent 50%);
         }
 
         .container {
-            max-width: 800px;
+            max-width: 1200px;
             margin: 0 auto;
         }
 
+        /* Header */
         header {
             text-align: center;
             margin-bottom: 3rem;
             animation: fadeInDown 0.8s ease-out;
         }
 
-        h1 {
-            font-size: 3rem;
-            font-weight: 800;
-            background: linear-gradient(to right, #818cf8, #f472b6);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 0.5rem;
-            letter-spacing: -0.025em;
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto 2rem;
+            padding: 0 1rem;
         }
 
-        .version {
-            color: var(--text-muted);
-            font-size: 0.875rem;
-            margin-bottom: 1rem;
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
 
-        header p {
-            color: var(--text-muted);
-            font-size: 1.125rem;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .tool-card {
-            background: var(--glass);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 2.5rem;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .tool-icon {
+        .logo-icon {
             width: 48px;
             height: 48px;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border-radius: 12px;
+            border-radius: var(--radius-md);
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-lg);
         }
 
-        h2 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 0.75rem;
+        .logo-icon svg {
+            width: 24px;
+            height: 24px;
+            stroke: white;
+        }
+
+        .logo-text h1 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+            letter-spacing: -0.025em;
+        }
+
+        .logo-text .tagline {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .header-controls {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            gap: 1rem;
         }
 
-        .description {
-            color: var(--text-muted);
+        .version-badge {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            padding: 0.5rem 1rem;
+            border-radius: 999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--primary);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 52px;
+            height: 28px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--bg-tertiary);
+            border: 2px solid var(--glass-border);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 999px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 50%;
+            box-shadow: var(--shadow-sm);
+        }
+
+        input:checked + .toggle-slider {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-color: var(--primary);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
+
+        /* Main Grid Layout */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
             margin-bottom: 2rem;
         }
 
+        @media (max-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Cards */
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-xl);
+            transform: translateY(-2px);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .card-icon svg {
+            width: 24px;
+            height: 24px;
+            stroke: white;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .card-description {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        /* Form Elements */
         .form-group {
             margin-bottom: 1.5rem;
         }
@@ -123,77 +286,153 @@
             display: block;
             font-size: 0.875rem;
             font-weight: 600;
-            color: var(--text-muted);
+            color: var(--text-secondary);
             margin-bottom: 0.5rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
 
         input[type="text"],
-        textarea {
+        textarea,
+        select {
             width: 100%;
-            background: rgba(15, 23, 42, 0.6);
+            background: var(--bg-tertiary);
             border: 1px solid var(--glass-border);
-            border-radius: 12px;
+            border-radius: var(--radius-md);
             padding: 0.875rem 1.25rem;
-            color: white;
+            color: var(--text-primary);
             font-size: 1rem;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
+            font-family: inherit;
         }
 
-        input:focus,
-        textarea:focus {
+        input[type="text"]:focus,
+        textarea:focus,
+        select:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
         }
 
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+        }
+
+        /* File Drop Zone */
         .file-drop-zone {
             border: 2px dashed var(--glass-border);
-            border-radius: 16px;
-            padding: 2rem;
+            border-radius: var(--radius-lg);
+            padding: 2.5rem;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s;
-            background: rgba(15, 23, 42, 0.4);
+            transition: all 0.3s ease;
+            background: var(--bg-tertiary);
+            position: relative;
+            overflow: hidden;
         }
 
         .file-drop-zone:hover,
-        .file-drop-zone.active {
+        .file-drop-zone.drag-over {
             border-color: var(--primary);
             background: rgba(99, 102, 241, 0.05);
         }
 
+        [data-theme="dark"] .file-drop-zone:hover,
+        [data-theme="dark"] .file-drop-zone.drag-over {
+            background: rgba(99, 102, 241, 0.1);
+        }
+
         .file-drop-zone input[type="file"] {
-            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-drop-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .file-drop-icon svg {
+            width: 32px;
+            height: 32px;
+            stroke: white;
+        }
+
+        .file-drop-text {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .file-drop-hint {
+            font-size: 0.875rem;
+            color: var(--text-muted);
         }
 
         .file-info {
-            margin-top: 0.5rem;
-            font-size: 0.875rem;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: var(--radius-md);
             color: var(--success);
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
+        .file-info .remove-file {
+            background: none;
+            border: none;
+            color: var(--error);
+            cursor: pointer;
+            font-size: 1.25rem;
+            padding: 0.25rem;
+            line-height: 1;
+        }
+
+        /* Buttons */
         .btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 100%;
-            padding: 1rem;
+            gap: 0.5rem;
+            padding: 0.875rem 1.5rem;
             background: linear-gradient(135deg, var(--primary), var(--primary-hover));
             color: white;
             border: none;
-            border-radius: 12px;
+            border-radius: var(--radius-md);
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
-            gap: 0.5rem;
+            transition: all 0.3s ease;
+            width: 100%;
         }
 
         .btn:hover {
             filter: brightness(1.1);
-            transform: scale(1.02);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn:active {
+            transform: translateY(0);
         }
 
         .btn:disabled {
@@ -203,53 +442,219 @@
         }
 
         .btn-secondary {
-            background: rgba(255, 255, 255, 0.05);
+            background: var(--bg-tertiary);
             border: 1px solid var(--glass-border);
+            color: var(--text-primary);
         }
 
         .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.1);
+            background: var(--bg-secondary);
         }
 
-        /* Chapter Styles */
-        .chapter-section {
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 16px;
-            padding: 1.5rem;
-            margin-top: 2rem;
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            width: auto;
+        }
+
+        .btn-icon {
+            width: 36px;
+            height: 36px;
+            padding: 0;
+        }
+
+        /* Smart Mode Toggle */
+        .smart-mode-section {
+            background: var(--bg-secondary);
             border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-md);
         }
 
-        .chapter-controls {
+        .smart-mode-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1rem;
         }
 
-        .chapter-entries {
+        .smart-mode-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .smart-mode-description {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .mode-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* Chapter Builder */
+        .chapter-builder {
+            background: var(--bg-secondary);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .chapter-builder-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .chapter-builder-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .duration-toggle {
+            display: flex;
+            gap: 0.5rem;
+            background: var(--bg-tertiary);
+            padding: 0.25rem;
+            border-radius: var(--radius-md);
+        }
+
+        .duration-toggle button {
+            padding: 0.5rem 1rem;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            transition: all 0.3s ease;
+        }
+
+        .duration-toggle button.active {
+            background: var(--bg-secondary);
+            color: var(--primary);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .chapter-input-grid {
+            display: grid;
+            grid-template-columns: 1fr 150px 120px;
+            gap: 0.75rem;
             margin-bottom: 1rem;
+            align-items: end;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group label {
+            margin-bottom: 0.375rem;
+            font-size: 0.75rem;
+        }
+
+        .timestamp-display {
+            padding: 0.875rem 1.25rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            color: var(--primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        .chapter-entries {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 1rem;
+            padding-right: 0.5rem;
+        }
+
+        .chapter-entries::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chapter-entries::-webkit-scrollbar-track {
+            background: var(--bg-tertiary);
+            border-radius: 999px;
+        }
+
+        .chapter-entries::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 999px;
         }
 
         .chapter-entry {
             display: grid;
-            grid-template-columns: 1fr 120px 48px;
+            grid-template-columns: 1fr 100px 80px 40px;
             gap: 0.75rem;
+            align-items: center;
+            padding: 1rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
             margin-bottom: 0.75rem;
             animation: slideIn 0.3s ease-out;
+            transition: all 0.3s ease;
+        }
+
+        .chapter-entry:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .chapter-entry .timestamp {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-align: center;
+        }
+
+        .chapter-entry .duration {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            text-align: center;
         }
 
         .remove-chapter-btn {
             background: rgba(239, 68, 68, 0.1);
             color: var(--error);
             border: 1px solid rgba(239, 68, 68, 0.2);
-            border-radius: 12px;
+            border-radius: var(--radius-sm);
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.25rem;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
+            width: 36px;
+            height: 36px;
         }
 
         .remove-chapter-btn:hover {
@@ -257,6 +662,150 @@
             color: white;
         }
 
+        .chapter-actions {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        /* Preview Panel */
+        .preview-panel {
+            background: var(--bg-secondary);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-top: 2rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .preview-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .preview-content {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            padding: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            color: var(--text-primary);
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+            line-height: 1.6;
+        }
+
+        .preview-content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .preview-content::-webkit-scrollbar-track {
+            background: var(--bg-tertiary);
+            border-radius: 999px;
+        }
+
+        .preview-content::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 999px;
+        }
+
+        /* Progress */
+        .progress-section {
+            margin-top: 2rem;
+            display: none;
+        }
+
+        .progress-section.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .progress-track {
+            height: 12px;
+            background: var(--bg-tertiary);
+            border-radius: 999px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            width: 0%;
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .status-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-secondary);
+        }
+
+        .status-badge.processing {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary);
+            animation: pulse 2s infinite;
+        }
+
+        .status-badge.success {
+            background: rgba(34, 197, 94, 0.1);
+            color: var(--success);
+        }
+
+        .status-badge.error {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Batch Import Area */
         .batch-import-area {
             margin-top: 1rem;
             display: none;
@@ -267,106 +816,23 @@
             animation: fadeIn 0.3s ease-in;
         }
 
-        .batch-import-area textarea {
-            min-height: 150px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 13px;
-        }
-
-        /* Progress */
-        .progress-container {
-            margin-top: 2rem;
-            display: none;
-        }
-
-        .progress-container.active {
-            display: block;
-        }
-
-        .progress-track {
-            height: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 999px;
-            overflow: hidden;
-        }
-
-        .progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            width: 0%;
-            transition: width 0.3s ease;
-        }
-
-        .status-badge {
-            display: inline-block;
-            padding: 8px 16px;
-            border-radius: 999px;
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--glass-border);
+            color: var(--text-muted);
             font-size: 0.875rem;
-            margin-top: 1rem;
-            background: rgba(255, 255, 255, 0.05);
         }
 
-        .status-badge.processing {
-            background: rgba(99, 102, 241, 0.2);
-            color: #818cf8;
+        footer p {
+            margin-bottom: 0.5rem;
         }
 
-        .status-badge.success {
-            background: rgba(34, 197, 94, 0.2);
-            color: var(--success);
-        }
-
-        .status-badge.error {
-            background: rgba(239, 68, 68, 0.2);
-            color: var(--error);
-        }
-
-        /* Command Preview */
-        .command-preview {
-            background: #000;
-            border-radius: 12px;
-            padding: 1.25rem;
-            margin-top: 2rem;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.875rem;
-            position: relative;
-            border: 1px solid var(--glass-border);
-        }
-
-        .command-preview header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-
-        .command-preview label {
-            margin: 0;
-            color: #6366f1;
-            text-transform: none;
-            letter-spacing: 0;
-        }
-
-        .copy-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            color: white;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 0.75rem;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .copy-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .command-preview code {
-            color: #818cf8;
-            word-break: break-all;
-            display: block;
-            line-height: 1.6;
+        footer .version {
+            font-weight: 600;
+            color: var(--primary);
         }
 
         /* Animations */
@@ -375,11 +841,26 @@
                 opacity: 0;
                 transform: translateY(-20px);
             }
-
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         @keyframes slideIn {
@@ -387,412 +868,989 @@
                 opacity: 0;
                 transform: translateX(-10px);
             }
-
             to {
                 opacity: 1;
                 transform: translateX(0);
             }
         }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
+        /* Utility Classes */
+        .hidden { display: none !important; }
+        .text-center { text-align: center; }
+        .mt-1 { margin-top: 0.5rem; }
+        .mt-2 { margin-top: 1rem; }
+        .mt-3 { margin-top: 1.5rem; }
+        .mb-1 { margin-bottom: 0.5rem; }
+        .mb-2 { margin-bottom: 1rem; }
+        .mb-3 { margin-bottom: 1.5rem; }
+        .flex { display: flex; }
+        .flex-col { flex-direction: column; }
+        .items-center { align-items: center; }
+        .justify-between { justify-content: space-between; }
+        .gap-1 { gap: 0.5rem; }
+        .gap-2 { gap: 1rem; }
+        .gap-3 { gap: 1.5rem; }
 
-            to {
-                opacity: 1;
-            }
-        }
-
+        /* Responsive */
         @media (max-width: 768px) {
-            h1 {
-                font-size: 2.25rem;
+            .header-top {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .chapter-input-grid {
+                grid-template-columns: 1fr;
             }
 
             .chapter-entry {
-                grid-template-columns: 1fr 80px 40px;
+                grid-template-columns: 1fr 80px 60px 40px;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .toast {
+            padding: 1rem 1.5rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            animation: slideInRight 0.3s ease-out;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            min-width: 300px;
+        }
+
+        .toast.success {
+            border-left: 4px solid var(--success);
+        }
+
+        .toast.error {
+            border-left: 4px solid var(--error);
+        }
+
+        .toast.info {
+            border-left: 4px solid var(--primary);
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
             }
         }
     </style>
 </head>
 
 <body>
+    <div class="toast-container" id="toastContainer"></div>
+
     <div class="container">
-        <header>
-            <h1>MP3 to M4B Converter</h1>
-            <p class="version">Version <%= version %>
-            </p>
-            <p>Convert MP3 files to M4B audiobook format with custom chapter markers.</p>
+        <header class="text-center">
+            <div class="header-top">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 18V5l12-2v13M6 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm12-3a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+                        </svg>
+                    </div>
+                    <div class="logo-text">
+                        <h1>BPM4B</h1>
+                        <div class="tagline">Professional Multimedia Converter</div>
+                    </div>
+                </div>
+                <div class="header-controls">
+                    <div class="version-badge">v<%= version %></div>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="themeToggle" checked>
+                        <label class="toggle-slider" for="themeToggle"></label>
+                    </div>
+                </div>
+            </div>
         </header>
 
-        <div class="tool-card">
-            <div class="tool-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
-                    <path d="M9 18V5l12-2v13M6 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm12-3a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
-                </svg>
-            </div>
-            <h2>MP3 to Audiobook</h2>
-            <p class="description">Convert MP3s to M4B with chapters for the perfect listening experience on Apple Books
-                and other audiobook players.</p>
-
-            <form id="mp3Form">
-                <div class="form-group">
-                    <label>Audio File (MP3)</label>
-                    <div class="file-drop-zone" id="dropZone">
-                        <input type="file" id="mp3File" name="mp3_file" accept=".mp3,audio/mpeg" required>
-                        <p id="filePrompt">Click or drag your MP3 file here</p>
-                        <div class="file-info" id="fileInfo" style="display: none;"></div>
+        <div class="main-grid">
+            <!-- Left Column: Conversion & Settings -->
+            <div class="left-column">
+                <!-- Smart Mode Toggle -->
+                <div class="card">
+                    <div class="smart-mode-section">
+                        <div class="smart-mode-header">
+                            <div class="smart-mode-title">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+                                </svg>
+                                Unified Smart Mode
+                            </div>
+                            <div class="mode-indicator" id="modeIndicator">
+                                <span id="modeText">Conversion Mode</span>
+                            </div>
+                        </div>
+                        <p class="smart-mode-description">
+                            Toggle between <strong>Conversion Mode</strong> (process files and embed chapters) and <strong>Chapter Builder Only</strong> (generate timestamps without conversion).
+                        </p>
+                        <div class="mt-2">
+                            <label class="toggle-switch" style="display: inline-block;">
+                                <input type="checkbox" id="smartModeToggle" checked>
+                                <label class="toggle-slider" for="smartModeToggle"></label>
+                            </label>
+                            <span class="ml-2" style="font-size: 0.875rem; color: var(--text-muted);">Enable Conversion</span>
+                        </div>
                     </div>
                 </div>
 
-                <div class="chapter-section">
-                    <div class="chapter-controls">
-                        <label style="margin: 0;">Chapter Markers (Optional)</label>
-                        <div style="display: flex; gap: 0.5rem;">
-                            <button type="button" class="btn btn-secondary" id="toggleBatchBtn"
-                                style="width: auto; padding: 6px 12px; font-size: 0.75rem;">Batch Import</button>
-                            <button type="button" class="btn btn-secondary" id="exportChaptersBtn"
-                                style="width: auto; padding: 6px 12px; font-size: 0.75rem;">Export .txt</button>
+                <!-- File Conversion Section -->
+                <div class="card" id="conversionCard">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 18V5l12-2v13M6 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm12-3a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="card-title">File Conversion</h3>
+                            <p class="card-description" id="conversionDescription">Convert audio files with embedded chapters</p>
                         </div>
                     </div>
 
-                    <div id="chaptersContainer"></div>
+                    <form id="conversionForm">
+                        <!-- File Type Tabs -->
+                        <div class="mb-2">
+                            <div class="duration-toggle" style="margin-bottom: 1rem;">
+                                <button type="button" class="file-type-tab active" data-type="mp3">MP3 → M4B</button>
+                                <button type="button" class="file-type-tab" data-type="m3u8">M3U8 → MKV</button>
+                            </div>
+                        </div>
 
-                    <div class="batch-import-area" id="batchArea">
-                        <textarea id="batchInput"
-                            placeholder="Paste chapter.txt content here...&#10;&#10;[CHAPTER]&#10;TIMEBASE=1/1000&#10;START=0&#10;title=Intro"
-                            style="min-height: 150px; font-family: monospace; font-size: 13px;"></textarea>
-                        <button type="button" class="btn btn-secondary" style="margin-top: 0.5rem;"
-                            id="applyBatchBtn">Apply Batch Data</button>
+                        <div class="form-group">
+                            <label>Source File</label>
+                            <div class="file-drop-zone" id="fileDropZone">
+                                <input type="file" id="sourceFile" name="source_file" accept=".mp3,.m3u8,.m3u">
+                                <div class="file-drop-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" />
+                                    </svg>
+                                </div>
+                                <div class="file-drop-text" id="fileDropText">Click or drag your file here</div>
+                                <div class="file-drop-hint" id="fileDropHint">MP3 or M3U8/HLS stream file</div>
+                                <div class="file-info" id="fileInfo" style="display: none;"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Output Filename (optional)</label>
+                            <input type="text" id="outputName" placeholder="Leave empty for auto-generated name">
+                        </div>
+
+                        <button type="submit" class="btn" id="convertBtn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
+                            </svg>
+                            <span id="convertBtnText">Convert to M4B</span>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Settings Panel -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="3"></circle>
+                                <path d="M12 1v6M12 17v6M4.22 4.22l4.24 4.24M15.54 15.54l4.24 4.24M1 12h6M17 12h6M4.22 19.78l4.24-4.24M15.54 8.46l4.24-4.24"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="card-title">Settings</h3>
+                            <p class="card-description">Customize your experience</p>
+                        </div>
                     </div>
 
-                    <button type="button" class="btn btn-secondary" style="margin-top: 1rem; width: auto;"
-                        id="addChapterBtn">
-                        + Add Chapter
-                    </button>
+                    <div class="form-group">
+                        <label>Audio Quality (AAC bitrate)</label>
+                        <select id="audioQuality">
+                            <option value="64k">64 kbps - Small files (speech optimized)</option>
+                            <option value="128k" selected>128 kbps - Good quality</option>
+                            <option value="192k">192 kbps - High quality</option>
+                            <option value="256k">256 kbps - Best quality</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Chapter Format</label>
+                        <select id="chapterFormat">
+                            <option value="m4b">M4B (for MP3 conversions)</option>
+                            <option value="mkv">MKV (for M3U8 conversions)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Chapter Builder & Preview -->
+            <div class="right-column">
+                <!-- Chapter Builder -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="card-title">Chapter Builder</h3>
+                            <p class="card-description">Automatic timestamp generation</p>
+                        </div>
+                    </div>
+
+                    <div class="chapter-builder">
+                        <div class="chapter-builder-header">
+                            <div class="chapter-builder-title">Add Chapter</div>
+                            <div class="duration-toggle">
+                                <button type="button" class="active" data-mode="minutes">Minutes</button>
+                                <button type="button" data-mode="seconds">Seconds</button>
+                            </div>
+                        </div>
+
+                        <div class="chapter-input-grid">
+                            <div class="input-group">
+                                <label>Chapter Title</label>
+                                <input type="text" id="chapterTitle" placeholder="Enter chapter title">
+                            </div>
+                            <div class="input-group">
+                                <label>Duration</label>
+                                <input type="text" id="chapterDuration" placeholder="e.g., 6 or 6:30">
+                            </div>
+                            <div class="input-group">
+                                <label>Start Time (auto)</label>
+                                <div class="timestamp-display" id="nextTimestamp">00:00:00</div>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-secondary" id="addChapterBtn" style="width: 100%; margin-bottom: 1rem;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            Add Chapter
+                        </button>
+
+                        <div class="chapter-actions">
+                            <button type="button" class="btn btn-secondary btn-sm" id="toggleBatchBtn">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                                    <polyline points="10 9 9 9 8 9"></polyline>
+                                </svg>
+                                Batch Import
+                            </button>
+                            <button type="button" class="btn btn-secondary btn-sm" id="exportChaptersBtn">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"></path>
+                                </svg>
+                                Export .txt
+                            </button>
+                            <button type="button" class="btn btn-secondary btn-sm" id="clearChaptersBtn">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="3 6 5 6 21 6"></polyline>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                </svg>
+                                Clear All
+                            </button>
+                        </div>
+
+                        <div class="batch-import-area" id="batchArea">
+                            <label>Batch Import Chapters</label>
+                            <textarea id="batchInput" placeholder="Paste chapter list here...&#10;&#10;Chapter Title, Duration&#10;Introduction, 2:30&#10;Chapter 1, 10:00&#10;Chapter 2, 15:30"></textarea>
+                            <button type="button" class="btn btn-secondary btn-sm" style="margin-top: 0.5rem;" id="applyBatchBtn">Apply Batch Data</button>
+                        </div>
+
+                        <div class="chapter-entries" id="chaptersContainer"></div>
+
+                        <div class="preview-content" id="chaptersPreview" style="min-height: 100px; max-height: 200px;">
+                            <!-- Chapters preview will appear here -->
+                        </div>
+                    </div>
                 </div>
 
-                <div class="command-preview">
-                    <header>
-                        <label>FFmpeg Command (Self-Service)</label>
-                        <button type="button" class="copy-btn" id="copyCommandBtn">Copy</button>
-                    </header>
-                    <code id="cmdOutput">ffmpeg -i input.mp3 -c:a aac -b:a 64k output.m4b</code>
+                <!-- Preview Panel -->
+                <div class="preview-panel">
+                    <div class="preview-header">
+                        <div class="preview-title">FFmpeg Command Preview</div>
+                        <button type="button" class="btn btn-secondary btn-sm" id="copyCommandBtn">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                            Copy Command
+                        </button>
+                    </div>
+                    <div class="preview-content" id="commandPreview">ffmpeg -i input.mp3 -c:a aac -b:a 64k -map_metadata 1 -i chapters.txt output.m4b</div>
                 </div>
 
-                <button type="submit" class="btn" id="submitBtn" style="margin-top: 2rem;">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
-                    </svg>
-                    Convert to M4B
-                </button>
-            </form>
-
-            <div class="progress-container" id="progressContainer">
-                <div class="progress-track">
-                    <div class="progress-bar" id="progressBar"></div>
+                <!-- Progress Section -->
+                <div class="progress-section" id="progressSection">
+                    <div class="progress-track">
+                        <div class="progress-bar" id="progressBar"></div>
+                    </div>
+                    <div class="status-section">
+                        <div class="status-badge" id="statusBadge">
+                            <span class="spinner" id="statusSpinner" style="display: none;"></span>
+                            <span id="statusText">Processing...</span>
+                        </div>
+                        <div style="font-size: 0.875rem; color: var(--text-muted);" id="progressPercent">0%</div>
+                    </div>
                 </div>
-                <div class="status-badge" id="statusBadge">Processing...</div>
             </div>
         </div>
 
-        <footer style="text-align: center; margin-top: 3rem; color: var(--text-muted); font-size: 0.875rem;">
-            <p>Requires FFmpeg to be installed on the server.</p>
+        <footer>
+            <p>BPM4B v<%= version %> • Professional Multimedia Processing Tool</p>
+            <p style="margin-top: 0.5rem; font-size: 0.75rem;">Requires FFmpeg to be installed on the server.</p>
         </footer>
     </div>
 
     <script>
+        // Global State
+        const state = {
+            theme: 'dark',
+            smartMode: true,
+            fileType: 'mp3',
+            fileInfo: null,
+            chapters: [],
+            cumulativeTime: 0,
+            durationMode: 'minutes',
+            isProcessing: false
+        };
+
         // DOM Elements
-        const dropZone = document.getElementById('dropZone');
-        const fileInput = document.getElementById('mp3File');
-        const filePrompt = document.getElementById('filePrompt');
-        const fileInfo = document.getElementById('fileInfo');
-        const chaptersContainer = document.getElementById('chaptersContainer');
-        const addChapterBtn = document.getElementById('addChapterBtn');
-        const toggleBatchBtn = document.getElementById('toggleBatchBtn');
-        const batchArea = document.getElementById('batchArea');
-        const batchInput = document.getElementById('batchInput');
-        const applyBatchBtn = document.getElementById('applyBatchBtn');
-        const exportChaptersBtn = document.getElementById('exportChaptersBtn');
-        const cmdOutput = document.getElementById('cmdOutput');
-        const mp3Form = document.getElementById('mp3Form');
-        const submitBtn = document.getElementById('submitBtn');
-        const progressContainer = document.getElementById('progressContainer');
-        const progressBar = document.getElementById('progressBar');
-        const statusBadge = document.getElementById('statusBadge');
-        const copyCommandBtn = document.getElementById('copyCommandBtn');
+        const elements = {
+            themeToggle: document.getElementById('themeToggle'),
+            smartModeToggle: document.getElementById('smartModeToggle'),
+            modeText: document.getElementById('modeText'),
+            conversionDescription: document.getElementById('conversionDescription'),
+            fileDropZone: document.getElementById('fileDropZone'),
+            fileDropText: document.getElementById('fileDropText'),
+            fileDropHint: document.getElementById('fileDropHint'),
+            fileInfo: document.getElementById('fileInfo'),
+            sourceFile: document.getElementById('sourceFile'),
+            outputName: document.getElementById('outputName'),
+            convertBtn: document.getElementById('convertBtn'),
+            convertBtnText: document.getElementById('convertBtnText'),
+            conversionForm: document.getElementById('conversionForm'),
+            chaptersContainer: document.getElementById('chaptersContainer'),
+            chaptersPreview: document.getElementById('chaptersPreview'),
+            chapterTitle: document.getElementById('chapterTitle'),
+            chapterDuration: document.getElementById('chapterDuration'),
+            nextTimestamp: document.getElementById('nextTimestamp'),
+            addChapterBtn: document.getElementById('addChapterBtn'),
+            toggleBatchBtn: document.getElementById('toggleBatchBtn'),
+            batchArea: document.getElementById('batchArea'),
+            batchInput: document.getElementById('batchInput'),
+            applyBatchBtn: document.getElementById('applyBatchBtn'),
+            exportChaptersBtn: document.getElementById('exportChaptersBtn'),
+            clearChaptersBtn: document.getElementById('clearChaptersBtn'),
+            commandPreview: document.getElementById('commandPreview'),
+            copyCommandBtn: document.getElementById('copyCommandBtn'),
+            progressSection: document.getElementById('progressSection'),
+            progressBar: document.getElementById('progressBar'),
+            statusBadge: document.getElementById('statusBadge'),
+            statusText: document.getElementById('statusText'),
+            statusSpinner: document.getElementById('statusSpinner'),
+            progressPercent: document.getElementById('progressPercent'),
+            toastContainer: document.getElementById('toastContainer'),
+            fileTypeTabs: document.querySelectorAll('.file-type-tab'),
+            durationToggleButtons: document.querySelectorAll('.duration-toggle button')
+        };
 
-        // State
-        let selectedFile = null;
-        let chapters = [];
+        // Initialize
+        function init() {
+            loadTheme();
+            setupEventListeners();
+            updateCommandPreview();
+            updateChaptersPreview();
+        }
 
-        // File drop zone
-        dropZone.addEventListener('click', () => fileInput.click());
+        // Theme Management
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('bpm4b-theme') || 'dark';
+            setTheme(savedTheme);
+            elements.themeToggle.checked = savedTheme === 'dark';
+        }
 
-        dropZone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            dropZone.classList.add('active');
+        function setTheme(theme) {
+            state.theme = theme;
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('bpm4b-theme', theme);
+        }
+
+        elements.themeToggle.addEventListener('change', (e) => {
+            setTheme(e.target.checked ? 'dark' : 'light');
         });
 
-        dropZone.addEventListener('dragleave', () => {
-            dropZone.classList.remove('active');
+        // Smart Mode
+        elements.smartModeToggle.addEventListener('change', (e) => {
+            state.smartMode = e.target.checked;
+            updateModeIndicator();
+            updateCommandPreview();
+            showToast(state.smartMode ? 'Conversion mode enabled' : 'Chapter builder only mode', 'info');
         });
 
-        dropZone.addEventListener('drop', (e) => {
+        function updateModeIndicator() {
+            elements.modeText.textContent = state.smartMode ? 'Conversion Mode' : 'Chapter Builder Only';
+            elements.convertBtn.disabled = !state.smartMode;
+            if (!state.smartMode) {
+                elements.convertBtnText.textContent = 'Conversion Disabled';
+            } else {
+                updateConvertButtonText();
+            }
+        }
+
+        // File Type Selection
+        elements.fileTypeTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                elements.fileTypeTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                state.fileType = tab.dataset.type;
+                updateFileDropZone();
+                updateConvertButtonText();
+                updateCommandPreview();
+            });
+        });
+
+        function updateFileDropZone() {
+            const isM3U8 = state.fileType === 'm3u8';
+            elements.fileDropText.textContent = isM3U8 ? 'Click or drag your M3U8 file here' : 'Click or drag your MP3 file here';
+            elements.fileDropHint.textContent = isM3U8 ? 'M3U8 or HLS stream file' : 'MP3 audio file';
+            elements.sourceFile.accept = isM3U8 ? '.m3u8,.m3u' : '.mp3,audio/mpeg';
+            
+            // Clear file info if switching types
+            if (state.fileInfo && state.fileInfo.type !== state.fileType) {
+                clearFileSelection();
+            }
+        }
+
+        function updateConvertButtonText() {
+            if (!state.smartMode) {
+                elements.convertBtnText.textContent = 'Conversion Disabled';
+                return;
+            }
+            elements.convertBtnText.textContent = state.fileType === 'mp3' ? 'Convert to M4B' : 'Convert to MKV';
+        }
+
+        // File Upload
+        elements.fileDropZone.addEventListener('click', () => elements.sourceFile.click());
+        
+        elements.fileDropZone.addEventListener('dragover', (e) => {
             e.preventDefault();
-            dropZone.classList.remove('active');
+            elements.fileDropZone.classList.add('drag-over');
+        });
+
+        elements.fileDropZone.addEventListener('dragleave', () => {
+            elements.fileDropZone.classList.remove('drag-over');
+        });
+
+        elements.fileDropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            elements.fileDropZone.classList.remove('drag-over');
             const files = e.dataTransfer.files;
             if (files.length > 0) {
                 handleFileSelect(files[0]);
             }
         });
 
-        fileInput.addEventListener('change', (e) => {
+        elements.sourceFile.addEventListener('change', (e) => {
             if (e.target.files.length > 0) {
                 handleFileSelect(e.target.files[0]);
             }
         });
 
         function handleFileSelect(file) {
-            if (!file.name.endsWith('.mp3') && file.type !== 'audio/mpeg') {
-                alert('Please select an MP3 file');
+            const isM3U8 = state.fileType === 'm3u8';
+            const validExtensions = isM3U8 ? ['.m3u8', '.m3u'] : ['.mp3'];
+            const isValid = validExtensions.some(ext => file.name.toLowerCase().endsWith(ext)) || 
+                          (isM3U8 && file.type === 'application/x-mpegurl') ||
+                          (isM3U8 && file.type === 'audio/mpegurl');
+
+            if (!isValid) {
+                showToast(`Invalid file type. Please select a ${state.fileType.toUpperCase()} file.`, 'error');
                 return;
             }
-            selectedFile = file;
-            filePrompt.style.display = 'none';
-            fileInfo.style.display = 'block';
-            fileInfo.textContent = `${file.name} (${formatFileSize(file.size)})`;
+
+            state.fileInfo = {
+                name: file.name,
+                size: file.size,
+                type: state.fileType,
+                file: file
+            };
+
+            const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+            elements.fileInfo.innerHTML = `
+                <div>
+                    <strong>${file.name}</strong><br>
+                    <small>${sizeMB} MB</small>
+                </div>
+                <button type="button" class="remove-file" onclick="clearFileSelection()">×</button>
+            `;
+            elements.fileInfo.style.display = 'flex';
+
+            // Auto-generate output name
+            const baseName = file.name.replace(/\.[^/.]+$/, '');
+            elements.outputName.value = `${baseName}.${isM3U8 ? 'mkv' : 'm4b'}`;
+
+            updateCommandPreview();
+            showToast('File selected successfully', 'success');
+        }
+
+        function clearFileSelection() {
+            state.fileInfo = null;
+            elements.sourceFile.value = '';
+            elements.fileInfo.style.display = 'none';
             updateCommandPreview();
         }
 
-        function formatFileSize(bytes) {
-            if (bytes < 1024) return bytes + ' B';
-            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
-            if (bytes < 1024 * 1024 * 1024) return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
-            return (bytes / (1024 * 1024 * 1024)).toFixed(1) + ' GB';
+        // Duration Mode Toggle
+        elements.durationToggleButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                elements.durationToggleButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                state.durationMode = btn.dataset.mode;
+                updateNextTimestamp();
+            });
+        });
+
+        // Chapter Builder
+        function parseDurationInput(input) {
+            if (!input.trim()) return null;
+            
+            if (state.durationMode === 'minutes') {
+                // Treat as minutes
+                const minutes = parseFloat(input);
+                if (isNaN(minutes) || minutes < 0) return null;
+                return minutes * 60;
+            } else {
+                // Seconds mode - support MM:SS or pure seconds
+                if (input.includes(':')) {
+                    const parts = input.split(':');
+                    if (parts.length === 2) {
+                        const mins = parseInt(parts[0]) || 0;
+                        const secs = parseFloat(parts[1]) || 0;
+                        return mins * 60 + secs;
+                    }
+                }
+                const seconds = parseFloat(input);
+                return isNaN(seconds) || seconds < 0 ? null : seconds;
+            }
         }
 
-        // Chapter management
-        addChapterBtn.addEventListener('click', () => {
-            const id = Date.now();
-            chapters.push({ id, title: '', start_time: '' });
+        function formatTime(seconds) {
+            const hrs = Math.floor(seconds / 3600);
+            const mins = Math.floor((seconds % 3600) / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function updateNextTimestamp() {
+            elements.nextTimestamp.textContent = formatTime(state.cumulativeTime);
+        }
+
+        elements.chapterTitle.addEventListener('input', updateNextTimestamp);
+        elements.chapterDuration.addEventListener('input', () => {
+            const duration = parseDurationInput(elements.chapterDuration.value);
+            if (duration !== null) {
+                updateNextTimestamp();
+            }
+        });
+
+        elements.addChapterBtn.addEventListener('click', () => {
+            const title = elements.chapterTitle.value.trim();
+            const durationInput = elements.chapterDuration.value.trim();
+            const duration = parseDurationInput(durationInput);
+
+            if (!title) {
+                showToast('Please enter a chapter title', 'error');
+                return;
+            }
+
+            if (duration === null) {
+                showToast('Please enter a valid duration', 'error');
+                return;
+            }
+
+            const chapter = {
+                id: Date.now(),
+                title: title,
+                duration: duration,
+                start_time: state.cumulativeTime,
+                start_time_formatted: formatTime(state.cumulativeTime)
+            };
+
+            state.chapters.push(chapter);
+            state.cumulativeTime += duration;
+
+            // Clear inputs
+            elements.chapterTitle.value = '';
+            elements.chapterDuration.value = '';
+            updateNextTimestamp();
+
             renderChapters();
+            updateChaptersPreview();
+            updateCommandPreview();
+            showToast(`Added "${title}" at ${chapter.start_time_formatted}`, 'success');
         });
 
         function renderChapters() {
-            chaptersContainer.innerHTML = '';
-            chapters.forEach((chapter, index) => {
-                const entry = document.createElement('div');
-                entry.className = 'chapter-entry';
-                entry.innerHTML = `
-                    <input type="text" placeholder="Chapter title" value="${chapter.title}" data-index="${index}" data-field="title" required>
-                    <input type="text" placeholder="Start (e.g., 0 or 0:00)" value="${chapter.start_time}" data-index="${index}" data-field="start_time" required>
-                    <button type="button" class="remove-chapter-btn" data-index="${index}">×</button>
-                `;
-                chaptersContainer.appendChild(entry);
-            });
-
-            // Add event listeners
-            chaptersContainer.querySelectorAll('input').forEach(input => {
-                input.addEventListener('input', (e) => {
-                    const index = parseInt(e.target.dataset.index);
-                    const field = e.target.dataset.field;
-                    chapters[index][field] = e.target.value;
-                    updateCommandPreview();
-                });
-            });
-
-            chaptersContainer.querySelectorAll('.remove-chapter-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const index = parseInt(e.target.dataset.index);
-                    chapters.splice(index, 1);
-                    renderChapters();
-                    updateCommandPreview();
-                });
-            });
-
-            updateCommandPreview();
+            elements.chaptersContainer.innerHTML = state.chapters.map(chapter => `
+                <div class="chapter-entry" data-id="${chapter.id}">
+                    <div>
+                        <strong>${chapter.title}</strong>
+                    </div>
+                    <div class="timestamp">${chapter.start_time_formatted}</div>
+                    <div class="duration">${formatTime(chapter.duration)}</div>
+                    <button type="button" class="remove-chapter-btn" onclick="removeChapter(${chapter.id})">×</button>
+                </div>
+            `).join('');
         }
 
-        // Batch import/export
-        toggleBatchBtn.addEventListener('click', () => {
-            batchArea.classList.toggle('active');
+        function removeChapter(id) {
+            const index = state.chapters.findIndex(c => c.id === id);
+            if (index !== -1) {
+                // Subtract duration from cumulative time and recalculate all subsequent chapters
+                const removedDuration = state.chapters[index].duration;
+                state.chapters.splice(index, 1);
+                
+                // Recalculate all timestamps
+                state.cumulativeTime = 0;
+                state.chapters.forEach(chapter => {
+                    chapter.start_time = state.cumulativeTime;
+                    chapter.start_time_formatted = formatTime(state.cumulativeTime);
+                    state.cumulativeTime += chapter.duration;
+                });
+
+                renderChapters();
+                updateChaptersPreview();
+                updateCommandPreview();
+                updateNextTimestamp();
+            }
+        }
+
+        elements.clearChaptersBtn.addEventListener('click', () => {
+            if (state.chapters.length === 0) return;
+            if (confirm('Clear all chapters?')) {
+                state.chapters = [];
+                state.cumulativeTime = 0;
+                renderChapters();
+                updateChaptersPreview();
+                updateCommandPreview();
+                updateNextTimestamp();
+                showToast('All chapters cleared', 'info');
+            }
         });
 
-        applyBatchBtn.addEventListener('click', () => {
-            const text = batchInput.value.trim();
+        // Batch Import
+        elements.toggleBatchBtn.addEventListener('click', () => {
+            elements.batchArea.classList.toggle('active');
+        });
+
+        elements.applyBatchBtn.addEventListener('click', () => {
+            const text = elements.batchInput.value.trim();
             if (!text) return;
 
-            const parsedChapters = parseBatchChapters(text);
-            if (parsedChapters.length > 0) {
-                chapters = parsedChapters;
-                renderChapters();
-                batchArea.classList.remove('active');
-            } else {
-                alert('No valid chapters found in the batch data');
-            }
-        });
+            const lines = text.split('\n').filter(line => line.trim());
+            let addedCount = 0;
 
-        function parseBatchChapters(text) {
-            const lines = text.split('\n');
-            const chapters = [];
-            let currentChapter = null;
-
-            for (let line of lines) {
-                line = line.trim();
-                if (line.startsWith('[CHAPTER]')) {
-                    if (currentChapter) {
-                        chapters.push(currentChapter);
-                    }
-                    currentChapter = { id: Date.now() + Math.random(), title: '', start_time: '' };
-                } else if (currentChapter) {
-                    if (line.startsWith('title=')) {
-                        currentChapter.title = line.substring(6);
-                    } else if (line.startsWith('START=')) {
-                        const seconds = parseInt(line.substring(6)) / 1000;
-                        currentChapter.start_time = seconds.toString();
+            lines.forEach(line => {
+                const parts = line.split(',');
+                if (parts.length >= 2) {
+                    const title = parts[0].trim();
+                    const durationStr = parts[1].trim();
+                    const duration = parseDurationInput(durationStr);
+                    
+                    if (title && duration !== null) {
+                        const chapter = {
+                            id: Date.now() + addedCount,
+                            title: title,
+                            duration: duration,
+                            start_time: state.cumulativeTime,
+                            start_time_formatted: formatTime(state.cumulativeTime)
+                        };
+                        state.chapters.push(chapter);
+                        state.cumulativeTime += duration;
+                        addedCount++;
                     }
                 }
+            });
+
+            if (addedCount > 0) {
+                renderChapters();
+                updateChaptersPreview();
+                updateCommandPreview();
+                updateNextTimestamp();
+                showToast(`Imported ${addedCount} chapters`, 'success');
+                elements.batchArea.classList.remove('active');
+                elements.batchInput.value = '';
+            } else {
+                showToast('No valid chapters found in input', 'error');
             }
+        });
 
-            if (currentChapter) {
-                chapters.push(currentChapter);
-            }
-
-            return chapters.filter(c => c.title && c.start_time);
-        }
-
-        exportChaptersBtn.addEventListener('click', () => {
-            if (chapters.length === 0) {
-                alert('No chapters to export');
+        // Export Chapters
+        elements.exportChaptersBtn.addEventListener('click', () => {
+            if (state.chapters.length === 0) {
+                showToast('No chapters to export', 'error');
                 return;
             }
 
-            let text = '';
-            chapters.forEach(chapter => {
-                const startMs = Math.round(parseFloat(chapter.start_time) * 1000);
-                text += `[CHAPTER]\nTIMEBASE=1/1000\nSTART=${startMs}\ntitle=${chapter.title}\n\n`;
-            });
+            const content = state.chapters.map(chapter => 
+                `${chapter.start_time_formatted} - ${chapter.title}`
+            ).join('\n');
 
-            navigator.clipboard.writeText(text).then(() => {
-                alert('Chapter data copied to clipboard!');
-            }).catch(() => {
-                alert('Failed to copy to clipboard');
-            });
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'chapters.txt';
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            showToast('Chapters exported successfully', 'success');
         });
 
-        // Command preview
+        // Chapters Preview
+        function updateChaptersPreview() {
+            if (state.chapters.length === 0) {
+                elements.chaptersPreview.textContent = '// Chapter list will appear here\n// Add chapters using the form above';
+                return;
+            }
+
+            const preview = state.chapters.map(chapter => 
+                `${chapter.start_time_formatted} - ${chapter.title} (${formatTime(chapter.duration)})`
+            ).join('\n');
+            
+            elements.chaptersPreview.textContent = preview;
+        }
+
+        // Command Preview
         function updateCommandPreview() {
-            let cmd = 'ffmpeg -i input.mp3 -c:a aac -b:a 64k';
-            if (chapters.length > 0) {
-                cmd += ' [with chapters]';
+            const isM4B = state.fileType === 'mp3';
+            const outputExt = isM4B ? 'm4b' : 'mkv';
+            const outputName = state.fileInfo ? 
+                (elements.outputName.value.trim() || `output.${outputExt}`) : 
+                `output.${outputExt}`;
+
+            let cmd = `ffmpeg -i input.${state.fileType} -c:a ${document.getElementById('audioQuality').value}`;
+            
+            if (state.chapters.length > 0) {
+                cmd += ` -map_metadata 1 -i chapters.txt`;
             }
-            cmd += ' output.m4b';
-            cmdOutput.textContent = cmd;
+            
+            cmd += ` ${outputName}`;
+
+            elements.commandPreview.textContent = cmd;
         }
 
-        copyCommandBtn.addEventListener('click', () => {
-            navigator.clipboard.writeText(cmdOutput.textContent).then(() => {
-                const originalText = copyCommandBtn.textContent;
-                copyCommandBtn.textContent = 'Copied!';
-                setTimeout(() => {
-                    copyCommandBtn.textContent = originalText;
-                }, 2000);
-            });
+        elements.copyCommandBtn.addEventListener('click', async () => {
+            const cmd = elements.commandPreview.textContent;
+            try {
+                await navigator.clipboard.writeText(cmd);
+                showToast('Command copied to clipboard', 'success');
+            } catch (err) {
+                showToast('Failed to copy command', 'error');
+            }
         });
 
-        // Form submission
-        mp3Form.addEventListener('submit', async (e) => {
+        // Form Submission
+        elements.conversionForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-
-            if (!selectedFile) {
-                alert('Please select an MP3 file');
+            
+            if (!state.smartMode) {
+                showToast('Conversion mode is disabled. Enable it to convert files.', 'info');
                 return;
             }
 
-            // Validate chapters
-            const validChapters = chapters.filter(c => c.title && c.start_time);
-            if (validChapters.length !== chapters.length) {
-                alert('Please fill in all chapter fields or remove incomplete entries');
+            if (!state.fileInfo) {
+                showToast('Please select a source file', 'error');
+                return;
+            }
+
+            if (state.isProcessing) {
+                showToast('Conversion already in progress', 'error');
                 return;
             }
 
             // Prepare form data
             const formData = new FormData();
-            formData.append('mp3_file', selectedFile);
-            if (validChapters.length > 0) {
-                formData.append('chapters', JSON.stringify(validChapters));
+            formData.append('source_file', state.fileInfo.file);
+            formData.append('output_name', elements.outputName.value.trim() || '');
+            formData.append('file_type', state.fileType);
+            formData.append('audio_quality', document.getElementById('audioQuality').value);
+            
+            if (state.chapters.length > 0) {
+                formData.append('chapters', JSON.stringify(state.chapters));
             }
 
-            // Show progress
-            submitBtn.disabled = true;
-            progressContainer.classList.add('active');
-            progressBar.style.width = '0%';
-            statusBadge.textContent = 'Uploading...';
-            statusBadge.className = 'status-badge processing';
-
-            try {
-                const xhr = new XMLHttpRequest();
-
-                xhr.upload.addEventListener('progress', (e) => {
-                    if (e.lengthComputable) {
-                        const percent = Math.round((e.loaded / e.total) * 50);
-                        progressBar.style.width = percent + '%';
-                    }
-                });
-
-                xhr.addEventListener('load', () => {
-                    if (xhr.status === 200) {
-                        progressBar.style.width = '100%';
-                        statusBadge.textContent = 'Converting...';
-                        statusBadge.className = 'status-badge processing';
-
-                        // Download the file
-                        const blob = xhr.response;
-                        const url = window.URL.createObjectURL(blob);
-                        const a = document.createElement('a');
-                        a.href = url;
-                        const originalName = selectedFile.name.replace(/\.[^/.]+$/, '');
-                        a.download = originalName + '.m4b';
-                        document.body.appendChild(a);
-                        a.click();
-                        window.URL.revokeObjectURL(url);
-                        document.body.removeChild(a);
-
-                        statusBadge.textContent = 'Complete!';
-                        statusBadge.className = 'status-badge success';
-                        setTimeout(() => {
-                            progressContainer.classList.remove('active');
-                            submitBtn.disabled = false;
-                        }, 2000);
-                    } else {
-                        throw new Error(xhr.statusText || 'Conversion failed');
-                    }
-                });
-
-                xhr.addEventListener('error', () => {
-                    throw new Error('Network error');
-                });
-
-                xhr.addEventListener('abort', () => {
-                    statusBadge.textContent = 'Cancelled';
-                    statusBadge.className = 'status-badge error';
-                    submitBtn.disabled = false;
-                });
-
-                xhr.open('POST', '/api/mp3-to-m4b');
-                xhr.responseType = 'blob';
-                xhr.send(formData);
-
-            } catch (error) {
-                statusBadge.textContent = 'Error: ' + error.message;
-                statusBadge.className = 'status-badge error';
-                submitBtn.disabled = false;
-            }
+            // Start conversion
+            startConversion();
+            await performConversion(formData);
         });
 
-        // Initialize
-        updateCommandPreview();
+        function startConversion() {
+            state.isProcessing = true;
+            elements.progressSection.classList.add('active');
+            elements.progressBar.style.width = '0%';
+            elements.statusBadge.className = 'status-badge processing';
+            elements.statusText.textContent = 'Starting conversion...';
+            elements.statusSpinner.style.display = 'inline-block';
+            elements.convertBtn.disabled = true;
+            
+            simulateProgress();
+        }
+
+        function simulateProgress() {
+            let progress = 0;
+            const interval = setInterval(() => {
+                if (progress < 90) {
+                    progress += Math.random() * 15;
+                    if (progress > 90) progress = 90;
+                    elements.progressBar.style.width = `${progress}%`;
+                    elements.progressPercent.textContent = `${Math.round(progress)}%`;
+                } else {
+                    clearInterval(interval);
+                }
+            }, 500);
+        }
+
+        async function performConversion(formData) {
+            try {
+                elements.statusText.textContent = 'Uploading file...';
+                
+                const response = await fetch('/api/convert', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || 'Conversion failed');
+                }
+
+                // Get filename from headers
+                const contentDisposition = response.headers.get('Content-Disposition');
+                let filename = 'output.m4b';
+                if (contentDisposition) {
+                    const match = contentDisposition.match(/filename="?([^"]+)"?/);
+                    if (match) filename = match[1];
+                }
+
+                // Download the file
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                a.click();
+                window.URL.revokeObjectURL(url);
+
+                elements.progressBar.style.width = '100%';
+                elements.progressPercent.textContent = '100%';
+                elements.statusBadge.className = 'status-badge success';
+                elements.statusText.textContent = 'Conversion complete!';
+                elements.statusSpinner.style.display = 'none';
+                
+                showToast('Conversion completed successfully!', 'success');
+
+                // Reset after delay
+                setTimeout(() => {
+                    resetConversion();
+                }, 3000);
+
+            } catch (error) {
+                elements.statusBadge.className = 'status-badge error';
+                elements.statusText.textContent = 'Conversion failed';
+                elements.statusSpinner.style.display = 'none';
+                showToast(error.message, 'error');
+                
+                setTimeout(() => {
+                    resetConversion();
+                }, 5000);
+            } finally {
+                state.isProcessing = false;
+                elements.convertBtn.disabled = false;
+            }
+        }
+
+        function resetConversion() {
+            elements.progressSection.classList.remove('active');
+            elements.progressBar.style.width = '0%';
+            elements.statusBadge.className = 'status-badge';
+            elements.statusText.textContent = 'Processing...';
+            elements.progressPercent.textContent = '0%';
+        }
+
+        // Toast Notifications
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            let icon = '';
+            if (type === 'success') icon = '✓';
+            else if (type === 'error') icon = '✕';
+            else icon = 'ℹ';
+
+            toast.innerHTML = `<span>${icon}</span><span>${message}</span>`;
+            elements.toastContainer.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(100px)';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Event Listeners Setup
+        function setupEventListeners() {
+            updateCommandPreview();
+            updateNextTimestamp();
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 

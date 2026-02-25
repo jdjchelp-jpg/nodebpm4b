@@ -1,11 +1,12 @@
 /**
- * Vercel Serverless Function for MP3 to M4B conversion
+ * Vercel Serverless Function for BPM4B v7.0.0
+ * Supports MP3→M4B and M3U8→MKV conversions
  */
 
 const { promises: fs } = require('fs');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
-const { convertMp3ToM4b, checkFFmpeg } = require('../lib/core');
+const { smartConvert, checkFFmpeg } = require('../lib/core');
 
 // Vercel serverless function handler
 module.exports = async (req, res) => {
@@ -26,12 +27,24 @@ module.exports = async (req, res) => {
     }
 
     try {
-        // Check for file in request
-        if (!req.body || !req.files || !req.files.mp3_file) {
-            return res.status(400).json({ error: 'No MP3 file provided' });
+        // Check for file in request - support both mp3_file and source_file
+        const fileField = req.files?.mp3_file || req.files?.source_file;
+        if (!req.body || !fileField) {
+            return res.status(400).json({ error: 'No source file provided' });
         }
 
-        const mp3File = req.files.mp3_file;
+        const uploadedFile = fileField;
+
+        // Determine file type
+        const fileExt = path.extname(uploadedFile.name).toLowerCase();
+        const isMp3 = fileExt === '.mp3' || uploadedFile.mimetype === 'audio/mpeg';
+        const isM3U8 = fileExt === '.m3u8' || fileExt === '.m3u' ||
+                      uploadedFile.mimetype === 'application/x-mpegurl' ||
+                      uploadedFile.mimetype === 'audio/mpegurl';
+
+        if (!isMp3 && !isM3U8) {
+            return res.status(400).json({ error: 'Unsupported file type. Only MP3 and M3U8 files are allowed.' });
+        }
 
         // Parse chapters if provided
         let chapters = null;
@@ -61,6 +74,10 @@ module.exports = async (req, res) => {
             }
         }
 
+        // Get audio quality setting
+        const inputType = isMp3 ? 'mp3' : 'm3u8';
+        const audioQuality = req.body.audio_quality || (isMp3 ? '64k' : '128k');
+
         // Create temporary directories
         const tmpDir = path.join('/tmp');
         const uploadDir = path.join(tmpDir, 'uploads');
@@ -70,21 +87,30 @@ module.exports = async (req, res) => {
         await fs.mkdir(outputDir, { recursive: true });
 
         // Save uploaded file
-        const mp3Filename = `${uuidv4()}.mp3`;
-        const mp3Path = path.join(uploadDir, mp3Filename);
-        await fs.writeFile(mp3Path, mp3File.data);
+        const fileExtActual = isMp3 ? '.mp3' : (isM3U8 ? '.m3u8' : '.bin');
+        const inputFilename = `${uuidv4()}${fileExtActual}`;
+        const inputPath = path.join(uploadDir, inputFilename);
+        await fs.writeFile(inputPath, uploadedFile.data);
 
         // Create output filename
-        const originalName = path.parse(mp3File.name).name;
-        const outputFilename = `${originalName}.m4b`;
+        const originalName = path.parse(uploadedFile.name).name;
+        const outputExt = isMp3 ? 'm4b' : 'mkv';
+        const customOutputName = req.body.output_name || '';
+        const outputFilename = customOutputName.trim() || `${originalName}.${outputExt}`;
         const outputPath = path.join(outputDir, outputFilename);
 
-        // Convert to M4B
-        console.log(`Converting ${mp3Path} to ${outputPath}`);
-        await convertMp3ToM4b(mp3Path, outputPath, chapters);
+        // Convert using smartConvert
+        console.log(`Converting ${inputPath} (${inputType.toUpperCase()}) to ${outputPath}`);
+        await smartConvert({
+            inputPath: inputPath,
+            outputPath: outputPath,
+            inputType: inputType,
+            chapters: chapters,
+            audioQuality: audioQuality
+        });
 
         // Cleanup uploaded file
-        await fs.unlink(mp3Path);
+        await fs.unlink(inputPath);
 
         // Read output file
         const fileBuffer = await fs.readFile(outputPath);
@@ -92,8 +118,9 @@ module.exports = async (req, res) => {
         // Cleanup output file
         await fs.unlink(outputPath);
 
-        // Set response headers
-        res.setHeader('Content-Type', 'audio/x-m4b');
+        // Set response headers based on output type
+        const contentType = isMp3 ? 'audio/x-m4b' : 'video/x-matroska';
+        res.setHeader('Content-Type', contentType);
         res.setHeader('Content-Disposition', `attachment; filename="${outputFilename}"`);
         res.setHeader('Content-Length', fileBuffer.length);
 

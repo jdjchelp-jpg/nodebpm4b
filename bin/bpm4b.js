@@ -1,21 +1,21 @@
 #!/usr/bin/env node
 
 /**
- * BPM4B - MP3 to M4B Audiobook Converter
- * Command-line interface for converting MP3 files to M4B format
+ * BPM4B - Professional Multimedia Converter v7.0.0
+ * Command-line interface for converting MP3 to M4B and M3U8 to MKV
  */
 
 const { Command } = require('commander');
 const path = require('path');
 const fs = require('fs');
-const { convertMp3ToM4b, checkFFmpeg } = require('../lib/core');
+const { smartConvert, checkFFmpeg, parseTimeToSeconds } = require('../lib/core');
 
 const program = new Command();
 
 program
   .name('bpm4b')
-  .description('MP3 to M4B Audiobook Converter')
-  .version('6.0.0');
+  .description('Professional Multimedia Converter - MP3 to M4B and M3U8 to MKV')
+  .version('7.0.0');
 
 // Web command
 program
@@ -27,7 +27,7 @@ program
   .action(async (options) => {
     console.log(`
 ╔═══════════════════════════════════════════════════════════════╗
-║              MP3 to M4B Converter v6.0.0                      ║
+║          BPM4B Professional Converter v7.0.0                 ║
 ║                                                               ║
 ║  Web interface starting...                                    ║
 ║  URL: http://${options.host !== '0.0.0.0' ? options.host : 'localhost'}:${options.port}                    ║
@@ -65,18 +65,29 @@ program
     }
   });
 
-// Convert command
+// Convert command (supports MP3→M4B and M3U8→MKV)
 program
   .command('convert')
-  .description('Convert MP3 to M4B from command line')
-  .argument('<input>', 'Input MP3 file path')
-  .argument('<output>', 'Output M4B file path')
+  .description('Convert audio files from command line (auto-detects format)')
+  .argument('<input>', 'Input file path (MP3 or M3U8)')
+  .argument('<output>', 'Output file path (M4B for MP3, MKV for M3U8)')
   .option('--chapter <title:start_time>', 'Add chapter marker (can be used multiple times)')
+  .option('--quality <bitrate>', 'Audio quality (e.g., 64k, 128k, 192k)', (isMp3) => isMp3 ? '64k' : '128k')
   .action(async (input, output, options) => {
     try {
       // Check if input file exists
       if (!fs.existsSync(input)) {
         console.error(`Error: Input file '${input}' not found`);
+        process.exit(1);
+      }
+
+      // Determine file type from extension
+      const ext = path.extname(input).toLowerCase();
+      const isMp3 = ext === '.mp3';
+      const isM3U8 = ext === '.m3u8' || ext === '.m3u';
+
+      if (!isMp3 && !isM3U8) {
+        console.error('Error: Unsupported file type. Supported: .mp3, .m3u8, .m3u');
         process.exit(1);
       }
 
@@ -111,9 +122,17 @@ program
         });
       }
 
-      console.log(`Converting: ${input} -> ${output}`);
+      const fileType = isMp3 ? 'MP3' : 'M3U8';
+      const quality = options.quality || (isMp3 ? '64k' : '128k');
+      console.log(`Converting ${fileType}: ${input} -> ${output} (quality: ${quality})`);
 
-      await convertMp3ToM4b(input, output, chapters);
+      await smartConvert({
+        inputPath: input,
+        outputPath: output,
+        inputType: isMp3 ? 'mp3' : 'm3u8',
+        chapters: chapters,
+        audioQuality: quality
+      });
 
       console.log(`✓ Conversion complete: ${output}`);
     } catch (error) {
@@ -121,38 +140,6 @@ program
       process.exit(1);
     }
   });
-
-// Parse time helper (duplicate from core for CLI usage)
-function parseTimeToSeconds(timeInput) {
-  if (typeof timeInput === 'number') {
-    return timeInput;
-  }
-
-  if (typeof timeInput === 'string') {
-    const trimmed = timeInput.trim();
-
-    // Check if it's in MM:SS or M:SS or MM:SS.sss format first
-    if (trimmed.includes(':')) {
-      const parts = trimmed.split(':');
-      if (parts.length === 2) {
-        const minutes = parseFloat(parts[0]);
-        const seconds = parseFloat(parts[1]);
-        if (!isNaN(minutes) && !isNaN(seconds)) {
-          return minutes * 60 + seconds;
-        }
-      }
-      throw new Error(`Invalid time format: ${timeInput}. Use seconds (e.g., 390) or MM:SS (e.g., "6:30")`);
-    }
-
-    // Try parsing as a simple number
-    const asNumber = parseFloat(trimmed);
-    if (!isNaN(asNumber)) {
-      return asNumber;
-    }
-  }
-
-  throw new Error(`Invalid time format: ${timeInput}. Use seconds (e.g., 390) or MM:SS (e.g., "6:30")`);
-}
 
 // Parse command line arguments
 program.parse();

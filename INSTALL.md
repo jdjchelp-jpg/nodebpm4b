@@ -1,4 +1,4 @@
-# Installation & Quick Start Guide
+# Installation & Quick Start Guide - BPM4B v7.0.0
 
 ## For Users
 
@@ -15,6 +15,7 @@ npm install -g
 bpm4b --help
 bpm4b web
 bpm4b convert input.mp3 output.m4b --chapter "Chapter 1" 0
+bpm4b convert stream.m3u8 output.mkv
 ```
 
 ### Local Installation (For development or as a library)
