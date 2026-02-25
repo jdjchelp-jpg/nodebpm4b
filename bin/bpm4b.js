@@ -15,7 +15,7 @@ const program = new Command();
 program
   .name('bpm4b')
   .description('Professional Multimedia Converter - MP3 to M4B and M3U8 to MKV')
-  .version('7.0.0');
+  .version('8.0.0');
 
 // Web command
 program
@@ -27,7 +27,7 @@ program
   .action(async (options) => {
     console.log(`
 ╔═══════════════════════════════════════════════════════════════╗
-║          BPM4B Professional Converter v7.0.0                 ║
+║          BPM4B Professional Converter v8.0.0                 ║
 ║                                                               ║
 ║  Web interface starting...                                    ║
 ║  URL: http://${options.host !== '0.0.0.0' ? options.host : 'localhost'}:${options.port}                    ║

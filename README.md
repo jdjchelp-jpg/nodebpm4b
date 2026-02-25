@@ -1,4 +1,4 @@
-# BPM4B - Professional Multimedia Converter (v7.0.0)
+# BPM4B - Professional Multimedia Converter (v8.0.0)
 
 A professional multimedia processing tool for converting MP3 to M4B and M3U8 to MKV with automatic chapter support.
 

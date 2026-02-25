@@ -1,5 +1,5 @@
 /**
- * Vercel Serverless Function for BPM4B v7.0.0
+ * Vercel Serverless Function for BPM4B v8.0.0
  * Supports MP3→M4B and M3U8→MKV conversions
  */
 

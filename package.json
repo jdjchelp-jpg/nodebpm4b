@@ -1,6 +1,6 @@
 {
     "name": "bpm4b",
-    "version": "7.0.0",
+    "version": "8.0.0",
     "description": "Professional Multimedia Converter - MP3 to M4B and M3U8 to MKV with automatic chapters",
     "main": "lib/server.js",
     "bin": {

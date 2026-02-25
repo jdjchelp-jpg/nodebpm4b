@@ -4,7 +4,7 @@ A Node.js web application for converting MP3 to M4B and M3U8 to MKV with automat
 
 **Install and run with:** `npm install -g bpm4b` then `bpm4b`
 
-**Version:** 7.0.0
+**Version:** 8.0.0
 
 ## Features
 
