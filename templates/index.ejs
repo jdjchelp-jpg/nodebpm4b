@@ -9,7 +9,9 @@
     </title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
     <style>
         :root {
             /* Light mode (default) */
@@ -67,13 +69,13 @@
             padding: 2rem 1rem;
             line-height: 1.6;
             transition: background-color 0.3s ease, color 0.3s ease;
-            background-image: 
+            background-image:
                 radial-gradient(at 20% 20%, rgba(99, 102, 241, 0.08) 0px, transparent 50%),
                 radial-gradient(at 80% 80%, rgba(236, 72, 153, 0.08) 0px, transparent 50%);
         }
 
         [data-theme="dark"] body {
-            background-image: 
+            background-image:
                 radial-gradient(at 20% 20%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
                 radial-gradient(at 80% 80%, rgba(236, 72, 153, 0.15) 0px, transparent 50%);
         }
@@ -197,12 +199,12 @@
             box-shadow: var(--shadow-sm);
         }
 
-        input:checked + .toggle-slider {
+        input:checked+.toggle-slider {
             background: linear-gradient(135deg, var(--primary), var(--accent));
             border-color: var(--primary);
         }
 
-        input:checked + .toggle-slider:before {
+        input:checked+.toggle-slider:before {
             transform: translateX(24px);
         }
 
@@ -760,8 +762,13 @@
         }
 
         @keyframes shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
         }
 
         .status-section {
@@ -801,8 +808,15 @@
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
         }
 
         /* Batch Import Area */
@@ -841,6 +855,7 @@
                 opacity: 0;
                 transform: translateY(-20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -852,6 +867,7 @@
                 opacity: 0;
                 transform: translateY(20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -859,8 +875,13 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
 
         @keyframes slideIn {
@@ -868,28 +889,252 @@
                 opacity: 0;
                 transform: translateX(-10px);
             }
+
             to {
                 opacity: 1;
                 transform: translateX(0);
             }
         }
 
+        /* ── Audiobook Generator Styles ── */
+        .audiobook-panel,
+        .aax-panel {
+            display: none;
+        }
+
+        .audiobook-panel.active,
+        .aax-panel.active {
+            display: block;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .chapter-preview-list {
+            max-height: 350px;
+            overflow-y: auto;
+            margin-bottom: 1rem;
+        }
+
+        .chapter-preview-item {
+            padding: 1rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .chapter-preview-item:hover {
+            border-color: var(--primary);
+        }
+
+        .chapter-preview-item .chapter-num {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            padding: 0.25rem 0.625rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-right: 0.5rem;
+        }
+
+        .chapter-preview-item .chapter-title {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .chapter-preview-item .chapter-meta {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        .chapter-preview-item .chapter-excerpt {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+            font-style: italic;
+            line-height: 1.4;
+        }
+
+        .pipeline-progress {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .pipeline-step {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+        }
+
+        .pipeline-step.active {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .pipeline-step.done {
+            border-color: var(--success);
+            background: rgba(34, 197, 94, 0.05);
+        }
+
+        .pipeline-step.error {
+            border-color: var(--error);
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        .pipeline-step .step-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            font-weight: 700;
+            flex-shrink: 0;
+            background: var(--bg-secondary);
+            border: 2px solid var(--glass-border);
+            color: var(--text-muted);
+        }
+
+        .pipeline-step.active .step-icon {
+            border-color: var(--primary);
+            color: var(--primary);
+            animation: pulse 2s infinite;
+        }
+
+        .pipeline-step.done .step-icon {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+
+        .pipeline-step.error .step-icon {
+            background: var(--error);
+            border-color: var(--error);
+            color: white;
+        }
+
+        .api-key-input {
+            position: relative;
+        }
+
+        .api-key-input input {
+            padding-right: 3rem;
+        }
+
+        .api-key-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0.25rem;
+            font-size: 1.1rem;
+        }
+
+        .estimated-info {
+            display: flex;
+            gap: 1.5rem;
+            padding: 1rem;
+            background: rgba(99, 102, 241, 0.05);
+            border: 1px solid rgba(99, 102, 241, 0.15);
+            border-radius: var(--radius-md);
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .estimated-info .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .estimated-info .info-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .estimated-info .info-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
         /* Utility Classes */
-        .hidden { display: none !important; }
-        .text-center { text-align: center; }
-        .mt-1 { margin-top: 0.5rem; }
-        .mt-2 { margin-top: 1rem; }
-        .mt-3 { margin-top: 1.5rem; }
-        .mb-1 { margin-bottom: 0.5rem; }
-        .mb-2 { margin-bottom: 1rem; }
-        .mb-3 { margin-bottom: 1.5rem; }
-        .flex { display: flex; }
-        .flex-col { flex-direction: column; }
-        .items-center { align-items: center; }
-        .justify-between { justify-content: space-between; }
-        .gap-1 { gap: 0.5rem; }
-        .gap-2 { gap: 1rem; }
-        .gap-3 { gap: 1.5rem; }
+        .hidden {
+            display: none !important;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .mt-1 {
+            margin-top: 0.5rem;
+        }
+
+        .mt-2 {
+            margin-top: 1rem;
+        }
+
+        .mt-3 {
+            margin-top: 1.5rem;
+        }
+
+        .mb-1 {
+            margin-bottom: 0.5rem;
+        }
+
+        .mb-2 {
+            margin-bottom: 1rem;
+        }
+
+        .mb-3 {
+            margin-bottom: 1.5rem;
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .flex-col {
+            flex-direction: column;
+        }
+
+        .items-center {
+            align-items: center;
+        }
+
+        .justify-between {
+            justify-content: space-between;
+        }
+
+        .gap-1 {
+            gap: 0.5rem;
+        }
+
+        .gap-2 {
+            gap: 1rem;
+        }
+
+        .gap-3 {
+            gap: 1.5rem;
+        }
 
         /* Responsive */
         @media (max-width: 768px) {
@@ -922,7 +1167,9 @@
         }
 
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         /* Toast Notifications */
@@ -966,6 +1213,7 @@
                 opacity: 0;
                 transform: translateX(100px);
             }
+
             to {
                 opacity: 1;
                 transform: translateX(0);
@@ -983,7 +1231,8 @@
                 <div class="logo">
                     <div class="logo-icon">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M9 18V5l12-2v13M6 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm12-3a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+                            <path
+                                d="M9 18V5l12-2v13M6 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm12-3a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
                         </svg>
                     </div>
                     <div class="logo-text">
@@ -992,7 +1241,8 @@
                     </div>
                 </div>
                 <div class="header-controls">
-                    <div class="version-badge">v<%= version %></div>
+                    <div class="version-badge">v<%= version %>
+                    </div>
                     <div class="toggle-switch">
                         <input type="checkbox" id="themeToggle" checked>
                         <label class="toggle-slider" for="themeToggle"></label>
@@ -1009,8 +1259,10 @@
                     <div class="smart-mode-section">
                         <div class="smart-mode-header">
                             <div class="smart-mode-title">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path
+                                        d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
                                 </svg>
                                 Unified Smart Mode
                             </div>
@@ -1019,14 +1271,16 @@
                             </div>
                         </div>
                         <p class="smart-mode-description">
-                            Toggle between <strong>Conversion Mode</strong> (process files and embed chapters) and <strong>Chapter Builder Only</strong> (generate timestamps without conversion).
+                            Toggle between <strong>Conversion Mode</strong> (process files and embed chapters) and
+                            <strong>Chapter Builder Only</strong> (generate timestamps without conversion).
                         </p>
                         <div class="mt-2">
                             <label class="toggle-switch" style="display: inline-block;">
                                 <input type="checkbox" id="smartModeToggle" checked>
                                 <label class="toggle-slider" for="smartModeToggle"></label>
                             </label>
-                            <span class="ml-2" style="font-size: 0.875rem; color: var(--text-muted);">Enable Conversion</span>
+                            <span class="ml-2" style="font-size: 0.875rem; color: var(--text-muted);">Enable
+                                Conversion</span>
                         </div>
                     </div>
                 </div>
@@ -1036,12 +1290,14 @@
                     <div class="card-header">
                         <div class="card-icon">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M9 18V5l12-2v13M6 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm12-3a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+                                <path
+                                    d="M9 18V5l12-2v13M6 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm12-3a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
                             </svg>
                         </div>
                         <div>
                             <h3 class="card-title">File Conversion</h3>
-                            <p class="card-description" id="conversionDescription">Convert audio files with embedded chapters</p>
+                            <p class="card-description" id="conversionDescription">Convert audio files with embedded
+                                chapters</p>
                         </div>
                     </div>
 
@@ -1051,6 +1307,9 @@
                             <div class="duration-toggle" style="margin-bottom: 1rem;">
                                 <button type="button" class="file-type-tab active" data-type="mp3">MP3 → M4B</button>
                                 <button type="button" class="file-type-tab" data-type="m3u8">M3U8 → MKV</button>
+                                <button type="button" class="file-type-tab" data-type="document">Doc →
+                                    Audiobook</button>
+                                <button type="button" class="file-type-tab" data-type="aax">AAX → M4B</button>
                             </div>
                         </div>
 
@@ -1075,7 +1334,8 @@
                         </div>
 
                         <button type="submit" class="btn" id="convertBtn">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
                                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
                             </svg>
                             <span id="convertBtnText">Convert to M4B</span>
@@ -1089,7 +1349,9 @@
                         <div class="card-icon">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <circle cx="12" cy="12" r="3"></circle>
-                                <path d="M12 1v6M12 17v6M4.22 4.22l4.24 4.24M15.54 15.54l4.24 4.24M1 12h6M17 12h6M4.22 19.78l4.24-4.24M15.54 8.46l4.24-4.24"></path>
+                                <path
+                                    d="M12 1v6M12 17v6M4.22 4.22l4.24 4.24M15.54 15.54l4.24 4.24M1 12h6M17 12h6M4.22 19.78l4.24-4.24M15.54 8.46l4.24-4.24">
+                                </path>
                             </svg>
                         </div>
                         <div>
@@ -1116,6 +1378,212 @@
                         </select>
                     </div>
                 </div>
+
+                <!-- ── Document to Audiobook Panel ── -->
+                <div class="card audiobook-panel" id="audiobookPanel">
+                    <div class="card-header">
+                        <div class="card-icon" style="background: linear-gradient(135deg, #8b5cf6, #ec4899);">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="card-title">Document → Audiobook</h3>
+                            <p class="card-description">Convert PDF, DOCX, TXT, or EPUB to a chaptered M4B audiobook</p>
+                        </div>
+                    </div>
+
+                    <form id="audiobookForm">
+                        <div class="form-group">
+                            <label>Document File</label>
+                            <div class="file-drop-zone" id="docDropZone">
+                                <input type="file" id="docFile" accept=".pdf,.docx,.doc,.txt,.epub">
+                                <div class="file-drop-icon"
+                                    style="background: linear-gradient(135deg, #8b5cf6, #ec4899);">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                                    </svg>
+                                </div>
+                                <div class="file-drop-text">Click or drag your document here</div>
+                                <div class="file-drop-hint">PDF, DOCX, TXT, or EPUB</div>
+                                <div class="file-info" id="docFileInfo" style="display: none;"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>OpenRouter API Key</label>
+                            <div class="api-key-input">
+                                <input type="password" id="apiKeyInput" placeholder="sk-or-..."
+                                    style="width:100%;background:var(--bg-tertiary);border:1px solid var(--glass-border);border-radius:var(--radius-md);padding:0.875rem 3rem 0.875rem 1.25rem;color:var(--text-primary);font-size:1rem;">
+                                <button type="button" class="api-key-toggle" id="toggleApiKey"
+                                    title="Show/hide key">👁</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                            <div>
+                                <label>Voice</label>
+                                <select id="ttsVoice">
+                                    <option value="alloy">Alloy — Neutral</option>
+                                    <option value="echo">Echo — Warm</option>
+                                    <option value="fable">Fable — Expressive</option>
+                                    <option value="onyx">Onyx — Deep</option>
+                                    <option value="nova">Nova — Friendly</option>
+                                    <option value="shimmer">Shimmer — Soft</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label>Model</label>
+                                <select id="ttsModel">
+                                    <option value="openai/tts-1">TTS-1 (Standard)</option>
+                                    <option value="openai/tts-1-hd">TTS-1 HD (High Quality)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                            <div>
+                                <label>Speech Speed</label>
+                                <select id="ttsSpeed">
+                                    <option value="0.75">0.75x — Slow</option>
+                                    <option value="1.0" selected>1.0x — Normal</option>
+                                    <option value="1.25">1.25x — Fast</option>
+                                    <option value="1.5">1.5x — Very Fast</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label>Output Name (optional)</label>
+                                <input type="text" id="audiobookOutputName" placeholder="Auto-generated">
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-secondary" id="previewChaptersBtn"
+                            style="margin-bottom:1rem;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                            Preview Chapters
+                        </button>
+
+                        <!-- Chapter Preview Area -->
+                        <div id="chapterPreviewArea" style="display:none;">
+                            <div class="estimated-info" id="estimatedInfo"></div>
+                            <div class="chapter-preview-list" id="chapterPreviewList"></div>
+                        </div>
+
+                        <button type="submit" class="btn" id="generateAudiobookBtn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                            </svg>
+                            <span id="generateBtnText">Generate Audiobook</span>
+                        </button>
+                    </form>
+
+                    <!-- Pipeline Progress -->
+                    <div id="audiobookProgress" style="display:none;">
+                        <div class="pipeline-progress">
+                            <div class="pipeline-step" id="stepParsing">
+                                <div class="step-icon">1</div>
+                                <div>Parsing document...</div>
+                            </div>
+                            <div class="pipeline-step" id="stepDetecting">
+                                <div class="step-icon">2</div>
+                                <div>Detecting chapters...</div>
+                            </div>
+                            <div class="pipeline-step" id="stepGenerating">
+                                <div class="step-icon">3</div>
+                                <div id="stepGeneratingText">Generating audio...</div>
+                            </div>
+                            <div class="pipeline-step" id="stepAssembling">
+                                <div class="step-icon">4</div>
+                                <div>Assembling M4B...</div>
+                            </div>
+                            <div class="pipeline-step" id="stepComplete">
+                                <div class="step-icon">✓</div>
+                                <div>Complete!</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── AAX Converter Panel ── -->
+                <div class="card aax-panel" id="aaxPanel">
+                    <div class="card-header">
+                        <div class="card-icon" style="background: linear-gradient(135deg, #f59e0b, #ef4444);">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                                <line x1="12" y1="19" x2="12" y2="23"></line>
+                                <line x1="8" y1="23" x2="16" y2="23"></line>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="card-title">AAX → M4B / M4A</h3>
+                            <p class="card-description">Convert Audible files preserving chapters & cover art</p>
+                        </div>
+                    </div>
+
+                    <form id="aaxForm">
+                        <div class="form-group">
+                            <label>Audible AAX File</label>
+                            <div class="file-drop-zone" id="aaxDropZone">
+                                <input type="file" id="aaxFile" accept=".aax,.aa">
+                                <div class="file-drop-icon"
+                                    style="background: linear-gradient(135deg, #f59e0b, #ef4444);">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                                        <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                                    </svg>
+                                </div>
+                                <div class="file-drop-text">Click or drag your AAX file here</div>
+                                <div class="file-drop-hint">Audible AAX or AA file</div>
+                                <div class="file-info" id="aaxFileInfo" style="display: none;"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Activation Bytes (8 hex characters)</label>
+                            <input type="text" id="activationBytes" placeholder="e.g. 1a2b3c4d" maxlength="8"
+                                style="font-family:'JetBrains Mono',monospace;letter-spacing:0.1em;">
+                        </div>
+
+                        <div class="form-group" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                            <div>
+                                <label>Output Format</label>
+                                <select id="aaxOutputFormat">
+                                    <option value="m4b">M4B (Audiobook)</option>
+                                    <option value="m4a">M4A (Audio)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label>Output Name (optional)</label>
+                                <input type="text" id="aaxOutputName" placeholder="Auto-generated">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label
+                                style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;text-transform:none;">
+                                <input type="checkbox" id="extractCover" style="width:auto;">
+                                Extract cover art as separate image
+                            </label>
+                        </div>
+
+                        <button type="submit" class="btn" id="convertAaxBtn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"></path>
+                            </svg>
+                            <span id="aaxBtnText">Convert AAX</span>
+                        </button>
+                    </form>
+                </div>
+
             </div>
 
             <!-- Right Column: Chapter Builder & Preview -->
@@ -1161,8 +1629,10 @@
                             </div>
                         </div>
 
-                        <button type="button" class="btn btn-secondary" id="addChapterBtn" style="width: 100%; margin-bottom: 1rem;">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <button type="button" class="btn btn-secondary" id="addChapterBtn"
+                            style="width: 100%; margin-bottom: 1rem;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
                                 <line x1="12" y1="5" x2="12" y2="19"></line>
                                 <line x1="5" y1="12" x2="19" y2="12"></line>
                             </svg>
@@ -1171,7 +1641,8 @@
 
                         <div class="chapter-actions">
                             <button type="button" class="btn btn-secondary btn-sm" id="toggleBatchBtn">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
                                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                                     <polyline points="14 2 14 8 20 8"></polyline>
                                     <line x1="16" y1="13" x2="8" y2="13"></line>
@@ -1181,15 +1652,19 @@
                                 Batch Import
                             </button>
                             <button type="button" class="btn btn-secondary btn-sm" id="exportChaptersBtn">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
                                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"></path>
                                 </svg>
                                 Export .txt
                             </button>
                             <button type="button" class="btn btn-secondary btn-sm" id="clearChaptersBtn">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
                                     <polyline points="3 6 5 6 21 6"></polyline>
-                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                    <path
+                                        d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                                    </path>
                                 </svg>
                                 Clear All
                             </button>
@@ -1197,8 +1672,10 @@
 
                         <div class="batch-import-area" id="batchArea">
                             <label>Batch Import Chapters</label>
-                            <textarea id="batchInput" placeholder="Paste chapter list here...&#10;&#10;Chapter Title, Duration&#10;Introduction, 2:30&#10;Chapter 1, 10:00&#10;Chapter 2, 15:30"></textarea>
-                            <button type="button" class="btn btn-secondary btn-sm" style="margin-top: 0.5rem;" id="applyBatchBtn">Apply Batch Data</button>
+                            <textarea id="batchInput"
+                                placeholder="Paste chapter list here...&#10;&#10;Chapter Title, Duration&#10;Introduction, 2:30&#10;Chapter 1, 10:00&#10;Chapter 2, 15:30"></textarea>
+                            <button type="button" class="btn btn-secondary btn-sm" style="margin-top: 0.5rem;"
+                                id="applyBatchBtn">Apply Batch Data</button>
                         </div>
 
                         <div class="chapter-entries" id="chaptersContainer"></div>
@@ -1214,14 +1691,16 @@
                     <div class="preview-header">
                         <div class="preview-title">FFmpeg Command Preview</div>
                         <button type="button" class="btn btn-secondary btn-sm" id="copyCommandBtn">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
                                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                                 <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
                             </svg>
                             Copy Command
                         </button>
                     </div>
-                    <div class="preview-content" id="commandPreview">ffmpeg -i input.mp3 -c:a aac -b:a 64k -map_metadata 1 -i chapters.txt output.m4b</div>
+                    <div class="preview-content" id="commandPreview">ffmpeg -i input.mp3 -c:a aac -b:a 64k -map_metadata
+                        1 -i chapters.txt output.m4b</div>
                 </div>
 
                 <!-- Progress Section -->
@@ -1348,6 +1827,16 @@
                 elements.fileTypeTabs.forEach(t => t.classList.remove('active'));
                 tab.classList.add('active');
                 state.fileType = tab.dataset.type;
+
+                // Show/hide panels based on type
+                const conversionCard = document.getElementById('conversionCard');
+                const audiobookPanel = document.getElementById('audiobookPanel');
+                const aaxPanel = document.getElementById('aaxPanel');
+
+                conversionCard.style.display = (state.fileType === 'document' || state.fileType === 'aax') ? 'none' : '';
+                audiobookPanel.classList.toggle('active', state.fileType === 'document');
+                aaxPanel.classList.toggle('active', state.fileType === 'aax');
+
                 updateFileDropZone();
                 updateConvertButtonText();
                 updateCommandPreview();
@@ -1359,7 +1848,7 @@
             elements.fileDropText.textContent = isM3U8 ? 'Click or drag your M3U8 file here' : 'Click or drag your MP3 file here';
             elements.fileDropHint.textContent = isM3U8 ? 'M3U8 or HLS stream file' : 'MP3 audio file';
             elements.sourceFile.accept = isM3U8 ? '.m3u8,.m3u' : '.mp3,audio/mpeg';
-            
+
             // Clear file info if switching types
             if (state.fileInfo && state.fileInfo.type !== state.fileType) {
                 clearFileSelection();
@@ -1376,7 +1865,7 @@
 
         // File Upload
         elements.fileDropZone.addEventListener('click', () => elements.sourceFile.click());
-        
+
         elements.fileDropZone.addEventListener('dragover', (e) => {
             e.preventDefault();
             elements.fileDropZone.classList.add('drag-over');
@@ -1404,9 +1893,9 @@
         function handleFileSelect(file) {
             const isM3U8 = state.fileType === 'm3u8';
             const validExtensions = isM3U8 ? ['.m3u8', '.m3u'] : ['.mp3'];
-            const isValid = validExtensions.some(ext => file.name.toLowerCase().endsWith(ext)) || 
-                          (isM3U8 && file.type === 'application/x-mpegurl') ||
-                          (isM3U8 && file.type === 'audio/mpegurl');
+            const isValid = validExtensions.some(ext => file.name.toLowerCase().endsWith(ext)) ||
+                (isM3U8 && file.type === 'application/x-mpegurl') ||
+                (isM3U8 && file.type === 'audio/mpegurl');
 
             if (!isValid) {
                 showToast(`Invalid file type. Please select a ${state.fileType.toUpperCase()} file.`, 'error');
@@ -1458,7 +1947,7 @@
         // Chapter Builder
         function parseDurationInput(input) {
             if (!input.trim()) return null;
-            
+
             if (state.durationMode === 'minutes') {
                 // Treat as minutes
                 const minutes = parseFloat(input);
@@ -1554,7 +2043,7 @@
                 // Subtract duration from cumulative time and recalculate all subsequent chapters
                 const removedDuration = state.chapters[index].duration;
                 state.chapters.splice(index, 1);
-                
+
                 // Recalculate all timestamps
                 state.cumulativeTime = 0;
                 state.chapters.forEach(chapter => {
@@ -1601,7 +2090,7 @@
                     const title = parts[0].trim();
                     const durationStr = parts[1].trim();
                     const duration = parseDurationInput(durationStr);
-                    
+
                     if (title && duration !== null) {
                         const chapter = {
                             id: Date.now() + addedCount,
@@ -1637,7 +2126,7 @@
                 return;
             }
 
-            const content = state.chapters.map(chapter => 
+            const content = state.chapters.map(chapter =>
                 `${chapter.start_time_formatted} - ${chapter.title}`
             ).join('\n');
 
@@ -1648,7 +2137,7 @@
             a.download = 'chapters.txt';
             a.click();
             URL.revokeObjectURL(url);
-            
+
             showToast('Chapters exported successfully', 'success');
         });
 
@@ -1659,10 +2148,10 @@
                 return;
             }
 
-            const preview = state.chapters.map(chapter => 
+            const preview = state.chapters.map(chapter =>
                 `${chapter.start_time_formatted} - ${chapter.title} (${formatTime(chapter.duration)})`
             ).join('\n');
-            
+
             elements.chaptersPreview.textContent = preview;
         }
 
@@ -1670,16 +2159,16 @@
         function updateCommandPreview() {
             const isM4B = state.fileType === 'mp3';
             const outputExt = isM4B ? 'm4b' : 'mkv';
-            const outputName = state.fileInfo ? 
-                (elements.outputName.value.trim() || `output.${outputExt}`) : 
+            const outputName = state.fileInfo ?
+                (elements.outputName.value.trim() || `output.${outputExt}`) :
                 `output.${outputExt}`;
 
             let cmd = `ffmpeg -i input.${state.fileType} -c:a ${document.getElementById('audioQuality').value}`;
-            
+
             if (state.chapters.length > 0) {
                 cmd += ` -map_metadata 1 -i chapters.txt`;
             }
-            
+
             cmd += ` ${outputName}`;
 
             elements.commandPreview.textContent = cmd;
@@ -1698,7 +2187,7 @@
         // Form Submission
         elements.conversionForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
+
             if (!state.smartMode) {
                 showToast('Conversion mode is disabled. Enable it to convert files.', 'info');
                 return;
@@ -1720,7 +2209,7 @@
             formData.append('output_name', elements.outputName.value.trim() || '');
             formData.append('file_type', state.fileType);
             formData.append('audio_quality', document.getElementById('audioQuality').value);
-            
+
             if (state.chapters.length > 0) {
                 formData.append('chapters', JSON.stringify(state.chapters));
             }
@@ -1738,7 +2227,7 @@
             elements.statusText.textContent = 'Starting conversion...';
             elements.statusSpinner.style.display = 'inline-block';
             elements.convertBtn.disabled = true;
-            
+
             simulateProgress();
         }
 
@@ -1759,7 +2248,7 @@
         async function performConversion(formData) {
             try {
                 elements.statusText.textContent = 'Uploading file...';
-                
+
                 const response = await fetch('/api/convert', {
                     method: 'POST',
                     body: formData
@@ -1792,7 +2281,7 @@
                 elements.statusBadge.className = 'status-badge success';
                 elements.statusText.textContent = 'Conversion complete!';
                 elements.statusSpinner.style.display = 'none';
-                
+
                 showToast('Conversion completed successfully!', 'success');
 
                 // Reset after delay
@@ -1805,7 +2294,7 @@
                 elements.statusText.textContent = 'Conversion failed';
                 elements.statusSpinner.style.display = 'none';
                 showToast(error.message, 'error');
-                
+
                 setTimeout(() => {
                     resetConversion();
                 }, 5000);
@@ -1827,7 +2316,7 @@
         function showToast(message, type = 'info') {
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
-            
+
             let icon = '';
             if (type === 'success') icon = '✓';
             else if (type === 'error') icon = '✕';
@@ -1848,6 +2337,288 @@
             updateCommandPreview();
             updateNextTimestamp();
         }
+
+        // ── Document-to-Audiobook Logic ──
+
+        // Load saved API key
+        (function loadSavedApiKey() {
+            const saved = localStorage.getItem('bpm4b-openrouter-key');
+            if (saved) document.getElementById('apiKeyInput').value = saved;
+        })();
+
+        // Toggle API key visibility
+        document.getElementById('toggleApiKey').addEventListener('click', () => {
+            const input = document.getElementById('apiKeyInput');
+            input.type = input.type === 'password' ? 'text' : 'password';
+        });
+
+        // Save API key on change
+        document.getElementById('apiKeyInput').addEventListener('change', (e) => {
+            localStorage.setItem('bpm4b-openrouter-key', e.target.value);
+        });
+
+        // Document file drop zone
+        const docDropZone = document.getElementById('docDropZone');
+        const docFileInput = document.getElementById('docFile');
+        let selectedDocFile = null;
+
+        docDropZone.addEventListener('click', () => docFileInput.click());
+        docDropZone.addEventListener('dragover', (e) => { e.preventDefault(); docDropZone.classList.add('drag-over'); });
+        docDropZone.addEventListener('dragleave', () => docDropZone.classList.remove('drag-over'));
+        docDropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            docDropZone.classList.remove('drag-over');
+            if (e.dataTransfer.files.length > 0) handleDocFileSelect(e.dataTransfer.files[0]);
+        });
+        docFileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) handleDocFileSelect(e.target.files[0]);
+        });
+
+        function handleDocFileSelect(file) {
+            const validExts = ['.pdf', '.docx', '.doc', '.txt', '.epub'];
+            const ext = '.' + file.name.split('.').pop().toLowerCase();
+            if (!validExts.includes(ext)) {
+                showToast('Please select a PDF, DOCX, TXT, or EPUB file', 'error');
+                return;
+            }
+            selectedDocFile = file;
+            const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+            document.getElementById('docFileInfo').innerHTML = `
+                <div><strong>${file.name}</strong><br><small>${sizeMB} MB</small></div>
+                <button type="button" class="remove-file" onclick="clearDocFile()">×</button>
+            `;
+            document.getElementById('docFileInfo').style.display = 'flex';
+            const baseName = file.name.replace(/\.[^/.]+$/, '');
+            document.getElementById('audiobookOutputName').value = baseName + '.m4b';
+            showToast('Document selected', 'success');
+        }
+
+        function clearDocFile() {
+            selectedDocFile = null;
+            docFileInput.value = '';
+            document.getElementById('docFileInfo').style.display = 'none';
+            document.getElementById('chapterPreviewArea').style.display = 'none';
+        }
+
+        // Preview chapters
+        document.getElementById('previewChaptersBtn').addEventListener('click', async () => {
+            if (!selectedDocFile) { showToast('Please select a document first', 'error'); return; }
+
+            const btn = document.getElementById('previewChaptersBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span> Analyzing...';
+
+            try {
+                const formData = new FormData();
+                formData.append('document_file', selectedDocFile);
+                const res = await fetch('/api/preview-chapters', { method: 'POST', body: formData });
+                if (!res.ok) { const err = await res.json(); throw new Error(err.error); }
+
+                const data = await res.json();
+                const previewArea = document.getElementById('chapterPreviewArea');
+                const infoEl = document.getElementById('estimatedInfo');
+                const listEl = document.getElementById('chapterPreviewList');
+
+                infoEl.innerHTML = `
+                    <div class="info-item"><span class="info-label">Chapters</span><span class="info-value">${data.chapters.length}</span></div>
+                    <div class="info-item"><span class="info-label">Est. Duration</span><span class="info-value">${data.estimatedDuration}</span></div>
+                    <div class="info-item"><span class="info-label">Characters</span><span class="info-value">${data.totalCharacters.toLocaleString()}</span></div>
+                `;
+
+                listEl.innerHTML = data.chapters.map(ch => `
+                    <div class="chapter-preview-item">
+                        <span class="chapter-num">${ch.number}</span>
+                        <span class="chapter-title">${ch.title}</span>
+                        <div class="chapter-meta">${ch.wordCount.toLocaleString()} words</div>
+                        <div class="chapter-excerpt">${ch.preview}</div>
+                    </div>
+                `).join('');
+
+                previewArea.style.display = 'block';
+                showToast(`Found ${data.chapters.length} chapters`, 'success');
+
+            } catch (error) {
+                showToast(error.message || 'Chapter preview failed', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg> Preview Chapters';
+            }
+        });
+
+        // Generate audiobook
+        document.getElementById('audiobookForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!selectedDocFile) { showToast('Please select a document', 'error'); return; }
+
+            const apiKey = document.getElementById('apiKeyInput').value.trim();
+            if (!apiKey) { showToast('Please enter your OpenRouter API key', 'error'); return; }
+
+            const btn = document.getElementById('generateAudiobookBtn');
+            const btnText = document.getElementById('generateBtnText');
+            btn.disabled = true;
+            btnText.textContent = 'Generating...';
+
+            const progressEl = document.getElementById('audiobookProgress');
+            progressEl.style.display = 'block';
+
+            // Reset pipeline steps
+            ['stepParsing', 'stepDetecting', 'stepGenerating', 'stepAssembling', 'stepComplete'].forEach(id => {
+                document.getElementById(id).className = 'pipeline-step';
+            });
+
+            try {
+                const formData = new FormData();
+                formData.append('document_file', selectedDocFile);
+                formData.append('api_key', apiKey);
+                formData.append('voice', document.getElementById('ttsVoice').value);
+                formData.append('model', document.getElementById('ttsModel').value);
+                formData.append('speed', document.getElementById('ttsSpeed').value);
+                formData.append('output_name', document.getElementById('audiobookOutputName').value.trim());
+                formData.append('audio_quality', document.getElementById('audioQuality').value);
+
+                const res = await fetch('/api/document-to-audiobook', { method: 'POST', body: formData });
+
+                if (!res.ok) {
+                    const err = await res.json();
+                    throw new Error(err.error || 'Generation failed');
+                }
+
+                // Download the file
+                const contentDisposition = res.headers.get('Content-Disposition');
+                let filename = 'audiobook.m4b';
+                if (contentDisposition) {
+                    const match = contentDisposition.match(/filename="?([^"]+)"?/);
+                    if (match) filename = match[1];
+                }
+
+                const blob = await res.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                a.click();
+                window.URL.revokeObjectURL(url);
+
+                // Mark all steps as done
+                ['stepParsing', 'stepDetecting', 'stepGenerating', 'stepAssembling', 'stepComplete'].forEach(id => {
+                    document.getElementById(id).className = 'pipeline-step done';
+                });
+
+                showToast('Audiobook generated successfully!', 'success');
+            } catch (error) {
+                showToast(error.message || 'Audiobook generation failed', 'error');
+                document.getElementById('stepComplete').className = 'pipeline-step error';
+            } finally {
+                btn.disabled = false;
+                btnText.textContent = 'Generate Audiobook';
+            }
+        });
+
+        // ── AAX Conversion Logic ──
+
+        const aaxDropZone = document.getElementById('aaxDropZone');
+        const aaxFileInput = document.getElementById('aaxFile');
+        let selectedAaxFile = null;
+
+        aaxDropZone.addEventListener('click', () => aaxFileInput.click());
+        aaxDropZone.addEventListener('dragover', (e) => { e.preventDefault(); aaxDropZone.classList.add('drag-over'); });
+        aaxDropZone.addEventListener('dragleave', () => aaxDropZone.classList.remove('drag-over'));
+        aaxDropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            aaxDropZone.classList.remove('drag-over');
+            if (e.dataTransfer.files.length > 0) handleAaxFileSelect(e.dataTransfer.files[0]);
+        });
+        aaxFileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) handleAaxFileSelect(e.target.files[0]);
+        });
+
+        function handleAaxFileSelect(file) {
+            const ext = '.' + file.name.split('.').pop().toLowerCase();
+            if (ext !== '.aax' && ext !== '.aa') {
+                showToast('Please select an AAX or AA file', 'error');
+                return;
+            }
+            selectedAaxFile = file;
+            const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+            document.getElementById('aaxFileInfo').innerHTML = `
+                <div><strong>${file.name}</strong><br><small>${sizeMB} MB</small></div>
+                <button type="button" class="remove-file" onclick="clearAaxFile()">×</button>
+            `;
+            document.getElementById('aaxFileInfo').style.display = 'flex';
+            const baseName = file.name.replace(/\.[^/.]+$/, '');
+            document.getElementById('aaxOutputName').value = baseName + '.' + document.getElementById('aaxOutputFormat').value;
+            showToast('AAX file selected', 'success');
+        }
+
+        function clearAaxFile() {
+            selectedAaxFile = null;
+            aaxFileInput.value = '';
+            document.getElementById('aaxFileInfo').style.display = 'none';
+        }
+
+        // Update output name when format changes
+        document.getElementById('aaxOutputFormat').addEventListener('change', () => {
+            const currentName = document.getElementById('aaxOutputName').value;
+            if (currentName) {
+                const baseName = currentName.replace(/\.[^/.]+$/, '');
+                document.getElementById('aaxOutputName').value = baseName + '.' + document.getElementById('aaxOutputFormat').value;
+            }
+        });
+
+        // AAX conversion form submit
+        document.getElementById('aaxForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!selectedAaxFile) { showToast('Please select an AAX file', 'error'); return; }
+
+            const activationBytes = document.getElementById('activationBytes').value.trim();
+            if (!activationBytes || !/^[0-9a-fA-F]{8}$/.test(activationBytes)) {
+                showToast('Activation bytes must be 8 hex characters', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('convertAaxBtn');
+            const btnText = document.getElementById('aaxBtnText');
+            btn.disabled = true;
+            btnText.textContent = 'Converting...';
+
+            try {
+                const formData = new FormData();
+                formData.append('aax_file', selectedAaxFile);
+                formData.append('activation_bytes', activationBytes);
+                formData.append('output_format', document.getElementById('aaxOutputFormat').value);
+                formData.append('output_name', document.getElementById('aaxOutputName').value.trim());
+                formData.append('extract_cover', document.getElementById('extractCover').checked);
+
+                const res = await fetch('/api/convert-aax', { method: 'POST', body: formData });
+
+                if (!res.ok) {
+                    const err = await res.json();
+                    throw new Error(err.error || 'AAX conversion failed');
+                }
+
+                const contentDisposition = res.headers.get('Content-Disposition');
+                let filename = 'output.m4b';
+                if (contentDisposition) {
+                    const match = contentDisposition.match(/filename="?([^"]+)"?/);
+                    if (match) filename = match[1];
+                }
+
+                const blob = await res.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                a.click();
+                window.URL.revokeObjectURL(url);
+
+                showToast('AAX conversion complete!', 'success');
+            } catch (error) {
+                showToast(error.message || 'AAX conversion failed', 'error');
+            } finally {
+                btn.disabled = false;
+                btnText.textContent = 'Convert AAX';
+            }
+        });
 
         // Initialize on load
         document.addEventListener('DOMContentLoaded', init);

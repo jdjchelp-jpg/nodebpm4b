@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 
 /**
- * BPM4B - Professional Multimedia Converter v7.0.0
- * Command-line interface for converting MP3 to M4B and M3U8 to MKV
+ * BPM4B - Professional Multimedia Converter v8.0.0
+ * Command-line interface for converting MP3 to M4B, M3U8 to MKV,
+ * Documents to Audiobooks, and AAX to M4B/M4A
  */
 
 const { Command } = require('commander');
@@ -14,7 +15,7 @@ const program = new Command();
 
 program
   .name('bpm4b')
-  .description('Professional Multimedia Converter - MP3 to M4B and M3U8 to MKV')
+  .description('Professional Multimedia Converter - MP3 to M4B, M3U8 to MKV, Document to Audiobook, AAX Converter')
   .version('8.0.0');
 
 // Web command
@@ -65,7 +66,7 @@ program
     }
   });
 
-// Convert command (supports MP3→M4B and M3U8→MKV)
+// Convert command (supports MP3->M4B and M3U8->MKV)
 program
   .command('convert')
   .description('Convert audio files from command line (auto-detects format)')
@@ -134,9 +135,131 @@ program
         audioQuality: quality
       });
 
-      console.log(`✓ Conversion complete: ${output}`);
+      console.log(`\u2713 Conversion complete: ${output}`);
     } catch (error) {
       console.error('Error during conversion:', error.message);
+      process.exit(1);
+    }
+  });
+
+// Audiobook command (Document -> M4B via TTS)
+program
+  .command('audiobook')
+  .description('Convert a document (PDF/DOCX/TXT/EPUB) to an audiobook (M4B) using TTS')
+  .argument('<input>', 'Input document file path')
+  .argument('<output>', 'Output M4B file path')
+  .requiredOption('--api-key <key>', 'OpenRouter API key')
+  .option('--voice <voice>', 'TTS voice (alloy, echo, fable, onyx, nova, shimmer)', 'alloy')
+  .option('--model <model>', 'TTS model (openai/tts-1, openai/tts-1-hd)', 'openai/tts-1')
+  .option('--speed <speed>', 'Speech speed (0.25 - 4.0)', '1.0')
+  .option('--quality <bitrate>', 'Audio quality for M4B (e.g., 64k, 128k)', '64k')
+  .option('--preview', 'Preview detected chapters without generating audio', false)
+  .action(async (input, output, options) => {
+    try {
+      if (!fs.existsSync(input)) {
+        console.error(`Error: Input file '${input}' not found`);
+        process.exit(1);
+      }
+
+      const ext = path.extname(input).toLowerCase();
+      const validExts = ['.pdf', '.docx', '.doc', '.txt', '.epub'];
+      if (!validExts.includes(ext)) {
+        console.error(`Error: Unsupported file type. Supported: ${validExts.join(', ')}`);
+        process.exit(1);
+      }
+
+      try {
+        await checkFFmpeg();
+      } catch (error) {
+        console.error('Error: FFmpeg is not available');
+        process.exit(1);
+      }
+
+      if (options.preview) {
+        const { previewChapters } = require('../lib/audiobook-builder');
+        console.log(`\nAnalyzing document: ${input}\n`);
+        const preview = await previewChapters(input);
+        console.log(`Detected ${preview.chapters.length} chapter(s):`);
+        console.log(`Estimated duration: ${preview.estimatedDuration}\n`);
+        preview.chapters.forEach((ch, i) => {
+          console.log(`  ${i + 1}. ${ch.title} (${ch.wordCount} words)`);
+          console.log(`     Preview: ${ch.preview.substring(0, 80)}...`);
+        });
+        console.log(`\nTotal characters: ${preview.totalCharacters.toLocaleString()}`);
+        return;
+      }
+
+      const { buildAudiobook } = require('../lib/audiobook-builder');
+      const outputDir = path.dirname(output);
+      if (outputDir) fs.mkdirSync(outputDir, { recursive: true });
+
+      console.log(`\nGenerating audiobook: ${input} -> ${output}`);
+      console.log(`  Voice: ${options.voice} | Model: ${options.model} | Speed: ${options.speed}\n`);
+
+      const result = await buildAudiobook(input, output, {
+        apiKey: options.apiKey,
+        voice: options.voice,
+        model: options.model,
+        speed: parseFloat(options.speed),
+        audioQuality: options.quality,
+        onProgress: (stage, detail) => {
+          console.log(`  [${stage}] ${detail}`);
+        }
+      });
+
+      console.log(`\n\u2713 Audiobook created: ${output}`);
+      console.log(`  Chapters: ${result.chapters.length}`);
+      console.log(`  Duration: ${Math.floor(result.totalDuration / 60)}m ${Math.floor(result.totalDuration % 60)}s`);
+    } catch (error) {
+      console.error('Error during audiobook generation:', error.message);
+      process.exit(1);
+    }
+  });
+
+// AAX Conversion command
+program
+  .command('convert-aax')
+  .description('Convert Audible AAX to M4B/M4A (preserves chapters and cover art)')
+  .argument('<input>', 'Input AAX file path')
+  .argument('<output>', 'Output file path (.m4b or .m4a)')
+  .requiredOption('--activation-bytes <hex>', '8-character hex activation bytes for your Audible account')
+  .option('--extract-cover', 'Extract cover art as a separate image', false)
+  .action(async (input, output, options) => {
+    try {
+      if (!fs.existsSync(input)) {
+        console.error(`Error: Input file '${input}' not found`);
+        process.exit(1);
+      }
+
+      const ext = path.extname(input).toLowerCase();
+      if (ext !== '.aax' && ext !== '.aa') {
+        console.error('Error: Input must be an AAX or AA file');
+        process.exit(1);
+      }
+
+      try {
+        await checkFFmpeg();
+      } catch (error) {
+        console.error('Error: FFmpeg is not available');
+        process.exit(1);
+      }
+
+      const { convertAAX } = require('../lib/aax-converter');
+      const outputDir = path.dirname(output);
+      if (outputDir) fs.mkdirSync(outputDir, { recursive: true });
+
+      console.log(`\nConverting AAX: ${input} -> ${output}`);
+
+      const result = await convertAAX(input, output, options.activationBytes, {
+        extractCover: options.extractCover
+      });
+
+      console.log(`\u2713 Conversion complete: ${output}`);
+      if (result.coverPath) {
+        console.log(`\u2713 Cover art extracted: ${result.coverPath}`);
+      }
+    } catch (error) {
+      console.error('Error during AAX conversion:', error.message);
       process.exit(1);
     }
   });
