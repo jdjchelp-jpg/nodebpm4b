@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
 /**
- * BPM4B - Professional Multimedia Converter v8.0.0
+ * BPM4B - Professional Multimedia Converter v9.0.0
  * Command-line interface for converting MP3 to M4B, M3U8 to MKV,
- * Documents to Audiobooks, and AAX to M4B/M4A
+ * Documents to Audiobooks (Local Kokoro-82M), and AAX to M4B/M4A
  */
 
 const { Command } = require('commander');
@@ -15,8 +15,8 @@ const program = new Command();
 
 program
   .name('bpm4b')
-  .description('Professional Multimedia Converter - MP3 to M4B, M3U8 to MKV, Document to Audiobook, AAX Converter')
-  .version('8.0.0');
+  .description('Professional Multimedia Converter - Local Kokoro-82M TTS & Premium Audio Conversion')
+  .version('9.0.0 (AudioBPM4B v9)');
 
 // Web command
 program
@@ -28,7 +28,8 @@ program
   .action(async (options) => {
     console.log(`
 ╔═══════════════════════════════════════════════════════════════╗
-║          BPM4B Professional Converter v8.0.0                 ║
+║          BPM4B Professional Converter v9.0.0                 ║
+║  (Local Kokoro-82M Engine | No API Keys Required)             ║
 ║                                                               ║
 ║  Web interface starting...                                    ║
 ║  URL: http://${options.host !== '0.0.0.0' ? options.host : 'localhost'}:${options.port}                    ║
@@ -145,12 +146,10 @@ program
 // Audiobook command (Document -> M4B via TTS)
 program
   .command('audiobook')
-  .description('Convert a document (PDF/DOCX/TXT/EPUB) to an audiobook (M4B) using TTS')
+  .description('Convert a document (PDF/DOCX/TXT/EPUB) to an audiobook (M4B) using local Kokoro-82M TTS')
   .argument('<input>', 'Input document file path')
   .argument('<output>', 'Output M4B file path')
-  .requiredOption('--api-key <key>', 'OpenRouter API key')
-  .option('--voice <voice>', 'TTS voice (alloy, echo, fable, onyx, nova, shimmer)', 'alloy')
-  .option('--model <model>', 'TTS model (openai/tts-1, openai/tts-1-hd)', 'openai/tts-1')
+  .option('--voice <voice>', 'TTS voice (e.g., af_heart, af_sky, am_adam)', 'af_heart')
   .option('--speed <speed>', 'Speech speed (0.25 - 4.0)', '1.0')
   .option('--quality <bitrate>', 'Audio quality for M4B (e.g., 64k, 128k)', '64k')
   .option('--preview', 'Preview detected chapters without generating audio', false)
@@ -194,12 +193,10 @@ program
       if (outputDir) fs.mkdirSync(outputDir, { recursive: true });
 
       console.log(`\nGenerating audiobook: ${input} -> ${output}`);
-      console.log(`  Voice: ${options.voice} | Model: ${options.model} | Speed: ${options.speed}\n`);
+      console.log(`  Engine: Local Kokoro-82M | Voice: ${options.voice} | Speed: ${options.speed}\n`);
 
       const result = await buildAudiobook(input, output, {
-        apiKey: options.apiKey,
         voice: options.voice,
-        model: options.model,
         speed: parseFloat(options.speed),
         audioQuality: options.quality,
         onProgress: (stage, detail) => {

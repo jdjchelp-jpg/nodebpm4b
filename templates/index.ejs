@@ -10,403 +10,435 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
         rel="stylesheet">
     <style>
         :root {
-            /* Light mode (default) */
-            --bg-primary: #f8fafc;
-            --bg-secondary: #ffffff;
-            --bg-tertiary: #f1f5f9;
-            --text-primary: #0f172a;
-            --text-secondary: #475569;
+            /* Premium v9 Dashboard Palette (Dark Default) */
+            --bg-page: #020617;
+            --bg-sidebar: #0f172a;
+            --bg-card: #1e293b;
+            --bg-card-hover: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
             --text-muted: #64748b;
             --primary: #6366f1;
-            --primary-hover: #4f46e5;
-            --secondary: #ec4899;
+            --primary-glow: rgba(99, 102, 241, 0.4);
             --accent: #8b5cf6;
-            --success: #22c55e;
+            --success: #10b981;
             --error: #ef4444;
             --warning: #f59e0b;
-            --glass-bg: rgba(255, 255, 255, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.5);
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
-            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            --border: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(255, 255, 255, 0.15);
             --radius-sm: 8px;
             --radius-md: 12px;
-            --radius-lg: 16px;
-            --radius-xl: 24px;
+            --radius-lg: 20px;
+            --radius-xl: 32px;
+            --font-main: 'Outfit', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --sidebar-width: 280px;
         }
 
-        [data-theme="dark"] {
-            --bg-primary: #0f172a;
-            --bg-secondary: #1e293b;
-            --bg-tertiary: #334155;
-            --text-primary: #f8fafc;
-            --text-secondary: #cbd5e1;
+        [data-theme="light"] {
+            --bg-page: #f8fafc;
+            --bg-sidebar: #ffffff;
+            --bg-card: #ffffff;
+            --bg-card-hover: #f1f5f9;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
             --text-muted: #94a3b8;
-            --glass-bg: rgba(30, 41, 59, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
-            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+            --border: rgba(0, 0, 0, 0.06);
+            --border-hover: rgba(0, 0, 0, 0.1);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-primary);
+            font-family: var(--font-body);
+            background-color: var(--bg-page);
             color: var(--text-primary);
             min-height: 100vh;
-            padding: 2rem 1rem;
-            line-height: 1.6;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            display: flex;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Layout Structure */
+        .app-shell {
+            display: flex;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--bg-sidebar);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 2rem 1.5rem;
+            z-index: 50;
+        }
+
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            position: relative;
+            padding: 2.5rem;
             background-image:
-                radial-gradient(at 20% 20%, rgba(99, 102, 241, 0.08) 0px, transparent 50%),
-                radial-gradient(at 80% 80%, rgba(236, 72, 153, 0.08) 0px, transparent 50%);
+                radial-gradient(circle at 0% 0%, rgba(99, 102, 241, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 100% 100%, rgba(139, 92, 246, 0.05) 0%, transparent 40%);
         }
 
-        [data-theme="dark"] body {
-            background-image:
-                radial-gradient(at 20% 20%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
-                radial-gradient(at 80% 80%, rgba(236, 72, 153, 0.15) 0px, transparent 50%);
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        /* Header */
-        header {
-            text-align: center;
+        /* Brand section */
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
             margin-bottom: 3rem;
-            animation: fadeInDown 0.8s ease-out;
         }
 
-        .header-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto 2rem;
-            padding: 0 1rem;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .logo-icon {
-            width: 48px;
-            height: 48px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border-radius: var(--radius-md);
+        .brand-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: var(--shadow-lg);
+            box-shadow: 0 4px 12px var(--primary-glow);
         }
 
-        .logo-icon svg {
-            width: 24px;
-            height: 24px;
-            stroke: white;
-        }
-
-        .logo-text h1 {
-            font-size: 1.75rem;
-            font-weight: 800;
-            background: linear-gradient(to right, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin: 0;
+        .brand h1 {
+            font-family: var(--font-main);
+            font-size: 1.5rem;
+            font-weight: 700;
             letter-spacing: -0.025em;
         }
 
-        .logo-text .tagline {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-
-        .header-controls {
+        /* Navigation */
+        .nav-group {
             display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .version-badge {
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            padding: 0.5rem 1rem;
-            border-radius: 999px;
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: var(--primary);
-            box-shadow: var(--shadow-sm);
-        }
-
-        /* Toggle Switch */
-        .toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 52px;
-            height: 28px;
-        }
-
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .toggle-slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: var(--bg-tertiary);
-            border: 2px solid var(--glass-border);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border-radius: 999px;
-        }
-
-        .toggle-slider:before {
-            position: absolute;
-            content: "";
-            height: 20px;
-            width: 20px;
-            left: 2px;
-            bottom: 2px;
-            background-color: white;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border-radius: 50%;
-            box-shadow: var(--shadow-sm);
-        }
-
-        input:checked+.toggle-slider {
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            border-color: var(--primary);
-        }
-
-        input:checked+.toggle-slider:before {
-            transform: translateX(24px);
-        }
-
-        /* Main Grid Layout */
-        .main-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
+            flex-direction: column;
+            gap: 0.5rem;
             margin-bottom: 2rem;
         }
 
+        .nav-label {
+            font-family: var(--font-main);
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            padding-left: 0.5rem;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-md);
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9375rem;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+
+        .nav-item:hover {
+            color: var(--text-primary);
+            background: var(--bg-card-hover);
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+            background: rgba(99, 102, 241, 0.1);
+            border-color: rgba(99, 102, 241, 0.2);
+        }
+
+        .nav-item svg {
+            width: 20px;
+            height: 20px;
+            opacity: 0.7;
+        }
+
+        .nav-item.active svg {
+            opacity: 1;
+            stroke: var(--primary);
+        }
+
+        /* Version & Theme switch at bottom */
+        .sidebar-footer {
+            margin-top: auto;
+            border-top: 1px solid var(--border);
+            padding-top: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .version-tag {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .theme-toggle-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        /* Bento Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            grid-auto-rows: minmax(120px, auto);
+            gap: 1.5rem;
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+
+        .bento-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1.75rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .bento-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-4px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Span Helpers */
+        .col-span-full {
+            grid-column: span 12;
+        }
+
+        .col-span-8 {
+            grid-column: span 8;
+        }
+
+        .col-span-4 {
+            grid-column: span 4;
+        }
+
+        .col-span-6 {
+            grid-column: span 6;
+        }
+
+        .row-span-2 {
+            grid-row: span 2;
+        }
+
+        .row-span-3 {
+            grid-row: span 3;
+        }
+
         @media (max-width: 1024px) {
-            .main-grid {
-                grid-template-columns: 1fr;
+
+            .col-span-8,
+            .col-span-4,
+            .col-span-6 {
+                grid-column: span 12;
             }
-        }
-
-        /* Cards */
-        .card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-xl);
-            padding: 2rem;
-            box-shadow: var(--shadow-lg);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            animation: fadeInUp 0.6s ease-out;
-        }
-
-        .card:hover {
-            box-shadow: var(--shadow-xl);
-            transform: translateY(-2px);
         }
 
         .card-header {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid var(--glass-border);
-        }
-
-        .card-icon {
-            width: 48px;
-            height: 48px;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            border-radius: var(--radius-md);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .card-icon svg {
-            width: 24px;
-            height: 24px;
-            stroke: white;
+            margin-bottom: 2rem;
         }
 
         .card-title {
+            font-family: var(--font-main);
             font-size: 1.25rem;
             font-weight: 700;
             color: var(--text-primary);
-            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.875rem;
         }
 
-        .card-description {
-            font-size: 0.875rem;
-            color: var(--text-muted);
-            margin-top: 0.25rem;
+        .card-icon-sm {
+            width: 36px;
+            height: 36px;
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
         }
 
-        /* Form Elements */
-        .form-group {
+        /* Tool views */
+        .tool-content {
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .tool-content.active {
+            display: block;
+        }
+
+        /* Inputs & Controls */
+        .input-group {
             margin-bottom: 1.5rem;
         }
 
         label {
             display: block;
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-            margin-bottom: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 0.625rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
 
-        input[type="text"],
-        textarea,
-        select {
+        .form-select,
+        .form-input,
+        textarea {
             width: 100%;
-            background: var(--bg-tertiary);
-            border: 1px solid var(--glass-border);
+            background: var(--bg-sidebar);
+            border: 1px solid var(--border);
             border-radius: var(--radius-md);
-            padding: 0.875rem 1.25rem;
+            padding: 0.875rem 1.125rem;
             color: var(--text-primary);
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            font-family: inherit;
+            font-family: var(--font-body);
+            font-size: 0.9375rem;
+            transition: all 0.2s ease;
         }
 
-        input[type="text"]:focus,
-        textarea:focus,
-        select:focus {
+        .form-select:focus,
+        .form-input:focus,
+        textarea:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
         }
 
         textarea {
             min-height: 120px;
             resize: vertical;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 13px;
         }
 
-        /* File Drop Zone */
-        .file-drop-zone {
-            border: 2px dashed var(--glass-border);
+        /* Drop Zone */
+        .drop-zone {
+            border: 2px dashed var(--border);
             border-radius: var(--radius-lg);
-            padding: 2.5rem;
+            padding: 3.5rem 2rem;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s ease;
-            background: var(--bg-tertiary);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .file-drop-zone:hover,
-        .file-drop-zone.drag-over {
-            border-color: var(--primary);
-            background: rgba(99, 102, 241, 0.05);
-        }
-
-        [data-theme="dark"] .file-drop-zone:hover,
-        [data-theme="dark"] .file-drop-zone.drag-over {
-            background: rgba(99, 102, 241, 0.1);
-        }
-
-        .file-drop-zone input[type="file"] {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            cursor: pointer;
-        }
-
-        .file-drop-icon {
-            width: 64px;
-            height: 64px;
-            margin: 0 auto 1rem;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border-radius: var(--radius-md);
+            transition: all 0.2s ease;
+            background: rgba(255, 255, 255, 0.015);
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
+            gap: 1rem;
         }
 
-        .file-drop-icon svg {
-            width: 32px;
-            height: 32px;
-            stroke: white;
+        .drop-zone:hover,
+        .drop-zone.drag-over {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.04);
+            transform: scale(1.005);
         }
 
-        .file-drop-text {
-            font-size: 1rem;
+        .drop-zone-icon {
+            width: 48px;
+            height: 48px;
+            color: var(--primary);
+            opacity: 0.9;
+        }
+
+        .drop-zone p {
             font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 0.5rem;
+            font-size: 1rem;
         }
 
-        .file-drop-hint {
-            font-size: 0.875rem;
+        .drop-zone span {
+            font-size: 0.8125rem;
             color: var(--text-muted);
         }
 
-        .file-info {
-            margin-top: 1rem;
-            padding: 1rem;
-            background: rgba(34, 197, 94, 0.1);
-            border: 1px solid rgba(34, 197, 94, 0.2);
+        .active-file-indicator {
+            margin-top: 1.5rem;
+            padding: 1rem 1.25rem;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
             border-radius: var(--radius-md);
-            color: var(--success);
-            font-size: 0.875rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            font-size: 0.875rem;
+            color: var(--success);
+            font-weight: 600;
         }
 
-        .file-info .remove-file {
-            background: none;
-            border: none;
-            color: var(--error);
-            cursor: pointer;
-            font-size: 1.25rem;
-            padding: 0.25rem;
-            line-height: 1;
+        /* Engine Status Widget */
+        .engine-status-card {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .status-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 0.375rem 0.875rem;
+            border-radius: 999px;
+        }
+
+        .status-ready {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+
+        .status-loading {
+            background: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
         }
 
         /* Buttons */
@@ -414,809 +446,255 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
-            padding: 0.875rem 1.5rem;
-            background: linear-gradient(135deg, var(--primary), var(--primary-hover));
-            color: white;
-            border: none;
+            gap: 0.75rem;
+            padding: 1rem 1.5rem;
             border-radius: var(--radius-md);
-            font-size: 1rem;
-            font-weight: 600;
+            font-weight: 700;
+            font-size: 0.9375rem;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
             width: 100%;
+            font-family: var(--font-main);
         }
 
-        .btn:hover {
-            filter: brightness(1.1);
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-md);
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
         }
 
-        .btn:active {
-            transform: translateY(0);
-        }
-
-        .btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.45);
         }
 
         .btn-secondary {
-            background: var(--bg-tertiary);
-            border: 1px solid var(--glass-border);
+            background: var(--bg-card-hover);
             color: var(--text-primary);
+            border: 1px solid var(--border);
         }
 
-        .btn-secondary:hover {
-            background: var(--bg-secondary);
-        }
-
-        .btn-sm {
-            padding: 0.5rem 1rem;
-            font-size: 0.875rem;
-            width: auto;
-        }
-
-        .btn-icon {
-            width: 36px;
-            height: 36px;
-            padding: 0;
-        }
-
-        /* Smart Mode Toggle */
-        .smart-mode-section {
-            background: var(--bg-secondary);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-lg);
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            box-shadow: var(--shadow-md);
-        }
-
-        .smart-mode-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-
-        .smart-mode-title {
-            font-size: 1.125rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .smart-mode-description {
-            font-size: 0.875rem;
-            color: var(--text-muted);
-            line-height: 1.5;
-        }
-
-        .mode-indicator {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 999px;
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: var(--primary);
-        }
-
-        /* Chapter Builder */
-        .chapter-builder {
-            background: var(--bg-secondary);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-lg);
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            box-shadow: var(--shadow-md);
-        }
-
-        .chapter-builder-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .chapter-builder-title {
-            font-size: 1.125rem;
-            font-weight: 700;
-            color: var(--text-primary);
-        }
-
-        .duration-toggle {
-            display: flex;
-            gap: 0.5rem;
-            background: var(--bg-tertiary);
-            padding: 0.25rem;
-            border-radius: var(--radius-md);
-        }
-
-        .duration-toggle button {
-            padding: 0.5rem 1rem;
-            border: none;
-            background: transparent;
-            color: var(--text-muted);
-            font-size: 0.875rem;
-            font-weight: 600;
-            cursor: pointer;
-            border-radius: var(--radius-sm);
-            transition: all 0.3s ease;
-        }
-
-        .duration-toggle button.active {
-            background: var(--bg-secondary);
-            color: var(--primary);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .chapter-input-grid {
-            display: grid;
-            grid-template-columns: 1fr 150px 120px;
-            gap: 0.75rem;
-            margin-bottom: 1rem;
-            align-items: end;
-        }
-
-        .input-group {
+        /* Progress Display */
+        .progress-card {
+            margin-top: auto;
             display: flex;
             flex-direction: column;
+            gap: 1rem;
         }
 
-        .input-group label {
-            margin-bottom: 0.375rem;
-            font-size: 0.75rem;
-        }
-
-        .timestamp-display {
-            padding: 0.875rem 1.25rem;
-            background: var(--bg-tertiary);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-md);
-            color: var(--primary);
-            font-family: 'JetBrains Mono', monospace;
-            font-weight: 600;
-            font-size: 1rem;
-            text-align: center;
-        }
-
-        .chapter-entries {
-            max-height: 400px;
-            overflow-y: auto;
-            margin-bottom: 1rem;
-            padding-right: 0.5rem;
-        }
-
-        .chapter-entries::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .chapter-entries::-webkit-scrollbar-track {
-            background: var(--bg-tertiary);
-            border-radius: 999px;
-        }
-
-        .chapter-entries::-webkit-scrollbar-thumb {
-            background: var(--primary);
-            border-radius: 999px;
-        }
-
-        .chapter-entry {
-            display: grid;
-            grid-template-columns: 1fr 100px 80px 40px;
-            gap: 0.75rem;
-            align-items: center;
-            padding: 1rem;
-            background: var(--bg-tertiary);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-md);
-            margin-bottom: 0.75rem;
-            animation: slideIn 0.3s ease-out;
-            transition: all 0.3s ease;
-        }
-
-        .chapter-entry:hover {
-            border-color: var(--primary);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .chapter-entry .timestamp {
-            font-family: 'JetBrains Mono', monospace;
-            color: var(--primary);
-            font-weight: 600;
-            font-size: 0.875rem;
-            text-align: center;
-        }
-
-        .chapter-entry .duration {
-            font-family: 'JetBrains Mono', monospace;
-            color: var(--text-muted);
-            font-size: 0.875rem;
-            text-align: center;
-        }
-
-        .remove-chapter-btn {
-            background: rgba(239, 68, 68, 0.1);
-            color: var(--error);
-            border: 1px solid rgba(239, 68, 68, 0.2);
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.25rem;
-            transition: all 0.3s ease;
-            width: 36px;
-            height: 36px;
-        }
-
-        .remove-chapter-btn:hover {
-            background: var(--error);
-            color: white;
-        }
-
-        .chapter-actions {
-            display: flex;
-            gap: 0.75rem;
-            flex-wrap: wrap;
-        }
-
-        /* Preview Panel */
-        .preview-panel {
-            background: var(--bg-secondary);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-lg);
-            padding: 1.5rem;
-            margin-top: 2rem;
-            box-shadow: var(--shadow-md);
-        }
-
-        .preview-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-
-        .preview-title {
-            font-size: 1.125rem;
-            font-weight: 700;
-            color: var(--text-primary);
-        }
-
-        .preview-content {
-            background: var(--bg-tertiary);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-md);
-            padding: 1rem;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.875rem;
-            color: var(--text-primary);
-            max-height: 300px;
-            overflow-y: auto;
-            white-space: pre-wrap;
-            word-break: break-all;
-            line-height: 1.6;
-        }
-
-        .preview-content::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .preview-content::-webkit-scrollbar-track {
-            background: var(--bg-tertiary);
-            border-radius: 999px;
-        }
-
-        .preview-content::-webkit-scrollbar-thumb {
-            background: var(--primary);
-            border-radius: 999px;
-        }
-
-        /* Progress */
-        .progress-section {
-            margin-top: 2rem;
-            display: none;
-        }
-
-        .progress-section.active {
-            display: block;
-            animation: fadeIn 0.3s ease-in;
-        }
-
-        .progress-track {
-            height: 12px;
-            background: var(--bg-tertiary);
-            border-radius: 999px;
+        .progress-bar-container {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
             overflow: hidden;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border);
         }
 
-        .progress-bar {
+        .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            background: linear-gradient(to right, var(--primary), var(--accent));
             width: 0%;
-            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: width 0.4s ease-out;
             position: relative;
-            overflow: hidden;
         }
 
-        .progress-bar::after {
+        .progress-fill::after {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            animation: shimmer 2s infinite;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: shimmer 1.5s infinite;
         }
 
-        @keyframes shimmer {
-            0% {
-                transform: translateX(-100%);
-            }
-
-            100% {
-                transform: translateX(100%);
-            }
+        /* Log view */
+        .log-vessel {
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: var(--radius-md);
+            padding: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            height: 150px;
+            overflow-y: auto;
+            border: 1px solid var(--border);
         }
 
-        .status-section {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .log-line {
+            margin-bottom: 0.25rem;
+            border-left: 2px solid transparent;
+            padding-left: 0.5rem;
+        }
+
+        .log-line.info {
+            border-color: var(--primary);
+        }
+
+        .log-line.success {
+            border-color: var(--success);
+            color: var(--text-primary);
+        }
+
+        /* Chapter Preview Grid */
+        .chapter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
             margin-top: 1rem;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 0.5rem;
         }
 
-        .status-badge {
-            display: inline-flex;
+        .chapter-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .chapter-card:hover {
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .chapter-header {
+            display: flex;
             align-items: center;
             gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            border-radius: 999px;
-            font-size: 0.875rem;
-            font-weight: 600;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            color: var(--text-secondary);
-        }
-
-        .status-badge.processing {
-            background: rgba(99, 102, 241, 0.1);
-            color: var(--primary);
-            animation: pulse 2s infinite;
-        }
-
-        .status-badge.success {
-            background: rgba(34, 197, 94, 0.1);
-            color: var(--success);
-        }
-
-        .status-badge.error {
-            background: rgba(239, 68, 68, 0.1);
-            color: var(--error);
-        }
-
-        @keyframes pulse {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.7;
-            }
-        }
-
-        /* Batch Import Area */
-        .batch-import-area {
-            margin-top: 1rem;
-            display: none;
-        }
-
-        .batch-import-area.active {
-            display: block;
-            animation: fadeIn 0.3s ease-in;
-        }
-
-        /* Footer */
-        footer {
-            text-align: center;
-            margin-top: 3rem;
-            padding-top: 2rem;
-            border-top: 1px solid var(--glass-border);
-            color: var(--text-muted);
-            font-size: 0.875rem;
-        }
-
-        footer p {
             margin-bottom: 0.5rem;
         }
 
-        footer .version {
-            font-weight: 600;
-            color: var(--primary);
+        .chapter-badge {
+            background: var(--primary);
+            color: white;
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 800;
         }
 
-        /* Animations */
-        @keyframes fadeInDown {
+        .chapter-name {
+            font-weight: 700;
+            font-size: 0.875rem;
+        }
+
+        /* Quick Entry Styles */
+        .quick-entry-bar {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 1rem;
+            padding: 1.25rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid var(--border);
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .quick-entry-bar.hidden {
+            display: none;
+        }
+
+        .entry-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .next-mark {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 0.25rem 0.6rem;
+            border-radius: 4px;
+        }
+
+        .remove-ch {
+            opacity: 0;
+            transition: opacity 0.2s;
+            color: var(--error);
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .chapter-card:hover .remove-ch {
+            opacity: 1;
+        }
+
+        @keyframes shimmer {
             from {
-                opacity: 0;
-                transform: translateY(-20px);
+                transform: translateX(-100%);
             }
 
             to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
+                transform: translateX(100%);
             }
         }
 
         @keyframes fadeIn {
             from {
                 opacity: 0;
+                transform: translateY(10px);
             }
 
             to {
                 opacity: 1;
+                transform: translateY(0);
             }
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.6;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        /* Toast notifications */
+        .toast-container {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .toast {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 1.25rem 2rem;
+            border-radius: var(--radius-md);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            animation: slideIn 0.3s ease-out;
         }
 
         @keyframes slideIn {
             from {
+                transform: translateX(100%);
                 opacity: 0;
-                transform: translateX(-10px);
             }
 
             to {
-                opacity: 1;
                 transform: translateX(0);
-            }
-        }
-
-        /* ── Audiobook Generator Styles ── */
-        .audiobook-panel,
-        .aax-panel {
-            display: none;
-        }
-
-        .audiobook-panel.active,
-        .aax-panel.active {
-            display: block;
-            animation: fadeInUp 0.6s ease-out;
-        }
-
-        .chapter-preview-list {
-            max-height: 350px;
-            overflow-y: auto;
-            margin-bottom: 1rem;
-        }
-
-        .chapter-preview-item {
-            padding: 1rem;
-            background: var(--bg-tertiary);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-md);
-            margin-bottom: 0.5rem;
-            transition: all 0.3s ease;
-        }
-
-        .chapter-preview-item:hover {
-            border-color: var(--primary);
-        }
-
-        .chapter-preview-item .chapter-num {
-            display: inline-block;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            color: white;
-            padding: 0.25rem 0.625rem;
-            border-radius: var(--radius-sm);
-            font-size: 0.75rem;
-            font-weight: 700;
-            margin-right: 0.5rem;
-        }
-
-        .chapter-preview-item .chapter-title {
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .chapter-preview-item .chapter-meta {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin-top: 0.25rem;
-        }
-
-        .chapter-preview-item .chapter-excerpt {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            margin-top: 0.5rem;
-            font-style: italic;
-            line-height: 1.4;
-        }
-
-        .pipeline-progress {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            margin-top: 1rem;
-        }
-
-        .pipeline-step {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.75rem 1rem;
-            background: var(--bg-tertiary);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-md);
-            font-size: 0.875rem;
-            transition: all 0.3s ease;
-        }
-
-        .pipeline-step.active {
-            border-color: var(--primary);
-            background: rgba(99, 102, 241, 0.05);
-        }
-
-        .pipeline-step.done {
-            border-color: var(--success);
-            background: rgba(34, 197, 94, 0.05);
-        }
-
-        .pipeline-step.error {
-            border-color: var(--error);
-            background: rgba(239, 68, 68, 0.05);
-        }
-
-        .pipeline-step .step-icon {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.875rem;
-            font-weight: 700;
-            flex-shrink: 0;
-            background: var(--bg-secondary);
-            border: 2px solid var(--glass-border);
-            color: var(--text-muted);
-        }
-
-        .pipeline-step.active .step-icon {
-            border-color: var(--primary);
-            color: var(--primary);
-            animation: pulse 2s infinite;
-        }
-
-        .pipeline-step.done .step-icon {
-            background: var(--success);
-            border-color: var(--success);
-            color: white;
-        }
-
-        .pipeline-step.error .step-icon {
-            background: var(--error);
-            border-color: var(--error);
-            color: white;
-        }
-
-        .api-key-input {
-            position: relative;
-        }
-
-        .api-key-input input {
-            padding-right: 3rem;
-        }
-
-        .api-key-toggle {
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            cursor: pointer;
-            padding: 0.25rem;
-            font-size: 1.1rem;
-        }
-
-        .estimated-info {
-            display: flex;
-            gap: 1.5rem;
-            padding: 1rem;
-            background: rgba(99, 102, 241, 0.05);
-            border: 1px solid rgba(99, 102, 241, 0.15);
-            border-radius: var(--radius-md);
-            margin-bottom: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .estimated-info .info-item {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .estimated-info .info-label {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--text-muted);
-            font-weight: 600;
-        }
-
-        .estimated-info .info-value {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--primary);
-        }
-
-        /* Utility Classes */
-        .hidden {
-            display: none !important;
-        }
-
-        .text-center {
-            text-align: center;
-        }
-
-        .mt-1 {
-            margin-top: 0.5rem;
-        }
-
-        .mt-2 {
-            margin-top: 1rem;
-        }
-
-        .mt-3 {
-            margin-top: 1.5rem;
-        }
-
-        .mb-1 {
-            margin-bottom: 0.5rem;
-        }
-
-        .mb-2 {
-            margin-bottom: 1rem;
-        }
-
-        .mb-3 {
-            margin-bottom: 1.5rem;
-        }
-
-        .flex {
-            display: flex;
-        }
-
-        .flex-col {
-            flex-direction: column;
-        }
-
-        .items-center {
-            align-items: center;
-        }
-
-        .justify-between {
-            justify-content: space-between;
-        }
-
-        .gap-1 {
-            gap: 0.5rem;
-        }
-
-        .gap-2 {
-            gap: 1rem;
-        }
-
-        .gap-3 {
-            gap: 1.5rem;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .header-top {
-                flex-direction: column;
-                gap: 1rem;
-            }
-
-            .chapter-input-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .chapter-entry {
-                grid-template-columns: 1fr 80px 60px 40px;
-            }
-
-            .card {
-                padding: 1.5rem;
-            }
-        }
-
-        /* Loading Spinner */
-        .spinner {
-            width: 20px;
-            height: 20px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-top-color: white;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* Toast Notifications */
-        .toast-container {
-            position: fixed;
-            top: 1rem;
-            right: 1rem;
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .toast {
-            padding: 1rem 1.5rem;
-            background: var(--bg-secondary);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-lg);
-            animation: slideInRight 0.3s ease-out;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            min-width: 300px;
-        }
-
-        .toast.success {
-            border-left: 4px solid var(--success);
-        }
-
-        .toast.error {
-            border-left: 4px solid var(--error);
-        }
-
-        .toast.info {
-            border-left: 4px solid var(--primary);
-        }
-
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(100px);
-            }
-
-            to {
                 opacity: 1;
-                transform: translateX(0);
             }
         }
     </style>
@@ -1225,1402 +703,734 @@
 <body>
     <div class="toast-container" id="toastContainer"></div>
 
-    <div class="container">
-        <header class="text-center">
-            <div class="header-top">
-                <div class="logo">
-                    <div class="logo-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path
-                                d="M9 18V5l12-2v13M6 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm12-3a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
-                        </svg>
-                    </div>
-                    <div class="logo-text">
-                        <h1>BPM4B</h1>
-                        <div class="tagline">Professional Multimedia Converter</div>
+    <div class="app-shell">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+                        <path d="M9 18V5l12-2v13M6 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm12-3a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+                    </svg>
+                </div>
+                <h1>AudioBPM</h1>
+            </div>
+
+            <div class="nav-group">
+                <div class="nav-label">Tools</div>
+                <a class="nav-item active" data-tool="conversion">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2v20M2 12h20" />
+                    </svg>
+                    MP3 Conversion
+                </a>
+                <a class="nav-item" data-tool="audiobook">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path
+                            d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5V4.5z" />
+                    </svg>
+                    Audiobook Gen
+                </a>
+                <a class="nav-item" data-tool="aax">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                    </svg>
+                    AAX Converter
+                </a>
+            </div>
+
+            <div class="nav-group">
+                <div class="nav-label">System</div>
+                <div class="engine-status">
+                    <div class="status-indicator ready" id="engineStatusDot"></div>
+                    <div style="flex: 1">
+                        <div style="font-size: 0.75rem; font-weight: 700; color: var(--text-primary)">Kokoro Local</div>
+                        <div style="font-size: 0.65rem; color: var(--text-muted)" id="engineStatusText">Core Ready</div>
                     </div>
                 </div>
-                <div class="header-controls">
-                    <div class="version-badge">v<%= version %>
-                    </div>
-                    <div class="toggle-switch">
+            </div>
+
+            <div class="sidebar-footer">
+                <div class="theme-toggle-container">
+                    <span>Dark Appearance</span>
+                    <label class="toggle-switch">
                         <input type="checkbox" id="themeToggle" checked>
-                        <label class="toggle-slider" for="themeToggle"></label>
-                    </div>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="version-tag">
+                    <span>Engine v<%= version %></span>
+                    <span>Stable</span>
                 </div>
             </div>
-        </header>
+        </aside>
 
-        <div class="main-grid">
-            <!-- Left Column: Conversion & Settings -->
-            <div class="left-column">
-                <!-- Smart Mode Toggle -->
-                <div class="card">
-                    <div class="smart-mode-section">
-                        <div class="smart-mode-header">
-                            <div class="smart-mode-title">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2">
-                                    <path
-                                        d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
-                                </svg>
-                                Unified Smart Mode
-                            </div>
-                            <div class="mode-indicator" id="modeIndicator">
-                                <span id="modeText">Conversion Mode</span>
-                            </div>
-                        </div>
-                        <p class="smart-mode-description">
-                            Toggle between <strong>Conversion Mode</strong> (process files and embed chapters) and
-                            <strong>Chapter Builder Only</strong> (generate timestamps without conversion).
-                        </p>
-                        <div class="mt-2">
-                            <label class="toggle-switch" style="display: inline-block;">
-                                <input type="checkbox" id="smartModeToggle" checked>
-                                <label class="toggle-slider" for="smartModeToggle"></label>
-                            </label>
-                            <span class="ml-2" style="font-size: 0.875rem; color: var(--text-muted);">Enable
-                                Conversion</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- File Conversion Section -->
-                <div class="card" id="conversionCard">
-                    <div class="card-header">
-                        <div class="card-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path
-                                    d="M9 18V5l12-2v13M6 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm12-3a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
-                            </svg>
-                        </div>
-                        <div>
-                            <h3 class="card-title">File Conversion</h3>
-                            <p class="card-description" id="conversionDescription">Convert audio files with embedded
-                                chapters</p>
-                        </div>
-                    </div>
-
-                    <form id="conversionForm">
-                        <!-- File Type Tabs -->
-                        <div class="mb-2">
-                            <div class="duration-toggle" style="margin-bottom: 1rem;">
-                                <button type="button" class="file-type-tab active" data-type="mp3">MP3 → M4B</button>
-                                <button type="button" class="file-type-tab" data-type="m3u8">M3U8 → MKV</button>
-                                <button type="button" class="file-type-tab" data-type="document">Doc →
-                                    Audiobook</button>
-                                <button type="button" class="file-type-tab" data-type="aax">AAX → M4B</button>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Source File</label>
-                            <div class="file-drop-zone" id="fileDropZone">
-                                <input type="file" id="sourceFile" name="source_file" accept=".mp3,.m3u8,.m3u">
-                                <div class="file-drop-icon">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" />
-                                    </svg>
-                                </div>
-                                <div class="file-drop-text" id="fileDropText">Click or drag your file here</div>
-                                <div class="file-drop-hint" id="fileDropHint">MP3 or M3U8/HLS stream file</div>
-                                <div class="file-info" id="fileInfo" style="display: none;"></div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Output Filename (optional)</label>
-                            <input type="text" id="outputName" placeholder="Leave empty for auto-generated name">
-                        </div>
-
-                        <button type="submit" class="btn" id="convertBtn">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- MP3 Conversion Panel -->
+            <div class="bento-card col-span-8 tool-content active" id="conversionPanel">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <div class="card-icon-sm">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2">
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
+                                <path d="M12 2v20M2 12h20" />
                             </svg>
-                            <span id="convertBtnText">Convert to M4B</span>
-                        </button>
-                    </form>
+                        </div>
+                        MP3 to M4B Pipeline
+                    </h3>
                 </div>
 
-                <!-- Settings Panel -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="12" cy="12" r="3"></circle>
-                                <path
-                                    d="M12 1v6M12 17v6M4.22 4.22l4.24 4.24M15.54 15.54l4.24 4.24M1 12h6M17 12h6M4.22 19.78l4.24-4.24M15.54 8.46l4.24-4.24">
-                                </path>
-                            </svg>
-                        </div>
-                        <div>
-                            <h3 class="card-title">Settings</h3>
-                            <p class="card-description">Customize your experience</p>
-                        </div>
+                <div class="input-group">
+                    <label>Source Audio</label>
+                    <div class="drop-zone" id="mp3DropZone">
+                        <svg class="drop-zone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
+                        </svg>
+                        <p>Drop MP3 or M3U8 here</p>
+                        <span>Up to 2GB supported</span>
+                        <input type="file" id="sourceFile" class="hidden" accept=".mp3,.m3u8">
                     </div>
+                    <div id="mp3FileInfo" class="active-file-indicator hidden"></div>
+                </div>
 
-                    <div class="form-group">
-                        <label>Audio Quality (AAC bitrate)</label>
-                        <select id="audioQuality">
-                            <option value="64k">64 kbps - Small files (speech optimized)</option>
-                            <option value="128k" selected>128 kbps - Good quality</option>
-                            <option value="192k">192 kbps - High quality</option>
-                            <option value="256k">256 kbps - Best quality</option>
-                        </select>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="input-group">
+                        <label>Output Filename</label>
+                        <input type="text" id="outputName" class="form-input" placeholder="my-audiobook.m4b">
                     </div>
-
-                    <div class="form-group">
-                        <label>Chapter Format</label>
-                        <select id="chapterFormat">
-                            <option value="m4b">M4B (for MP3 conversions)</option>
-                            <option value="mkv">MKV (for M3U8 conversions)</option>
+                    <div class="input-group">
+                        <label>Audio Fidelity</label>
+                        <select id="audioQuality" class="form-select">
+                            <option value="copy">Stream Copy (Original)</option>
+                            <option value="libmp3lame">Standard (128k)</option>
+                            <option value="aac" selected>High Fidelity (256k AAC)</option>
                         </select>
                     </div>
                 </div>
 
-                <!-- ── Document to Audiobook Panel ── -->
-                <div class="card audiobook-panel" id="audiobookPanel">
-                    <div class="card-header">
-                        <div class="card-icon" style="background: linear-gradient(135deg, #8b5cf6, #ec4899);">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-                            </svg>
-                        </div>
-                        <div>
-                            <h3 class="card-title">Document → Audiobook</h3>
-                            <p class="card-description">Convert PDF, DOCX, TXT, or EPUB to a chaptered M4B audiobook</p>
-                        </div>
-                    </div>
-
-                    <form id="audiobookForm">
-                        <div class="form-group">
-                            <label>Document File</label>
-                            <div class="file-drop-zone" id="docDropZone">
-                                <input type="file" id="docFile" accept=".pdf,.docx,.doc,.txt,.epub">
-                                <div class="file-drop-icon"
-                                    style="background: linear-gradient(135deg, #8b5cf6, #ec4899);">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-                                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-                                    </svg>
-                                </div>
-                                <div class="file-drop-text">Click or drag your document here</div>
-                                <div class="file-drop-hint">PDF, DOCX, TXT, or EPUB</div>
-                                <div class="file-info" id="docFileInfo" style="display: none;"></div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label>OpenRouter API Key</label>
-                            <div class="api-key-input">
-                                <input type="password" id="apiKeyInput" placeholder="sk-or-..."
-                                    style="width:100%;background:var(--bg-tertiary);border:1px solid var(--glass-border);border-radius:var(--radius-md);padding:0.875rem 3rem 0.875rem 1.25rem;color:var(--text-primary);font-size:1rem;">
-                                <button type="button" class="api-key-toggle" id="toggleApiKey"
-                                    title="Show/hide key">👁</button>
-                            </div>
-                        </div>
-
-                        <div class="form-group" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
-                            <div>
-                                <label>Voice</label>
-                                <select id="ttsVoice">
-                                    <option value="alloy">Alloy — Neutral</option>
-                                    <option value="echo">Echo — Warm</option>
-                                    <option value="fable">Fable — Expressive</option>
-                                    <option value="onyx">Onyx — Deep</option>
-                                    <option value="nova">Nova — Friendly</option>
-                                    <option value="shimmer">Shimmer — Soft</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label>Model</label>
-                                <select id="ttsModel">
-                                    <option value="openai/tts-1">TTS-1 (Standard)</option>
-                                    <option value="openai/tts-1-hd">TTS-1 HD (High Quality)</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-group" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
-                            <div>
-                                <label>Speech Speed</label>
-                                <select id="ttsSpeed">
-                                    <option value="0.75">0.75x — Slow</option>
-                                    <option value="1.0" selected>1.0x — Normal</option>
-                                    <option value="1.25">1.25x — Fast</option>
-                                    <option value="1.5">1.5x — Very Fast</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label>Output Name (optional)</label>
-                                <input type="text" id="audiobookOutputName" placeholder="Auto-generated">
-                            </div>
-                        </div>
-
-                        <button type="button" class="btn btn-secondary" id="previewChaptersBtn"
-                            style="margin-bottom:1rem;">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2">
-                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                <circle cx="12" cy="12" r="3"></circle>
-                            </svg>
-                            Preview Chapters
-                        </button>
-
-                        <!-- Chapter Preview Area -->
-                        <div id="chapterPreviewArea" style="display:none;">
-                            <div class="estimated-info" id="estimatedInfo"></div>
-                            <div class="chapter-preview-list" id="chapterPreviewList"></div>
-                        </div>
-
-                        <button type="submit" class="btn" id="generateAudiobookBtn">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2">
-                                <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                            </svg>
-                            <span id="generateBtnText">Generate Audiobook</span>
-                        </button>
-                    </form>
-
-                    <!-- Pipeline Progress -->
-                    <div id="audiobookProgress" style="display:none;">
-                        <div class="pipeline-progress">
-                            <div class="pipeline-step" id="stepParsing">
-                                <div class="step-icon">1</div>
-                                <div>Parsing document...</div>
-                            </div>
-                            <div class="pipeline-step" id="stepDetecting">
-                                <div class="step-icon">2</div>
-                                <div>Detecting chapters...</div>
-                            </div>
-                            <div class="pipeline-step" id="stepGenerating">
-                                <div class="step-icon">3</div>
-                                <div id="stepGeneratingText">Generating audio...</div>
-                            </div>
-                            <div class="pipeline-step" id="stepAssembling">
-                                <div class="step-icon">4</div>
-                                <div>Assembling M4B...</div>
-                            </div>
-                            <div class="pipeline-step" id="stepComplete">
-                                <div class="step-icon">✓</div>
-                                <div>Complete!</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ── AAX Converter Panel ── -->
-                <div class="card aax-panel" id="aaxPanel">
-                    <div class="card-header">
-                        <div class="card-icon" style="background: linear-gradient(135deg, #f59e0b, #ef4444);">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
-                                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
-                                <line x1="12" y1="19" x2="12" y2="23"></line>
-                                <line x1="8" y1="23" x2="16" y2="23"></line>
-                            </svg>
-                        </div>
-                        <div>
-                            <h3 class="card-title">AAX → M4B / M4A</h3>
-                            <p class="card-description">Convert Audible files preserving chapters & cover art</p>
-                        </div>
-                    </div>
-
-                    <form id="aaxForm">
-                        <div class="form-group">
-                            <label>Audible AAX File</label>
-                            <div class="file-drop-zone" id="aaxDropZone">
-                                <input type="file" id="aaxFile" accept=".aax,.aa">
-                                <div class="file-drop-icon"
-                                    style="background: linear-gradient(135deg, #f59e0b, #ef4444);">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
-                                        <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
-                                    </svg>
-                                </div>
-                                <div class="file-drop-text">Click or drag your AAX file here</div>
-                                <div class="file-drop-hint">Audible AAX or AA file</div>
-                                <div class="file-info" id="aaxFileInfo" style="display: none;"></div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Activation Bytes (8 hex characters)</label>
-                            <input type="text" id="activationBytes" placeholder="e.g. 1a2b3c4d" maxlength="8"
-                                style="font-family:'JetBrains Mono',monospace;letter-spacing:0.1em;">
-                        </div>
-
-                        <div class="form-group" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
-                            <div>
-                                <label>Output Format</label>
-                                <select id="aaxOutputFormat">
-                                    <option value="m4b">M4B (Audiobook)</option>
-                                    <option value="m4a">M4A (Audio)</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label>Output Name (optional)</label>
-                                <input type="text" id="aaxOutputName" placeholder="Auto-generated">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label
-                                style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;text-transform:none;">
-                                <input type="checkbox" id="extractCover" style="width:auto;">
-                                Extract cover art as separate image
-                            </label>
-                        </div>
-
-                        <button type="submit" class="btn" id="convertAaxBtn">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2">
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"></path>
-                            </svg>
-                            <span id="aaxBtnText">Convert AAX</span>
-                        </button>
-                    </form>
-                </div>
-
+                <button id="convertBtn" class="btn btn-primary">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
+                    Initialize Conversion
+                </button>
             </div>
 
-            <!-- Right Column: Chapter Builder & Preview -->
-            <div class="right-column">
-                <!-- Chapter Builder -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                                <line x1="16" y1="2" x2="16" y2="6"></line>
-                                <line x1="8" y1="2" x2="8" y2="6"></line>
-                                <line x1="3" y1="10" x2="21" y2="10"></line>
-                            </svg>
-                        </div>
-                        <div>
-                            <h3 class="card-title">Chapter Builder</h3>
-                            <p class="card-description">Automatic timestamp generation</p>
-                        </div>
-                    </div>
-
-                    <div class="chapter-builder">
-                        <div class="chapter-builder-header">
-                            <div class="chapter-builder-title">Add Chapter</div>
-                            <div class="duration-toggle">
-                                <button type="button" class="active" data-mode="minutes">Minutes</button>
-                                <button type="button" data-mode="seconds">Seconds</button>
-                            </div>
-                        </div>
-
-                        <div class="chapter-input-grid">
-                            <div class="input-group">
-                                <label>Chapter Title</label>
-                                <input type="text" id="chapterTitle" placeholder="Enter chapter title">
-                            </div>
-                            <div class="input-group">
-                                <label>Duration</label>
-                                <input type="text" id="chapterDuration" placeholder="e.g., 6 or 6:30">
-                            </div>
-                            <div class="input-group">
-                                <label>Start Time (auto)</label>
-                                <div class="timestamp-display" id="nextTimestamp">00:00:00</div>
-                            </div>
-                        </div>
-
-                        <button type="button" class="btn btn-secondary" id="addChapterBtn"
-                            style="width: 100%; margin-bottom: 1rem;">
+            <!-- Audiobook Generator Panel (Document) -->
+            <div class="bento-card col-span-8 tool-content" id="audiobookPanel">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <div class="card-icon-sm">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2">
-                                <line x1="12" y1="5" x2="12" y2="19"></line>
-                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <path
+                                    d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5V4.5z" />
                             </svg>
-                            Add Chapter
-                        </button>
-
-                        <div class="chapter-actions">
-                            <button type="button" class="btn btn-secondary btn-sm" id="toggleBatchBtn">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2">
-                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                    <polyline points="14 2 14 8 20 8"></polyline>
-                                    <line x1="16" y1="13" x2="8" y2="13"></line>
-                                    <line x1="16" y1="17" x2="8" y2="17"></line>
-                                    <polyline points="10 9 9 9 8 9"></polyline>
-                                </svg>
-                                Batch Import
-                            </button>
-                            <button type="button" class="btn btn-secondary btn-sm" id="exportChaptersBtn">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2">
-                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"></path>
-                                </svg>
-                                Export .txt
-                            </button>
-                            <button type="button" class="btn btn-secondary btn-sm" id="clearChaptersBtn">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2">
-                                    <polyline points="3 6 5 6 21 6"></polyline>
-                                    <path
-                                        d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
-                                    </path>
-                                </svg>
-                                Clear All
-                            </button>
                         </div>
+                        Document to Audiobook
+                    </h3>
+                </div>
 
-                        <div class="batch-import-area" id="batchArea">
-                            <label>Batch Import Chapters</label>
-                            <textarea id="batchInput"
-                                placeholder="Paste chapter list here...&#10;&#10;Chapter Title, Duration&#10;Introduction, 2:30&#10;Chapter 1, 10:00&#10;Chapter 2, 15:30"></textarea>
-                            <button type="button" class="btn btn-secondary btn-sm" style="margin-top: 0.5rem;"
-                                id="applyBatchBtn">Apply Batch Data</button>
-                        </div>
+                <div class="input-group">
+                    <label>E-Book or Document</label>
+                    <div class="drop-zone" id="docDropZone">
+                        <svg class="drop-zone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                        </svg>
+                        <p>Upload PDF, EPUB, or DOCX</p>
+                        <span>Local Kokoro processing</span>
+                        <input type="file" id="docFile" class="hidden" accept=".pdf,.epub,.docx,.txt">
+                    </div>
+                    <div id="docFileInfo" class="active-file-indicator hidden"></div>
+                </div>
 
-                        <div class="chapter-entries" id="chaptersContainer"></div>
-
-                        <div class="preview-content" id="chaptersPreview" style="min-height: 100px; max-height: 200px;">
-                            <!-- Chapters preview will appear here -->
-                        </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                    <div class="input-group">
+                        <label>Voice Model</label>
+                        <select id="ttsVoice" class="form-select">
+                            <option value="af_heart">Female (Heart)</option>
+                            <option value="af_bella">Female (Bella)</option>
+                            <option value="am_adam">Male (Adam)</option>
+                            <option value="am_michael">Male (Michael)</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Speed</label>
+                        <select id="ttsSpeed" class="form-select">
+                            <option value="0.8">0.8x</option>
+                            <option value="1.0" selected>1.0x (Natural)</option>
+                            <option value="1.2">1.2x</option>
+                            <option value="1.5">1.5x</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Language</label>
+                        <select id="ttsLanguage" class="form-select">
+                            <option value="en-us">English (US)</option>
+                            <option value="en-gb">English (GB)</option>
+                        </select>
                     </div>
                 </div>
 
-                <!-- Preview Panel -->
-                <div class="preview-panel">
-                    <div class="preview-header">
-                        <div class="preview-title">FFmpeg Command Preview</div>
-                        <button type="button" class="btn btn-secondary btn-sm" id="copyCommandBtn">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                <div class="chapter-actions mt-3">
+                    <button id="previewChaptersBtn" class="btn btn-secondary">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                            <circle cx="12" cy="12" r="3" />
+                        </svg>
+                        Analyze Chapters
+                    </button>
+                    <button id="generateAudiobookBtn" class="btn btn-primary">
+                        Generate Audiobook
+                    </button>
+                </div>
+            </div>
+
+            <!-- AAX Converter Panel -->
+            <div class="bento-card col-span-8 tool-content" id="aaxPanel">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <div class="card-icon-sm">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2">
-                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                             </svg>
-                            Copy Command
-                        </button>
-                    </div>
-                    <div class="preview-content" id="commandPreview">ffmpeg -i input.mp3 -c:a aac -b:a 64k -map_metadata
-                        1 -i chapters.txt output.m4b</div>
+                        </div>
+                        AAX Decryptor
+                    </h3>
                 </div>
 
-                <!-- Progress Section -->
-                <div class="progress-section" id="progressSection">
-                    <div class="progress-track">
-                        <div class="progress-bar" id="progressBar"></div>
+                <div class="input-group">
+                    <label>Audible File</label>
+                    <div class="drop-zone" id="aaxDropZone">
+                        <svg class="drop-zone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                        </svg>
+                        <p>Select AAX or AA File</p>
+                        <input type="file" id="aaxFile" class="hidden" accept=".aax,.aa">
                     </div>
-                    <div class="status-section">
-                        <div class="status-badge" id="statusBadge">
-                            <span class="spinner" id="statusSpinner" style="display: none;"></span>
-                            <span id="statusText">Processing...</span>
-                        </div>
-                        <div style="font-size: 0.875rem; color: var(--text-muted);" id="progressPercent">0%</div>
+                    <div id="aaxFileInfo" class="active-file-indicator hidden"></div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="input-group">
+                        <label>Activation Bytes</label>
+                        <input type="text" id="activationBytes" class="form-input" placeholder="8 characters (hex)">
+                    </div>
+                    <div class="input-group">
+                        <label>Export Format</label>
+                        <select id="aaxOutputFormat" class="form-select">
+                            <option value="m4b">M4B (Lossless)</option>
+                            <option value="mp3">MP3</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button id="convertAaxBtn" class="btn btn-primary">Decrypt and Convert</button>
+            </div>
+
+            <!-- Sidebar/Right Column Bento Cards -->
+            <div class="bento-card col-span-4 row-span-2">
+                <div class="card-header">
+                    <h3 class="card-title">Metadata & Status</h3>
+                </div>
+
+                <div class="progress-card">
+                    <div class="stat-card">
+                        <div class="stat-value" id="progressPercent">0%</div>
+                        <div class="stat-label">Pipeline Progress</div>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-fill" id="progressBar"></div>
+                    </div>
+                    <div id="statusText" style="font-size: 0.8125rem; color: var(--text-muted);">Awaiting
+                        initialization...</div>
+                </div>
+
+                <div class="log-vessel mt-3" id="processLog">
+                    <!-- Logs will appear here -->
+                    <div class="log-line info">V9 System Ready.</div>
+                </div>
+            </div>
+
+            <!-- Preview Grid Card -->
+            <div class="bento-card col-span-12 tool-content active" id="chapterPreviewPanel">
+                <div class="card-header">
+                    <h3 class="card-title">Chapter Manifest</h3>
+                    <div class="chapter-actions">
+                        <button class="btn btn-sm btn-secondary" id="addChapterBtn">Add Mark</button>
+                        <button class="btn btn-sm btn-secondary" id="clearChaptersBtn">Clear All</button>
+                    </div>
+                </div>
+
+                <div class="chapter-grid" id="chaptersContainer">
+                    <!-- Chapters will be rendered here as cards -->
+                </div>
+
+                <div id="quickEntryBar" class="quick-entry-bar hidden">
+                    <div class="input-group" style="margin: 0;">
+                        <input type="text" id="chapterTitle" class="form-input" placeholder="Chapter Title">
+                    </div>
+                    <div class="input-group" style="margin: 0;">
+                        <input type="text" id="chapterDuration" class="form-input"
+                            placeholder="Duration (min or MM:SS)">
+                    </div>
+                    <div class="entry-actions">
+                        <div class="next-mark">Starts: <span id="nextTimestamp">00:00:00</span></div>
+                        <button class="btn btn-primary btn-sm" id="confirmAddChapterBtn">Add</button>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <footer>
-            <p>BPM4B v<%= version %> • Professional Multimedia Processing Tool</p>
-            <p style="margin-top: 0.5rem; font-size: 0.75rem;">Requires FFmpeg to be installed on the server.</p>
-        </footer>
+    </div>
+    </main>
+    </div>
     </div>
 
     <script>
-        // Global State
+        // Premium v9 Orchestration Logic
         const state = {
-            theme: 'dark',
-            smartMode: true,
-            fileType: 'mp3',
-            fileInfo: null,
+            activeTool: 'conversion',
             chapters: [],
             cumulativeTime: 0,
-            durationMode: 'minutes',
-            isProcessing: false
+            isProcessing: false,
+            theme: 'dark'
         };
 
-        // DOM Elements
         const elements = {
-            themeToggle: document.getElementById('themeToggle'),
-            smartModeToggle: document.getElementById('smartModeToggle'),
-            modeText: document.getElementById('modeText'),
-            conversionDescription: document.getElementById('conversionDescription'),
-            fileDropZone: document.getElementById('fileDropZone'),
-            fileDropText: document.getElementById('fileDropText'),
-            fileDropHint: document.getElementById('fileDropHint'),
-            fileInfo: document.getElementById('fileInfo'),
-            sourceFile: document.getElementById('sourceFile'),
-            outputName: document.getElementById('outputName'),
-            convertBtn: document.getElementById('convertBtn'),
-            convertBtnText: document.getElementById('convertBtnText'),
-            conversionForm: document.getElementById('conversionForm'),
+            navItems: document.querySelectorAll('.nav-item'),
+            toolPanels: document.querySelectorAll('.tool-content'),
+            progressBar: document.getElementById('progressBar'),
+            progressPercent: document.getElementById('progressPercent'),
+            statusText: document.getElementById('statusText'),
+            processLog: document.getElementById('processLog'),
+            engineStatusDot: document.getElementById('engineStatusDot'),
+            engineStatusText: document.getElementById('engineStatusText'),
+            toastContainer: document.getElementById('toastContainer'),
             chaptersContainer: document.getElementById('chaptersContainer'),
-            chaptersPreview: document.getElementById('chaptersPreview'),
+            themeToggle: document.getElementById('themeToggle'),
+            quickEntryBar: document.getElementById('quickEntryBar'),
             chapterTitle: document.getElementById('chapterTitle'),
             chapterDuration: document.getElementById('chapterDuration'),
+            confirmAddChapterBtn: document.getElementById('confirmAddChapterBtn'),
             nextTimestamp: document.getElementById('nextTimestamp'),
-            addChapterBtn: document.getElementById('addChapterBtn'),
-            toggleBatchBtn: document.getElementById('toggleBatchBtn'),
-            batchArea: document.getElementById('batchArea'),
-            batchInput: document.getElementById('batchInput'),
-            applyBatchBtn: document.getElementById('applyBatchBtn'),
-            exportChaptersBtn: document.getElementById('exportChaptersBtn'),
-            clearChaptersBtn: document.getElementById('clearChaptersBtn'),
-            commandPreview: document.getElementById('commandPreview'),
-            copyCommandBtn: document.getElementById('copyCommandBtn'),
-            progressSection: document.getElementById('progressSection'),
-            progressBar: document.getElementById('progressBar'),
-            statusBadge: document.getElementById('statusBadge'),
-            statusText: document.getElementById('statusText'),
-            statusSpinner: document.getElementById('statusSpinner'),
-            progressPercent: document.getElementById('progressPercent'),
-            toastContainer: document.getElementById('toastContainer'),
-            fileTypeTabs: document.querySelectorAll('.file-type-tab'),
-            durationToggleButtons: document.querySelectorAll('.duration-toggle button')
+            addChapterBtn: document.getElementById('addChapterBtn')
         };
 
-        // Initialize
+        const config = {
+            version: '<%= version %>'
+        };
+
+        // --- Core Functions ---
+
         function init() {
-            loadTheme();
-            setupEventListeners();
-            updateCommandPreview();
-            updateChaptersPreview();
+            setupNavigation();
+            setupTheme();
+            setupDropZones();
+            setupChapterBuilder();
+            checkEngineHealth();
+            log('V9 Pipeline Initialized', 'info');
         }
 
-        // Theme Management
-        function loadTheme() {
-            const savedTheme = localStorage.getItem('bpm4b-theme') || 'dark';
-            setTheme(savedTheme);
-            elements.themeToggle.checked = savedTheme === 'dark';
-        }
-
-        function setTheme(theme) {
-            state.theme = theme;
-            document.documentElement.setAttribute('data-theme', theme);
-            localStorage.setItem('bpm4b-theme', theme);
-        }
-
-        elements.themeToggle.addEventListener('change', (e) => {
-            setTheme(e.target.checked ? 'dark' : 'light');
-        });
-
-        // Smart Mode
-        elements.smartModeToggle.addEventListener('change', (e) => {
-            state.smartMode = e.target.checked;
-            updateModeIndicator();
-            updateCommandPreview();
-            showToast(state.smartMode ? 'Conversion mode enabled' : 'Chapter builder only mode', 'info');
-        });
-
-        function updateModeIndicator() {
-            elements.modeText.textContent = state.smartMode ? 'Conversion Mode' : 'Chapter Builder Only';
-            elements.convertBtn.disabled = !state.smartMode;
-            if (!state.smartMode) {
-                elements.convertBtnText.textContent = 'Conversion Disabled';
-            } else {
-                updateConvertButtonText();
-            }
-        }
-
-        // File Type Selection
-        elements.fileTypeTabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                elements.fileTypeTabs.forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                state.fileType = tab.dataset.type;
-
-                // Show/hide panels based on type
-                const conversionCard = document.getElementById('conversionCard');
-                const audiobookPanel = document.getElementById('audiobookPanel');
-                const aaxPanel = document.getElementById('aaxPanel');
-
-                conversionCard.style.display = (state.fileType === 'document' || state.fileType === 'aax') ? 'none' : '';
-                audiobookPanel.classList.toggle('active', state.fileType === 'document');
-                aaxPanel.classList.toggle('active', state.fileType === 'aax');
-
-                updateFileDropZone();
-                updateConvertButtonText();
-                updateCommandPreview();
+        function setupNavigation() {
+            elements.navItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const tool = item.dataset.tool;
+                    switchTool(tool);
+                });
             });
-        });
-
-        function updateFileDropZone() {
-            const isM3U8 = state.fileType === 'm3u8';
-            elements.fileDropText.textContent = isM3U8 ? 'Click or drag your M3U8 file here' : 'Click or drag your MP3 file here';
-            elements.fileDropHint.textContent = isM3U8 ? 'M3U8 or HLS stream file' : 'MP3 audio file';
-            elements.sourceFile.accept = isM3U8 ? '.m3u8,.m3u' : '.mp3,audio/mpeg';
-
-            // Clear file info if switching types
-            if (state.fileInfo && state.fileInfo.type !== state.fileType) {
-                clearFileSelection();
-            }
         }
 
-        function updateConvertButtonText() {
-            if (!state.smartMode) {
-                elements.convertBtnText.textContent = 'Conversion Disabled';
-                return;
-            }
-            elements.convertBtnText.textContent = state.fileType === 'mp3' ? 'Convert to M4B' : 'Convert to MKV';
-        }
+        function switchTool(toolId) {
+            state.activeTool = toolId;
 
-        // File Upload
-        elements.fileDropZone.addEventListener('click', () => elements.sourceFile.click());
-
-        elements.fileDropZone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            elements.fileDropZone.classList.add('drag-over');
-        });
-
-        elements.fileDropZone.addEventListener('dragleave', () => {
-            elements.fileDropZone.classList.remove('drag-over');
-        });
-
-        elements.fileDropZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            elements.fileDropZone.classList.remove('drag-over');
-            const files = e.dataTransfer.files;
-            if (files.length > 0) {
-                handleFileSelect(files[0]);
-            }
-        });
-
-        elements.sourceFile.addEventListener('change', (e) => {
-            if (e.target.files.length > 0) {
-                handleFileSelect(e.target.files[0]);
-            }
-        });
-
-        function handleFileSelect(file) {
-            const isM3U8 = state.fileType === 'm3u8';
-            const validExtensions = isM3U8 ? ['.m3u8', '.m3u'] : ['.mp3'];
-            const isValid = validExtensions.some(ext => file.name.toLowerCase().endsWith(ext)) ||
-                (isM3U8 && file.type === 'application/x-mpegurl') ||
-                (isM3U8 && file.type === 'audio/mpegurl');
-
-            if (!isValid) {
-                showToast(`Invalid file type. Please select a ${state.fileType.toUpperCase()} file.`, 'error');
-                return;
-            }
-
-            state.fileInfo = {
-                name: file.name,
-                size: file.size,
-                type: state.fileType,
-                file: file
-            };
-
-            const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
-            elements.fileInfo.innerHTML = `
-                <div>
-                    <strong>${file.name}</strong><br>
-                    <small>${sizeMB} MB</small>
-                </div>
-                <button type="button" class="remove-file" onclick="clearFileSelection()">×</button>
-            `;
-            elements.fileInfo.style.display = 'flex';
-
-            // Auto-generate output name
-            const baseName = file.name.replace(/\.[^/.]+$/, '');
-            elements.outputName.value = `${baseName}.${isM3U8 ? 'mkv' : 'm4b'}`;
-
-            updateCommandPreview();
-            showToast('File selected successfully', 'success');
-        }
-
-        function clearFileSelection() {
-            state.fileInfo = null;
-            elements.sourceFile.value = '';
-            elements.fileInfo.style.display = 'none';
-            updateCommandPreview();
-        }
-
-        // Duration Mode Toggle
-        elements.durationToggleButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                elements.durationToggleButtons.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                state.durationMode = btn.dataset.mode;
-                updateNextTimestamp();
+            elements.navItems.forEach(nav => {
+                nav.classList.toggle('active', nav.dataset.tool === toolId);
             });
-        });
 
-        // Chapter Builder
-        function parseDurationInput(input) {
-            if (!input.trim()) return null;
+            elements.toolPanels.forEach(panel => {
+                const isMatch = panel.id === (toolId + 'Panel');
+                panel.classList.toggle('active', isMatch);
 
-            if (state.durationMode === 'minutes') {
-                // Treat as minutes
-                const minutes = parseFloat(input);
-                if (isNaN(minutes) || minutes < 0) return null;
-                return minutes * 60;
-            } else {
-                // Seconds mode - support MM:SS or pure seconds
-                if (input.includes(':')) {
-                    const parts = input.split(':');
-                    if (parts.length === 2) {
-                        const mins = parseInt(parts[0]) || 0;
-                        const secs = parseFloat(parts[1]) || 0;
-                        return mins * 60 + secs;
-                    }
+                // Manifest visibility logic
+                if (panel.id === 'chapterPreviewPanel') {
+                    panel.classList.add('active'); // Keep manifest visible for most tools
                 }
-                const seconds = parseFloat(input);
-                return isNaN(seconds) || seconds < 0 ? null : seconds;
+            });
+
+            // Special handling for panels that don't need manifest
+            const noManifestTools = ['aax'];
+            document.getElementById('chapterPreviewPanel').classList.toggle('hidden', noManifestTools.includes(toolId));
+
+            log(`Switched to ${toolId} pipeline`, 'info');
+        }
+
+        function setupTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            applyTheme(savedTheme);
+            elements.themeToggle.checked = savedTheme === 'dark';
+
+            elements.themeToggle.addEventListener('change', (e) => {
+                const newTheme = e.target.checked ? 'dark' : 'light';
+                applyTheme(newTheme);
+            });
+        }
+
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            state.theme = theme;
+        }
+
+        function setupDropZones() {
+            ['mp3', 'doc', 'aax'].forEach(id => {
+                const dz = document.getElementById(`${id}DropZone`);
+                const input = document.getElementById(id === 'mp3' ? 'sourceFile' : `${id}File`);
+                const info = document.getElementById(`${id}FileInfo`);
+
+                if (!dz || !input) return;
+
+                dz.addEventListener('click', () => input.click());
+
+                dz.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    dz.classList.add('drag-over');
+                });
+
+                dz.addEventListener('dragleave', () => dz.classList.remove('drag-over'));
+
+                dz.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    dz.classList.remove('drag-over');
+                    if (e.dataTransfer.files.length > 0) {
+                        handleFileSelect(id, e.dataTransfer.files[0]);
+                    }
+                });
+
+                input.addEventListener('change', (e) => {
+                    if (e.target.files.length > 0) {
+                        handleFileSelect(id, e.target.files[0]);
+                    }
+                });
+            });
+        }
+
+        function handleFileSelect(id, file) {
+            const info = document.getElementById(`${id}FileInfo`);
+            info.innerHTML = `
+            <div class="file-badge">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" /><polyline points="13 2 13 9 20 9" /></svg>
+                <span>${file.name}</span>
+                <small>${(file.size / (1024 * 1024)).toFixed(1)}MB</small>
+            </div>
+            `;
+            info.classList.remove('hidden');
+            log(`Loaded: ${file.name}`, 'success');
+
+            if (id === 'doc') {
+                document.getElementById('audiobookPanel').querySelectorAll('input, select').forEach(el => {
+                    if (el.id === 'audiobookOutputName' || el.id === 'outputName') {
+                        el.value = file.name.split('.')[0] + '.m4b';
+                    }
+                });
             }
         }
 
-        function formatTime(seconds) {
-            const hrs = Math.floor(seconds / 3600);
-            const mins = Math.floor((seconds % 3600) / 60);
-            const secs = Math.floor(seconds % 60);
-            return `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-        }
+        function setupChapterBuilder() {
+            elements.addChapterBtn.addEventListener('click', () => {
+                elements.quickEntryBar.classList.toggle('hidden');
+                if (!elements.quickEntryBar.classList.contains('hidden')) {
+                    elements.chapterTitle.focus();
+                }
+            });
 
-        function updateNextTimestamp() {
-            elements.nextTimestamp.textContent = formatTime(state.cumulativeTime);
-        }
+            elements.confirmAddChapterBtn.addEventListener('click', () => {
+                const title = elements.chapterTitle.value.trim();
+                const durationRaw = elements.chapterDuration.value.trim();
 
-        elements.chapterTitle.addEventListener('input', updateNextTimestamp);
-        elements.chapterDuration.addEventListener('input', () => {
-            const duration = parseDurationInput(elements.chapterDuration.value);
-            if (duration !== null) {
-                updateNextTimestamp();
-            }
-        });
+                if (!title) return showToast('Enter chapter title', 'error');
 
-        elements.addChapterBtn.addEventListener('click', () => {
-            const title = elements.chapterTitle.value.trim();
-            const durationInput = elements.chapterDuration.value.trim();
-            const duration = parseDurationInput(durationInput);
+                const durationSec = parseDuration(durationRaw);
+                if (durationSec === null || durationSec <= 0) {
+                    return showToast('Invalid or zero duration', 'error');
+                }
 
-            if (!title) {
-                showToast('Please enter a chapter title', 'error');
-                return;
-            }
+                addChapterMark(title, durationSec);
 
-            if (duration === null) {
-                showToast('Please enter a valid duration', 'error');
-                return;
-            }
+                // Reset and update next
+                elements.chapterTitle.value = '';
+                elements.chapterDuration.value = '';
+                elements.nextTimestamp.textContent = formatTime(state.cumulativeTime);
+            });
 
-            const chapter = {
-                id: Date.now(),
-                title: title,
-                duration: duration,
-                start_time: state.cumulativeTime,
-                start_time_formatted: formatTime(state.cumulativeTime)
+            elements.chapterDuration.addEventListener('input', (e) => {
+                const dur = parseDuration(e.target.value);
+                if (dur !== null) {
+                    elements.nextTimestamp.textContent = formatTime(state.cumulativeTime + dur);
+                } else {
+                    elements.nextTimestamp.textContent = formatTime(state.cumulativeTime);
+                }
+            });
+
+            document.getElementById('clearChaptersBtn').addEventListener('click', () => {
+                if (confirm('Are you sure you want to clear all chapters?')) {
+                    state.chapters = [];
+                    state.cumulativeTime = 0;
+                    renderManifest();
+                    showToast('Manifest cleared', 'info');
+                    elements.nextTimestamp.textContent = '00:00:00';
+                }
+            });
+
+            window.addChapterMark = (title, durationSec) => {
+                const chapter = {
+                    id: Date.now(),
+                    title: title || `Chapter ${state.chapters.length + 1}`,
+                    duration: durationSec,
+                    startTime: state.cumulativeTime
+                };
+                state.chapters.push(chapter);
+                state.cumulativeTime += durationSec;
+                renderManifest();
+                showToast(`Added ${chapter.title}`, 'success');
             };
+        }
 
-            state.chapters.push(chapter);
-            state.cumulativeTime += duration;
+        function parseDuration(input) {
+            if (!input) return null;
+            // Support formats like HH:MM:SS.mmm, MM:SS.mmm, SS.mmm
+            if (input.includes(':') || input.includes('.')) {
+                let parts = input.split(':').map(p => p.trim());
+                let totalSeconds = 0;
 
-            // Clear inputs
-            elements.chapterTitle.value = '';
-            elements.chapterDuration.value = '';
-            updateNextTimestamp();
+                // Handle MM:SS or HH:MM:SS
+                if (parts.length === 3) {
+                    totalSeconds += parseFloat(parts[0]) * 3600; // hours
+                    totalSeconds += parseFloat(parts[1]) * 60;   // minutes
+                    totalSeconds += parseFloat(parts[2]);        // seconds + ms
+                } else if (parts.length === 2) {
+                    totalSeconds += parseFloat(parts[0]) * 60;   // minutes
+                    totalSeconds += parseFloat(parts[1]);        // seconds + ms
+                } else if (parts.length === 1 && input.includes('.')) {
+                    totalSeconds += parseFloat(parts[0]);        // just seconds + ms
+                }
 
-            renderChapters();
-            updateChaptersPreview();
-            updateCommandPreview();
-            showToast(`Added "${title}" at ${chapter.start_time_formatted}`, 'success');
-        });
+                return isNaN(totalSeconds) ? null : totalSeconds;
+            }
 
-        function renderChapters() {
-            elements.chaptersContainer.innerHTML = state.chapters.map(chapter => `
-                <div class="chapter-entry" data-id="${chapter.id}">
-                    <div>
-                        <strong>${chapter.title}</strong>
-                    </div>
-                    <div class="timestamp">${chapter.start_time_formatted}</div>
-                    <div class="duration">${formatTime(chapter.duration)}</div>
-                    <button type="button" class="remove-chapter-btn" onclick="removeChapter(${chapter.id})">×</button>
-                </div>
-            `).join('');
+            const num = parseFloat(input);
+            return isNaN(num) ? null : num * 60; // Default to minutes if just a number
         }
 
         function removeChapter(id) {
-            const index = state.chapters.findIndex(c => c.id === id);
-            if (index !== -1) {
-                // Subtract duration from cumulative time and recalculate all subsequent chapters
-                const removedDuration = state.chapters[index].duration;
-                state.chapters.splice(index, 1);
+            const idx = state.chapters.findIndex(c => c.id === id);
+            if (idx === -1) return;
 
-                // Recalculate all timestamps
-                state.cumulativeTime = 0;
-                state.chapters.forEach(chapter => {
-                    chapter.start_time = state.cumulativeTime;
-                    chapter.start_time_formatted = formatTime(state.cumulativeTime);
-                    state.cumulativeTime += chapter.duration;
-                });
+            state.chapters.splice(idx, 1);
+            // Re-calculate all subsequent start times
+            state.cumulativeTime = 0;
+            state.chapters = state.chapters.map(ch => {
+                const updated = { ...ch, startTime: state.cumulativeTime };
+                state.cumulativeTime += ch.duration;
+                return updated;
+            });
 
-                renderChapters();
-                updateChaptersPreview();
-                updateCommandPreview();
-                updateNextTimestamp();
+            renderManifest();
+            showToast('Chapter removed', 'info');
+            elements.nextTimestamp.textContent = formatTime(state.cumulativeTime);
+        }
+
+        function renderManifest() {
+            elements.chaptersContainer.innerHTML = state.chapters.map((ch, idx) => `
+                <div class="chapter-card">
+                    <div class="chapter-header">
+                        <div class="chapter-badge">#${idx + 1}</div>
+                        <div class="chapter-name">${ch.title}</div>
+                        <div style="flex:1"></div>
+                        <div class="remove-ch" onclick="removeChapter(${ch.id})">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                        </div>
+                    </div>
+                    <div class="chapter-meta">${formatTime(ch.startTime)} • ${formatTime(ch.duration)}</div>
+                </div>
+            `).join('');
+
+            if (state.chapters.length === 0) {
+                elements.chaptersContainer.innerHTML = '<div class="empty-state">No manifest data detected</div>';
             }
         }
 
-        elements.clearChaptersBtn.addEventListener('click', () => {
-            if (state.chapters.length === 0) return;
-            if (confirm('Clear all chapters?')) {
-                state.chapters = [];
-                state.cumulativeTime = 0;
-                renderChapters();
-                updateChaptersPreview();
-                updateCommandPreview();
-                updateNextTimestamp();
-                showToast('All chapters cleared', 'info');
-            }
-        });
-
-        // Batch Import
-        elements.toggleBatchBtn.addEventListener('click', () => {
-            elements.batchArea.classList.toggle('active');
-        });
-
-        elements.applyBatchBtn.addEventListener('click', () => {
-            const text = elements.batchInput.value.trim();
-            if (!text) return;
-
-            const lines = text.split('\n').filter(line => line.trim());
-            let addedCount = 0;
-
-            lines.forEach(line => {
-                const parts = line.split(',');
-                if (parts.length >= 2) {
-                    const title = parts[0].trim();
-                    const durationStr = parts[1].trim();
-                    const duration = parseDurationInput(durationStr);
-
-                    if (title && duration !== null) {
-                        const chapter = {
-                            id: Date.now() + addedCount,
-                            title: title,
-                            duration: duration,
-                            start_time: state.cumulativeTime,
-                            start_time_formatted: formatTime(state.cumulativeTime)
-                        };
-                        state.chapters.push(chapter);
-                        state.cumulativeTime += duration;
-                        addedCount++;
-                    }
+        async function checkEngineHealth() {
+            try {
+                const res = await fetch('/api/health');
+                const data = await res.json();
+                if (data.status === 'ok') {
+                    elements.engineStatusDot.className = 'status-indicator ready';
+                    const engineName = data.engine || 'Kokoro Local';
+                    elements.engineStatusText.textContent = engineName + ' Ready';
                 }
-            });
+            } catch (e) {
+                elements.engineStatusDot.className = 'status-indicator error';
+                elements.engineStatusText.textContent = 'Engine Offline';
+            }
+        }
 
-            if (addedCount > 0) {
-                renderChapters();
-                updateChaptersPreview();
-                updateCommandPreview();
-                updateNextTimestamp();
-                showToast(`Imported ${addedCount} chapters`, 'success');
-                elements.batchArea.classList.remove('active');
-                elements.batchInput.value = '';
-            } else {
-                showToast('No valid chapters found in input', 'error');
+        // --- Utility Functions ---
+
+        function formatTime(seconds) {
+            const h = Math.floor(seconds / 3600);
+            const m = Math.floor((seconds % 3600) / 60);
+            const s = Math.floor(seconds % 60);
+            const ms = Math.floor((seconds % 1) * 1000);
+
+            let res = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+            if (ms > 0) {
+                res += `.${ms.toString().padStart(3, '0')}`;
+            }
+            return res;
+        }
+
+        function log(msg, type = 'info') {
+            const line = document.createElement('div');
+            line.className = `log-line ${type}`;
+            const time = new Date().toLocaleTimeString([], { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            line.innerHTML = `<span class="log-time">[${time}]</span> ${msg}`;
+            elements.processLog.prepend(line);
+
+            // Limit log lines
+            if (elements.processLog.children.length > 50) {
+                elements.processLog.removeChild(elements.processLog.lastChild);
+            }
+        }
+
+        function showToast(msg, type = 'info') {
+            log(msg, type);
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = msg;
+            elements.toastContainer.appendChild(toast);
+            setTimeout(() => toast.remove(), 4000);
+        }
+
+        // --- Pipeline Execution ---
+
+        document.getElementById('convertBtn').addEventListener('click', async () => {
+            const fileInput = document.getElementById('sourceFile');
+            if (!fileInput.files.length) return showToast('Select source file', 'error');
+
+            startPipeline();
+            const formData = new FormData();
+            formData.append('source_file', fileInput.files[0]);
+            formData.append('output_name', document.getElementById('outputName').value);
+            formData.append('audio_quality', document.getElementById('audioQuality').value);
+
+            try {
+                const res = await fetch('/api/convert', { method: 'POST', body: formData });
+                if (!res.ok) throw new Error('Pipeline failed');
+                downloadBlob(await res.blob(), document.getElementById('outputName').value || 'audiobook.m4b');
+                finishPipeline('Conversion Complete');
+            } catch (e) {
+                failPipeline(e.message);
             }
         });
 
-        // Export Chapters
-        elements.exportChaptersBtn.addEventListener('click', () => {
-            if (state.chapters.length === 0) {
-                showToast('No chapters to export', 'error');
-                return;
+        document.getElementById('generateAudiobookBtn').addEventListener('click', async () => {
+            const fileInput = document.getElementById('docFile');
+            if (!fileInput.files.length) return showToast('Select document', 'error');
+
+            startPipeline();
+            log('Initializing Kokoro Local TTS...', 'info');
+
+            const formData = new FormData();
+            formData.append('document_file', fileInput.files[0]);
+            formData.append('voice', document.getElementById('ttsVoice').value);
+            formData.append('speed', document.getElementById('ttsSpeed').value);
+            formData.append('language', document.getElementById('ttsLanguage').value);
+
+            try {
+                const res = await fetch('/api/document-to-audiobook', { method: 'POST', body: formData });
+                if (!res.ok) throw new Error('TTS Generation failed');
+                downloadBlob(await res.blob(), 'audiobook.m4b');
+                finishPipeline('Audiobook Generated');
+            } catch (e) {
+                failPipeline(e.message);
             }
+        });
 
-            const content = state.chapters.map(chapter =>
-                `${chapter.start_time_formatted} - ${chapter.title}`
-            ).join('\n');
+        document.getElementById('previewChaptersBtn').addEventListener('click', async () => {
+            const fileInput = document.getElementById('docFile');
+            if (!fileInput.files.length) return showToast('Select document', 'error');
 
-            const blob = new Blob([content], { type: 'text/plain' });
+            log('Scanning document structure...', 'info');
+            const formData = new FormData();
+            formData.append('document_file', fileInput.files[0]);
+
+            try {
+                const res = await fetch('/api/preview-chapters', { method: 'POST', body: formData });
+                const data = await res.json();
+
+                state.chapters = data.chapters.map(c => ({
+                    title: c.title,
+                    duration: 0, // Duration unknown until TTS
+                    startTime: 0
+                }));
+                renderManifest();
+                showToast(`Detected ${data.chapters.length} chapters`, 'success');
+            } catch (e) {
+                log('Analysis failed', 'error');
+            }
+        });
+
+        function startPipeline() {
+            state.isProcessing = true;
+            elements.progressBar.style.width = '10%';
+            elements.progressPercent.textContent = '10%';
+            elements.statusText.textContent = 'Processing Pipeline...';
+
+            // Simulate progress for better UX
+            let p = 10;
+            const iv = setInterval(() => {
+                if (p < 85 && state.isProcessing) {
+                    p += Math.random() * 5;
+                    elements.progressBar.style.width = `${p}%`;
+                    elements.progressPercent.textContent = `${Math.round(p)}%`;
+                } else {
+                    clearInterval(iv);
+                }
+            }, 1000);
+        }
+
+        function finishPipeline(msg) {
+            state.isProcessing = false;
+            elements.progressBar.style.width = '100%';
+            elements.progressPercent.textContent = '100%';
+            elements.statusText.textContent = msg;
+            showToast(msg, 'success');
+        }
+
+        function failPipeline(err) {
+            state.isProcessing = false;
+            elements.progressBar.style.width = '0%';
+            elements.statusText.textContent = 'Pipeline Error';
+            showToast(err, 'error');
+        }
+
+        function downloadBlob(blob, name) {
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'chapters.txt';
+            a.download = name;
             a.click();
             URL.revokeObjectURL(url);
-
-            showToast('Chapters exported successfully', 'success');
-        });
-
-        // Chapters Preview
-        function updateChaptersPreview() {
-            if (state.chapters.length === 0) {
-                elements.chaptersPreview.textContent = '// Chapter list will appear here\n// Add chapters using the form above';
-                return;
-            }
-
-            const preview = state.chapters.map(chapter =>
-                `${chapter.start_time_formatted} - ${chapter.title} (${formatTime(chapter.duration)})`
-            ).join('\n');
-
-            elements.chaptersPreview.textContent = preview;
         }
 
-        // Command Preview
-        function updateCommandPreview() {
-            const isM4B = state.fileType === 'mp3';
-            const outputExt = isM4B ? 'm4b' : 'mkv';
-            const outputName = state.fileInfo ?
-                (elements.outputName.value.trim() || `output.${outputExt}`) :
-                `output.${outputExt}`;
-
-            let cmd = `ffmpeg -i input.${state.fileType} -c:a ${document.getElementById('audioQuality').value}`;
-
-            if (state.chapters.length > 0) {
-                cmd += ` -map_metadata 1 -i chapters.txt`;
-            }
-
-            cmd += ` ${outputName}`;
-
-            elements.commandPreview.textContent = cmd;
-        }
-
-        elements.copyCommandBtn.addEventListener('click', async () => {
-            const cmd = elements.commandPreview.textContent;
-            try {
-                await navigator.clipboard.writeText(cmd);
-                showToast('Command copied to clipboard', 'success');
-            } catch (err) {
-                showToast('Failed to copy command', 'error');
-            }
-        });
-
-        // Form Submission
-        elements.conversionForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            if (!state.smartMode) {
-                showToast('Conversion mode is disabled. Enable it to convert files.', 'info');
-                return;
-            }
-
-            if (!state.fileInfo) {
-                showToast('Please select a source file', 'error');
-                return;
-            }
-
-            if (state.isProcessing) {
-                showToast('Conversion already in progress', 'error');
-                return;
-            }
-
-            // Prepare form data
-            const formData = new FormData();
-            formData.append('source_file', state.fileInfo.file);
-            formData.append('output_name', elements.outputName.value.trim() || '');
-            formData.append('file_type', state.fileType);
-            formData.append('audio_quality', document.getElementById('audioQuality').value);
-
-            if (state.chapters.length > 0) {
-                formData.append('chapters', JSON.stringify(state.chapters));
-            }
-
-            // Start conversion
-            startConversion();
-            await performConversion(formData);
-        });
-
-        function startConversion() {
-            state.isProcessing = true;
-            elements.progressSection.classList.add('active');
-            elements.progressBar.style.width = '0%';
-            elements.statusBadge.className = 'status-badge processing';
-            elements.statusText.textContent = 'Starting conversion...';
-            elements.statusSpinner.style.display = 'inline-block';
-            elements.convertBtn.disabled = true;
-
-            simulateProgress();
-        }
-
-        function simulateProgress() {
-            let progress = 0;
-            const interval = setInterval(() => {
-                if (progress < 90) {
-                    progress += Math.random() * 15;
-                    if (progress > 90) progress = 90;
-                    elements.progressBar.style.width = `${progress}%`;
-                    elements.progressPercent.textContent = `${Math.round(progress)}%`;
-                } else {
-                    clearInterval(interval);
-                }
-            }, 500);
-        }
-
-        async function performConversion(formData) {
-            try {
-                elements.statusText.textContent = 'Uploading file...';
-
-                const response = await fetch('/api/convert', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                if (!response.ok) {
-                    const error = await response.json();
-                    throw new Error(error.error || 'Conversion failed');
-                }
-
-                // Get filename from headers
-                const contentDisposition = response.headers.get('Content-Disposition');
-                let filename = 'output.m4b';
-                if (contentDisposition) {
-                    const match = contentDisposition.match(/filename="?([^"]+)"?/);
-                    if (match) filename = match[1];
-                }
-
-                // Download the file
-                const blob = await response.blob();
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = filename;
-                a.click();
-                window.URL.revokeObjectURL(url);
-
-                elements.progressBar.style.width = '100%';
-                elements.progressPercent.textContent = '100%';
-                elements.statusBadge.className = 'status-badge success';
-                elements.statusText.textContent = 'Conversion complete!';
-                elements.statusSpinner.style.display = 'none';
-
-                showToast('Conversion completed successfully!', 'success');
-
-                // Reset after delay
-                setTimeout(() => {
-                    resetConversion();
-                }, 3000);
-
-            } catch (error) {
-                elements.statusBadge.className = 'status-badge error';
-                elements.statusText.textContent = 'Conversion failed';
-                elements.statusSpinner.style.display = 'none';
-                showToast(error.message, 'error');
-
-                setTimeout(() => {
-                    resetConversion();
-                }, 5000);
-            } finally {
-                state.isProcessing = false;
-                elements.convertBtn.disabled = false;
-            }
-        }
-
-        function resetConversion() {
-            elements.progressSection.classList.remove('active');
-            elements.progressBar.style.width = '0%';
-            elements.statusBadge.className = 'status-badge';
-            elements.statusText.textContent = 'Processing...';
-            elements.progressPercent.textContent = '0%';
-        }
-
-        // Toast Notifications
-        function showToast(message, type = 'info') {
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-
-            let icon = '';
-            if (type === 'success') icon = '✓';
-            else if (type === 'error') icon = '✕';
-            else icon = 'ℹ';
-
-            toast.innerHTML = `<span>${icon}</span><span>${message}</span>`;
-            elements.toastContainer.appendChild(toast);
-
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transform = 'translateX(100px)';
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        }
-
-        // Event Listeners Setup
-        function setupEventListeners() {
-            updateCommandPreview();
-            updateNextTimestamp();
-        }
-
-        // ── Document-to-Audiobook Logic ──
-
-        // Load saved API key
-        (function loadSavedApiKey() {
-            const saved = localStorage.getItem('bpm4b-openrouter-key');
-            if (saved) document.getElementById('apiKeyInput').value = saved;
-        })();
-
-        // Toggle API key visibility
-        document.getElementById('toggleApiKey').addEventListener('click', () => {
-            const input = document.getElementById('apiKeyInput');
-            input.type = input.type === 'password' ? 'text' : 'password';
-        });
-
-        // Save API key on change
-        document.getElementById('apiKeyInput').addEventListener('change', (e) => {
-            localStorage.setItem('bpm4b-openrouter-key', e.target.value);
-        });
-
-        // Document file drop zone
-        const docDropZone = document.getElementById('docDropZone');
-        const docFileInput = document.getElementById('docFile');
-        let selectedDocFile = null;
-
-        docDropZone.addEventListener('click', () => docFileInput.click());
-        docDropZone.addEventListener('dragover', (e) => { e.preventDefault(); docDropZone.classList.add('drag-over'); });
-        docDropZone.addEventListener('dragleave', () => docDropZone.classList.remove('drag-over'));
-        docDropZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            docDropZone.classList.remove('drag-over');
-            if (e.dataTransfer.files.length > 0) handleDocFileSelect(e.dataTransfer.files[0]);
-        });
-        docFileInput.addEventListener('change', (e) => {
-            if (e.target.files.length > 0) handleDocFileSelect(e.target.files[0]);
-        });
-
-        function handleDocFileSelect(file) {
-            const validExts = ['.pdf', '.docx', '.doc', '.txt', '.epub'];
-            const ext = '.' + file.name.split('.').pop().toLowerCase();
-            if (!validExts.includes(ext)) {
-                showToast('Please select a PDF, DOCX, TXT, or EPUB file', 'error');
-                return;
-            }
-            selectedDocFile = file;
-            const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
-            document.getElementById('docFileInfo').innerHTML = `
-                <div><strong>${file.name}</strong><br><small>${sizeMB} MB</small></div>
-                <button type="button" class="remove-file" onclick="clearDocFile()">×</button>
-            `;
-            document.getElementById('docFileInfo').style.display = 'flex';
-            const baseName = file.name.replace(/\.[^/.]+$/, '');
-            document.getElementById('audiobookOutputName').value = baseName + '.m4b';
-            showToast('Document selected', 'success');
-        }
-
-        function clearDocFile() {
-            selectedDocFile = null;
-            docFileInput.value = '';
-            document.getElementById('docFileInfo').style.display = 'none';
-            document.getElementById('chapterPreviewArea').style.display = 'none';
-        }
-
-        // Preview chapters
-        document.getElementById('previewChaptersBtn').addEventListener('click', async () => {
-            if (!selectedDocFile) { showToast('Please select a document first', 'error'); return; }
-
-            const btn = document.getElementById('previewChaptersBtn');
-            btn.disabled = true;
-            btn.innerHTML = '<span class="spinner"></span> Analyzing...';
-
-            try {
-                const formData = new FormData();
-                formData.append('document_file', selectedDocFile);
-                const res = await fetch('/api/preview-chapters', { method: 'POST', body: formData });
-                if (!res.ok) { const err = await res.json(); throw new Error(err.error); }
-
-                const data = await res.json();
-                const previewArea = document.getElementById('chapterPreviewArea');
-                const infoEl = document.getElementById('estimatedInfo');
-                const listEl = document.getElementById('chapterPreviewList');
-
-                infoEl.innerHTML = `
-                    <div class="info-item"><span class="info-label">Chapters</span><span class="info-value">${data.chapters.length}</span></div>
-                    <div class="info-item"><span class="info-label">Est. Duration</span><span class="info-value">${data.estimatedDuration}</span></div>
-                    <div class="info-item"><span class="info-label">Characters</span><span class="info-value">${data.totalCharacters.toLocaleString()}</span></div>
-                `;
-
-                listEl.innerHTML = data.chapters.map(ch => `
-                    <div class="chapter-preview-item">
-                        <span class="chapter-num">${ch.number}</span>
-                        <span class="chapter-title">${ch.title}</span>
-                        <div class="chapter-meta">${ch.wordCount.toLocaleString()} words</div>
-                        <div class="chapter-excerpt">${ch.preview}</div>
-                    </div>
-                `).join('');
-
-                previewArea.style.display = 'block';
-                showToast(`Found ${data.chapters.length} chapters`, 'success');
-
-            } catch (error) {
-                showToast(error.message || 'Chapter preview failed', 'error');
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg> Preview Chapters';
-            }
-        });
-
-        // Generate audiobook
-        document.getElementById('audiobookForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            if (!selectedDocFile) { showToast('Please select a document', 'error'); return; }
-
-            const apiKey = document.getElementById('apiKeyInput').value.trim();
-            if (!apiKey) { showToast('Please enter your OpenRouter API key', 'error'); return; }
-
-            const btn = document.getElementById('generateAudiobookBtn');
-            const btnText = document.getElementById('generateBtnText');
-            btn.disabled = true;
-            btnText.textContent = 'Generating...';
-
-            const progressEl = document.getElementById('audiobookProgress');
-            progressEl.style.display = 'block';
-
-            // Reset pipeline steps
-            ['stepParsing', 'stepDetecting', 'stepGenerating', 'stepAssembling', 'stepComplete'].forEach(id => {
-                document.getElementById(id).className = 'pipeline-step';
-            });
-
-            try {
-                const formData = new FormData();
-                formData.append('document_file', selectedDocFile);
-                formData.append('api_key', apiKey);
-                formData.append('voice', document.getElementById('ttsVoice').value);
-                formData.append('model', document.getElementById('ttsModel').value);
-                formData.append('speed', document.getElementById('ttsSpeed').value);
-                formData.append('output_name', document.getElementById('audiobookOutputName').value.trim());
-                formData.append('audio_quality', document.getElementById('audioQuality').value);
-
-                const res = await fetch('/api/document-to-audiobook', { method: 'POST', body: formData });
-
-                if (!res.ok) {
-                    const err = await res.json();
-                    throw new Error(err.error || 'Generation failed');
-                }
-
-                // Download the file
-                const contentDisposition = res.headers.get('Content-Disposition');
-                let filename = 'audiobook.m4b';
-                if (contentDisposition) {
-                    const match = contentDisposition.match(/filename="?([^"]+)"?/);
-                    if (match) filename = match[1];
-                }
-
-                const blob = await res.blob();
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = filename;
-                a.click();
-                window.URL.revokeObjectURL(url);
-
-                // Mark all steps as done
-                ['stepParsing', 'stepDetecting', 'stepGenerating', 'stepAssembling', 'stepComplete'].forEach(id => {
-                    document.getElementById(id).className = 'pipeline-step done';
-                });
-
-                showToast('Audiobook generated successfully!', 'success');
-            } catch (error) {
-                showToast(error.message || 'Audiobook generation failed', 'error');
-                document.getElementById('stepComplete').className = 'pipeline-step error';
-            } finally {
-                btn.disabled = false;
-                btnText.textContent = 'Generate Audiobook';
-            }
-        });
-
-        // ── AAX Conversion Logic ──
-
-        const aaxDropZone = document.getElementById('aaxDropZone');
-        const aaxFileInput = document.getElementById('aaxFile');
-        let selectedAaxFile = null;
-
-        aaxDropZone.addEventListener('click', () => aaxFileInput.click());
-        aaxDropZone.addEventListener('dragover', (e) => { e.preventDefault(); aaxDropZone.classList.add('drag-over'); });
-        aaxDropZone.addEventListener('dragleave', () => aaxDropZone.classList.remove('drag-over'));
-        aaxDropZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            aaxDropZone.classList.remove('drag-over');
-            if (e.dataTransfer.files.length > 0) handleAaxFileSelect(e.dataTransfer.files[0]);
-        });
-        aaxFileInput.addEventListener('change', (e) => {
-            if (e.target.files.length > 0) handleAaxFileSelect(e.target.files[0]);
-        });
-
-        function handleAaxFileSelect(file) {
-            const ext = '.' + file.name.split('.').pop().toLowerCase();
-            if (ext !== '.aax' && ext !== '.aa') {
-                showToast('Please select an AAX or AA file', 'error');
-                return;
-            }
-            selectedAaxFile = file;
-            const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
-            document.getElementById('aaxFileInfo').innerHTML = `
-                <div><strong>${file.name}</strong><br><small>${sizeMB} MB</small></div>
-                <button type="button" class="remove-file" onclick="clearAaxFile()">×</button>
-            `;
-            document.getElementById('aaxFileInfo').style.display = 'flex';
-            const baseName = file.name.replace(/\.[^/.]+$/, '');
-            document.getElementById('aaxOutputName').value = baseName + '.' + document.getElementById('aaxOutputFormat').value;
-            showToast('AAX file selected', 'success');
-        }
-
-        function clearAaxFile() {
-            selectedAaxFile = null;
-            aaxFileInput.value = '';
-            document.getElementById('aaxFileInfo').style.display = 'none';
-        }
-
-        // Update output name when format changes
-        document.getElementById('aaxOutputFormat').addEventListener('change', () => {
-            const currentName = document.getElementById('aaxOutputName').value;
-            if (currentName) {
-                const baseName = currentName.replace(/\.[^/.]+$/, '');
-                document.getElementById('aaxOutputName').value = baseName + '.' + document.getElementById('aaxOutputFormat').value;
-            }
-        });
-
-        // AAX conversion form submit
-        document.getElementById('aaxForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            if (!selectedAaxFile) { showToast('Please select an AAX file', 'error'); return; }
-
-            const activationBytes = document.getElementById('activationBytes').value.trim();
-            if (!activationBytes || !/^[0-9a-fA-F]{8}$/.test(activationBytes)) {
-                showToast('Activation bytes must be 8 hex characters', 'error');
-                return;
-            }
-
-            const btn = document.getElementById('convertAaxBtn');
-            const btnText = document.getElementById('aaxBtnText');
-            btn.disabled = true;
-            btnText.textContent = 'Converting...';
-
-            try {
-                const formData = new FormData();
-                formData.append('aax_file', selectedAaxFile);
-                formData.append('activation_bytes', activationBytes);
-                formData.append('output_format', document.getElementById('aaxOutputFormat').value);
-                formData.append('output_name', document.getElementById('aaxOutputName').value.trim());
-                formData.append('extract_cover', document.getElementById('extractCover').checked);
-
-                const res = await fetch('/api/convert-aax', { method: 'POST', body: formData });
-
-                if (!res.ok) {
-                    const err = await res.json();
-                    throw new Error(err.error || 'AAX conversion failed');
-                }
-
-                const contentDisposition = res.headers.get('Content-Disposition');
-                let filename = 'output.m4b';
-                if (contentDisposition) {
-                    const match = contentDisposition.match(/filename="?([^"]+)"?/);
-                    if (match) filename = match[1];
-                }
-
-                const blob = await res.blob();
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = filename;
-                a.click();
-                window.URL.revokeObjectURL(url);
-
-                showToast('AAX conversion complete!', 'success');
-            } catch (error) {
-                showToast(error.message || 'AAX conversion failed', 'error');
-            } finally {
-                btn.disabled = false;
-                btnText.textContent = 'Convert AAX';
-            }
-        });
-
-        // Initialize on load
         document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
