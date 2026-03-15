@@ -4,7 +4,7 @@
     "description": "Professional Multimedia Converter - Local Kokoro-82M TTS & Premium Audio Conversion",
     "main": "lib/server.js",
     "bin": {
-        "bpm4b": "./bin/bpm4b.js"
+        "bpm4b": "bin/bpm4b.js"
     },
     "scripts": {
         "start": "node bin/bpm4b.js web",
