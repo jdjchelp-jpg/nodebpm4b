@@ -1,10 +1,10 @@
-# BPM4B - Professional Multimedia Converter (Node.js Version)
+# BPM4B - Professional Multimedia Suite (Node.js Version)
 
-A Node.js web application for converting MP3 to M4B and M3U8 to MKV with automatic chapter support.
+A Node.js web application for converting MP3 to M4B, M4B to MP3, and generating AI Audiobooks with high-fidelity TTS and automatic chapter support.
 
 **Install and run with:** `npm install -g bpm4b` then `bpm4b`
 
-**Version:** 8.0.0
+**Version:** 9.0.0
 
 ## Features
 
@@ -15,10 +15,11 @@ A Node.js web application for converting MP3 to M4B and M3U8 to MKV with automat
 
 ### 📁 File Conversion Section
 - **MP3 to M4B**: Convert MP3 files to audiobook format with embedded chapters
-- **M3U8 to MKV**: Stream conversion with chapter embedding (NEW in v7)
+- **M4B to MP3**: High-fidelity conversion from M4B/M4A containers to MP3 (NEW in v9)
+- **Document to Audiobook**: Generate high-quality voiceovers from PDF/Text using Kokoro-82M AI (NEW in v9)
 - Drag-and-drop file upload with visual feedback
-- Real-time file validation
-- Visual progress bar with status updates
+- Real-time progress monitoring with SSE (Server-Sent Events)
+- Visual progress bar and live terminal logging
 
 ### ⏱ Automatic Chapter Builder
 - **Always enabled** - core functionality
@@ -186,16 +187,25 @@ Converts an MP3 file to M4B with optional chapters.
 **Response:**
 Returns an M4B file as a download.
 
-### POST /api/m3u8-to-mkv
-Converts an M3U8 HLS stream to MKV with embedded chapters.
+### POST /api/convert
+Converts MP3 to M4B or M4B to MP3.
 
 **Form Data:**
-- `m3u8_file`: The M3U8 file (can be local file or URL in content)
-- `chapters` (optional): JSON array of chapter objects with same format as MP3 endpoint
-- `smart_mode` (optional): If "chapters-only", only generates chapter timestamps without conversion
+- `source_file`: The file to convert
+- `output_name`: Custom filename
+- `audio_quality`: Bitrate (e.g., '128k', '256k')
+- `chapters` (optional): JSON array of chapter objects.
+
+### POST /api/generate-audiobook
+Generates an audiobook from a document.
+
+**Form Data:**
+- `doc_file`: The PDF or Text file
+- `voice`: Selection from available Kokoro voices
+- `output_name`: Custom filename
 
 **Response:**
-Returns an MKV file as a download with chapters embedded in the container.
+Returns the generated audio file as a download.
 
 ### GET /api/health
 
@@ -235,17 +245,24 @@ Health check endpoint. Returns JSON with status and FFmpeg availability.
 
 ## Notes
 
-- Maximum file size for uploads: 100MB
-- Temporary files are cleaned up automatically
+- Maximum file size for uploads: 2GB
+- SSE (Server-Sent Events) used for real-time progress updates
+- Kokoro AI engine runs locally (no API keys or external costs)
 - M4B output files can be large (typically 0.96-2GB per hour of audio depending on bitrate)
-- The default audio bitrate is 64kbps AAC, which provides good quality for speech
-- The web interface shows progress during upload but FFmpeg conversion happens server-side without progress updates
-- For large files, conversion may take several minutes
+- Optimized for high-speed conversion on Windows/macOS/Linux
+- The web interface shows accurate real-time progress thanks to FFmpeg spawn integration
+
+## Contact
+
+For questions, issues, or collaboration:
+- **X (Twitter)**: [@jdjchelp](https://x.com/jdjchelp)
+
+## Original Python Project
+
+This is a Node.js port of the original Python project by Me.
 
 ## License
 
 MIT
 
-## Original Python Project
 
-This is a Node.js port of the original Python project by Me.

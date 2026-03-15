@@ -1,6 +1,6 @@
-# BPM4B - Professional Multimedia Converter (v8.0.0)
+# BPM4B - Professional Multimedia Suite (v9.0.0)
 
-A professional multimedia processing tool for converting MP3 to M4B and M3U8 to MKV with automatic chapter support.
+A professional multimedia processing suite for converting MP3 to M4B, M4B to MP3, and generating AI Audiobooks with high-fidelity TTS and automatic chapter support.
 
 **Available in two versions:**
 - **Python** (Flask): `pip install bpm4b` then `bpm4b`
@@ -46,10 +46,11 @@ npm update -g bpm4b
 
 ### 📁 File Conversion Section
 - **MP3 to M4B**: Convert MP3 files to audiobook format with embedded chapters
-- **M3U8 to MKV**: Stream conversion with chapter embedding (NEW in v7)
-- Drag-and-drop file upload with visual feedback
-- Real-time file validation
-- Visual progress bar with status updates
+- **M4B to MP3**: High-fidelity conversion from M4B/M4A containers to MP3 (NEW in v9)
+- **Document to Audiobook**: Generate high-quality voiceovers from PDF/Text using Kokoro-82M AI (NEW in v9)
+- Drag-and-drop file upload for all tools
+- Real-time progress monitoring with SSE (Server-Sent Events)
+- Visual progress bar and live terminal logging
 
 ### ⏱ Automatic Chapter Builder
 - **Always enabled** - core functionality
@@ -238,12 +239,16 @@ Once the server is running:
 **MP3 to M4B**: Upload an MP3 file, add chapters using the automatic chapter builder, and click "Convert to M4B"
 - Automatically converts to M4B format (iTunes/Apple Books compatible)
 - Chapters automatically embedded with titles and timestamps
-- Uses FFmpeg for high-quality AAC audio (64kbps)
+- Uses FFmpeg for high-quality AAC audio (64kbps - 256kbps)
 
-**M3U8 to MKV**: Upload an M3U8 stream file, build chapters, and click "Convert to MKV with Chapters"
-- Downloads the HLS stream and converts to MKV container
-- Chapters automatically embedded into MKV metadata
-- Perfect for preserving chapter markers from streaming sources
+**M4B to MP3**: Upload an M4B/M4A file and convert it to a standard MP3
+- High-fidelity conversion using the libmp3lame encoder
+- Perfect for playback on legacy devices or sharing
+
+**Audiobook Gen**: Upload a PDF or Text document to generate a full audiobook
+- Powered by Kokoro-82M Local TTS engine
+- High-quality, human-like voice synthesis
+- Automatic chapter detection and manifest generation
 
 ## API Endpoints
 
@@ -261,16 +266,22 @@ Converts an MP3 file to M4B with optional chapters.
 ]
 ```
 
-### POST /api/m3u8-to-mkv
-Converts an M3U8 HLS stream to MKV with embedded chapters.
+### POST /api/convert
+Converts MP3 to M4B or M4B to MP3.
 
 **Form Data:**
-- `m3u8_file`: The M3U8 file (can be local file or URL in content)
-- `chapters` (optional): JSON array of chapter objects with same format as MP3 endpoint
-- `smart_mode` (optional): If "chapters-only", only generates chapter timestamps without conversion
+- `source_file`: The file to convert
+- `output_name`: Custom filename
+- `audio_quality`: Bitrate (e.g., '128k', '256k')
+- `chapters` (optional): JSON array of chapter objects.
 
-**Response:**
-Returns an MKV file as a download with chapters embedded in the container.
+### POST /api/generate-audiobook
+Generates an audiobook from a document.
+
+**Form Data:**
+- `doc_file`: The PDF or Text file
+- `voice`: Selection from available Kokoro voices
+- `output_name`: Custom filename
 
 ### GET /api/health
 Health check endpoint. Returns JSON with status and FFmpeg availability.
@@ -324,10 +335,12 @@ Returns an M4B file as a download.
 
 ## Notes
 
-- Maximum file size for uploads: 100MB
-- Temporary files are cleaned up automatically
+- Maximum file size for uploads: 2GB
+- SSE (Server-Sent Events) used for real-time progress updates
+- Kokoro AI engine runs locally (no API keys or external costs)
 - M4B output files can be large (typically 0.96-2GB per hour of audio depending on bitrate)
-- The default audio bitrate is 64kbps AAC, which provides good quality for speech
+- Optimized for high-speed conversion on Windows/macOS/Linuxion:
+- **X (Twitter)**: [@jdjchelp](https://x.com/jdjchelp)
 
 ## License
 

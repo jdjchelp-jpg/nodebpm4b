@@ -51,6 +51,10 @@
             --border-hover: rgba(0, 0, 0, 0.1);
         }
 
+        [data-theme="light"] .log-vessel {
+            color: #334155;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -626,6 +630,33 @@
             opacity: 1;
         }
 
+        /* Paste Chapters Panel */
+        .paste-chapters-panel {
+            background: rgba(99, 102, 241, 0.05);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .paste-chapters-panel.hidden {
+            display: none;
+        }
+
+        .paste-chapters-panel textarea {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+
+        .paste-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
         @keyframes shimmer {
             from {
                 transform: translateX(-100%);
@@ -712,7 +743,7 @@
                         <path d="M9 18V5l12-2v13M6 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm12-3a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
                     </svg>
                 </div>
-                <h1>AudioBPM</h1>
+                <h1>BPM4B</h1>
             </div>
 
             <div class="nav-group">
@@ -723,19 +754,18 @@
                     </svg>
                     MP3 Conversion
                 </a>
+                <a class="nav-item" data-tool="m4b">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 12h16M12 4v16" />
+                    </svg>
+                    M4B to MP3
+                </a>
                 <a class="nav-item" data-tool="audiobook">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path
                             d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5V4.5z" />
                     </svg>
                     Audiobook Gen
-                </a>
-                <a class="nav-item" data-tool="aax">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                    </svg>
-                    AAX Converter
                 </a>
             </div>
 
@@ -788,9 +818,9 @@
                             stroke-width="2">
                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
                         </svg>
-                        <p>Drop MP3 or M3U8 here</p>
-                        <span>Up to 2GB supported</span>
-                        <input type="file" id="sourceFile" class="hidden" accept=".mp3,.m3u8">
+                        <p>Drop MP3 here</p>
+                        <span>High-fidelity M4B conversion</span>
+                        <input type="file" id="sourceFile" class="hidden" accept=".mp3">
                     </div>
                     <div id="mp3FileInfo" class="active-file-indicator hidden"></div>
                 </div>
@@ -804,8 +834,8 @@
                         <label>Audio Fidelity</label>
                         <select id="audioQuality" class="form-select">
                             <option value="copy">Stream Copy (Original)</option>
-                            <option value="libmp3lame">Standard (128k)</option>
-                            <option value="aac" selected>High Fidelity (256k AAC)</option>
+                            <option value="128k">Standard (128k AAC)</option>
+                            <option value="256k" selected>High Fidelity (256k AAC)</option>
                         </select>
                     </div>
                 </div>
@@ -815,6 +845,57 @@
                         <path d="M5 12h14M12 5l7 7-7 7" />
                     </svg>
                     Initialize Conversion
+                </button>
+            </div>
+
+            <!-- M4B to MP3 Panel -->
+            <div class="bento-card col-span-8 tool-content" id="m4bPanel">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <div class="card-icon-sm">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M4 12h16M12 4v16" />
+                            </svg>
+                        </div>
+                        M4B to MP3
+                    </h3>
+                </div>
+
+                <div class="input-group">
+                    <label>Source M4B/M4A File</label>
+                    <div class="drop-zone" id="m4bDropZone">
+                        <svg class="drop-zone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
+                        </svg>
+                        <p>Drop M4B or M4A here</p>
+                        <span>High-quality audio container</span>
+                        <input type="file" id="m4bFile" class="hidden" accept=".m4b,.m4a">
+                    </div>
+                    <div id="m4bFileInfo" class="active-file-indicator hidden"></div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="input-group">
+                        <label>Output Filename</label>
+                        <input type="text" id="m4bOutputName" class="form-input" placeholder="output.mp3">
+                    </div>
+                    <div class="input-group">
+                        <label>Audio Quality</label>
+                        <select id="m4bAudioQuality" class="form-select">
+                            <option value="128k">Standard (128k)</option>
+                            <option value="192k">High (192k)</option>
+                            <option value="256k" selected>Very High (256k)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button id="convertM4bBtn" class="btn btn-primary">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
+                    Convert to MP3
                 </button>
             </div>
 
@@ -848,30 +929,71 @@
                     <div id="docFileInfo" class="active-file-indicator hidden"></div>
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 1rem;">
                     <div class="input-group">
-                        <label>Voice Model</label>
+                        <label>Voice (Local Kokoro)</label>
                         <select id="ttsVoice" class="form-select">
-                            <option value="af_heart">Female (Heart)</option>
-                            <option value="af_bella">Female (Bella)</option>
-                            <option value="am_adam">Male (Adam)</option>
-                            <option value="am_michael">Male (Michael)</option>
+                            <optgroup label="US English 🇺🇸">
+                                <option value="af_heart" selected>Heart (F) - Recommended</option>
+                                <option value="af_alloy">Alloy (F)</option>
+                                <option value="af_aoede">Aoede (F)</option>
+                                <option value="af_bella">Bella (F)</option>
+                                <option value="af_jessica">Jessica (F)</option>
+                                <option value="af_kore">Kore (F)</option>
+                                <option value="af_nicole">Nicole (F)</option>
+                                <option value="af_nova">Nova (F)</option>
+                                <option value="af_river">River (F)</option>
+                                <option value="af_sarah">Sarah (F)</option>
+                                <option value="af_sky">Sky (F)</option>
+                                <option value="am_adam">Adam (M)</option>
+                                <option value="am_echo">Echo (M)</option>
+                                <option value="am_eric">Eric (M)</option>
+                                <option value="am_fenrir">Fenrir (M)</option>
+                                <option value="am_liam">Liam (M)</option>
+                                <option value="am_michael">Michael (M)</option>
+                                <option value="am_onyx">Onyx (M)</option>
+                                <option value="am_puck">Puck (M)</option>
+                                <option value="am_santa">Santa (M)</option>
+                            </optgroup>
+                            <optgroup label="British English 🇬🇧">
+                                <option value="bf_alice">Alice (F)</option>
+                                <option value="bf_emma">Emma (F)</option>
+                                <option value="bf_isabella">Isabella (F)</option>
+                                <option value="bf_lily">Lily (F)</option>
+                                <option value="bm_daniel">Daniel (M)</option>
+                                <option value="bm_fable">Fable (M)</option>
+                                <option value="bm_george">George (M)</option>
+                                <option value="bm_lewis">Lewis (M)</option>
+                            </optgroup>
+                            <optgroup label="Spanish 🇪🇸">
+                                <option value="ef_dora">Dora (F)</option>
+                                <option value="em_alex">Alex (M)</option>
+                                <option value="em_santa">Santa (M)</option>
+                            </optgroup>
+                            <optgroup label="French 🇫🇷">
+                                <option value="ff_siwis">Siwis (F)</option>
+                            </optgroup>
+                            <optgroup label="Other Languages">
+                                <option value="if_sara">Italian (F)</option>
+                                <option value="im_nicola">Italian (M)</option>
+                                <option value="hf_alpha">Hindi (F)</option>
+                                <option value="hf_beta">Hindi (F)</option>
+                                <option value="hm_omega">Hindi (M)</option>
+                                <option value="jf_alpha">Japanese (F)</option>
+                                <option value="pf_dora">Portuguese (F)</option>
+                                <option value="zf_xiaobei">Mandarin (F)</option>
+                            </optgroup>
                         </select>
                     </div>
                     <div class="input-group">
-                        <label>Speed</label>
+                        <label>Speech Speed</label>
                         <select id="ttsSpeed" class="form-select">
+                            <option value="0.5">0.5x (Slow)</option>
                             <option value="0.8">0.8x</option>
                             <option value="1.0" selected>1.0x (Natural)</option>
                             <option value="1.2">1.2x</option>
-                            <option value="1.5">1.5x</option>
-                        </select>
-                    </div>
-                    <div class="input-group">
-                        <label>Language</label>
-                        <select id="ttsLanguage" class="form-select">
-                            <option value="en-us">English (US)</option>
-                            <option value="en-gb">English (GB)</option>
+                            <option value="1.5">1.5x (Fast)</option>
+                            <option value="2.0">2.0x</option>
                         </select>
                     </div>
                 </div>
@@ -891,50 +1013,6 @@
                 </div>
             </div>
 
-            <!-- AAX Converter Panel -->
-            <div class="bento-card col-span-8 tool-content" id="aaxPanel">
-                <div class="card-header">
-                    <h3 class="card-title">
-                        <div class="card-icon-sm">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2">
-                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                            </svg>
-                        </div>
-                        AAX Decryptor
-                    </h3>
-                </div>
-
-                <div class="input-group">
-                    <label>Audible File</label>
-                    <div class="drop-zone" id="aaxDropZone">
-                        <svg class="drop-zone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2">
-                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                        </svg>
-                        <p>Select AAX or AA File</p>
-                        <input type="file" id="aaxFile" class="hidden" accept=".aax,.aa">
-                    </div>
-                    <div id="aaxFileInfo" class="active-file-indicator hidden"></div>
-                </div>
-
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                    <div class="input-group">
-                        <label>Activation Bytes</label>
-                        <input type="text" id="activationBytes" class="form-input" placeholder="8 characters (hex)">
-                    </div>
-                    <div class="input-group">
-                        <label>Export Format</label>
-                        <select id="aaxOutputFormat" class="form-select">
-                            <option value="m4b">M4B (Lossless)</option>
-                            <option value="mp3">MP3</option>
-                        </select>
-                    </div>
-                </div>
-
-                <button id="convertAaxBtn" class="btn btn-primary">Decrypt and Convert</button>
-            </div>
 
             <!-- Sidebar/Right Column Bento Cards -->
             <div class="bento-card col-span-4 row-span-2">
@@ -946,12 +1024,16 @@
                     <div class="stat-card">
                         <div class="stat-value" id="progressPercent">0%</div>
                         <div class="stat-label">Pipeline Progress</div>
+                        <div class="progress-bar-container">
+                            <div class="progress-fill" id="progressBar"></div>
+                        </div>
+                        <div
+                            style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted);">
+                            <span id="statusText">V9 System Ready.</span>
+                            <span id="timeRemaining" class="hidden">Est: --:--</span>
+                            <span id="progressPercent">0%</span>
+                        </div>
                     </div>
-                    <div class="progress-bar-container">
-                        <div class="progress-fill" id="progressBar"></div>
-                    </div>
-                    <div id="statusText" style="font-size: 0.8125rem; color: var(--text-muted);">Awaiting
-                        initialization...</div>
                 </div>
 
                 <div class="log-vessel mt-3" id="processLog">
@@ -966,7 +1048,21 @@
                     <h3 class="card-title">Chapter Manifest</h3>
                     <div class="chapter-actions">
                         <button class="btn btn-sm btn-secondary" id="addChapterBtn">Add Mark</button>
+                        <button class="btn btn-sm btn-secondary" id="pasteChaptersBtn">Paste Chapters</button>
                         <button class="btn btn-sm btn-secondary" id="clearChaptersBtn">Clear All</button>
+                    </div>
+                </div>
+
+                <!-- Paste Chapters Panel -->
+                <div id="pasteChaptersPanel" class="paste-chapters-panel hidden">
+                    <div class="input-group">
+                        <label>Paste Chapter List</label>
+                        <textarea id="pasteChaptersText" class="form-input" rows="6"
+                            placeholder="Paste chapters in format:&#10;Example 1 = 1h 43m 02s&#10;Example 2 = 1h 30m 10s&#10;Example 3 = 1h 01m 51s"></textarea>
+                    </div>
+                    <div class="paste-actions">
+                        <button class="btn btn-secondary btn-sm" id="cancelPasteBtn">Cancel</button>
+                        <button class="btn btn-primary btn-sm" id="parsePasteBtn">Parse Chapters</button>
                     </div>
                 </div>
 
@@ -1021,7 +1117,8 @@
             chapterDuration: document.getElementById('chapterDuration'),
             confirmAddChapterBtn: document.getElementById('confirmAddChapterBtn'),
             nextTimestamp: document.getElementById('nextTimestamp'),
-            addChapterBtn: document.getElementById('addChapterBtn')
+            addChapterBtn: document.getElementById('addChapterBtn'),
+            timeRemaining: document.getElementById('timeRemaining')
         };
 
         const config = {
@@ -1046,6 +1143,8 @@
                     switchTool(tool);
                 });
             });
+            let monitoringInterval = null;
+            let jobStartTime = null;
         }
 
         function switchTool(toolId) {
@@ -1058,16 +1157,24 @@
             elements.toolPanels.forEach(panel => {
                 const isMatch = panel.id === (toolId + 'Panel');
                 panel.classList.toggle('active', isMatch);
-
-                // Manifest visibility logic
-                if (panel.id === 'chapterPreviewPanel') {
-                    panel.classList.add('active'); // Keep manifest visible for most tools
-                }
             });
 
-            // Special handling for panels that don't need manifest
-            const noManifestTools = ['aax'];
-            document.getElementById('chapterPreviewPanel').classList.toggle('hidden', noManifestTools.includes(toolId));
+            // Manifest visibility logic
+            const manifestTools = ['conversion', 'audiobook'];
+            document.getElementById('chapterPreviewPanel').classList.toggle('hidden', !manifestTools.includes(toolId));
+
+            // CLEAR previous file selections and chapter data safe-guards
+            if (!state.isProcessing) {
+                // Keep chapters if switching between conversion/audiobook? 
+                // Peer feedback suggests clearing if switching to a new data source.
+                // For now, let's just clear the "FileInfo" displays for other tools
+                ['mp3', 'm4b', 'doc', 'aax'].forEach(id => {
+                    const info = document.getElementById(`${id}FileInfo`);
+                    if (id !== toolId && (toolId !== 'conversion' || id !== 'mp3')) {
+                        // info.classList.add('hidden'); // Optional: clear previous info
+                    }
+                });
+            }
 
             log(`Switched to ${toolId} pipeline`, 'info');
         }
@@ -1090,7 +1197,7 @@
         }
 
         function setupDropZones() {
-            ['mp3', 'doc', 'aax'].forEach(id => {
+            ['mp3', 'm4b', 'doc', 'aax'].forEach(id => {
                 const dz = document.getElementById(`${id}DropZone`);
                 const input = document.getElementById(id === 'mp3' ? 'sourceFile' : `${id}File`);
                 const info = document.getElementById(`${id}FileInfo`);
@@ -1149,6 +1256,51 @@
                 if (!elements.quickEntryBar.classList.contains('hidden')) {
                     elements.chapterTitle.focus();
                 }
+            });
+
+            // Paste Chapters functionality
+            const pasteChaptersBtn = document.getElementById('pasteChaptersBtn');
+            const pasteChaptersPanel = document.getElementById('pasteChaptersPanel');
+            const pasteChaptersText = document.getElementById('pasteChaptersText');
+            const cancelPasteBtn = document.getElementById('cancelPasteBtn');
+            const parsePasteBtn = document.getElementById('parsePasteBtn');
+
+            pasteChaptersBtn.addEventListener('click', () => {
+                pasteChaptersPanel.classList.toggle('hidden');
+                if (!pasteChaptersPanel.classList.contains('hidden')) {
+                    pasteChaptersText.focus();
+                }
+            });
+
+            cancelPasteBtn.addEventListener('click', () => {
+                pasteChaptersPanel.classList.add('hidden');
+                pasteChaptersText.value = '';
+            });
+
+            parsePasteBtn.addEventListener('click', () => {
+                const text = pasteChaptersText.value.trim();
+                if (!text) {
+                    showToast('Please paste chapter information', 'error');
+                    return;
+                }
+
+                const parsedChapters = parsePastedChapters(text);
+                if (parsedChapters.length === 0) {
+                    showToast('No valid chapters found. Use format: Title = Duration', 'error');
+                    return;
+                }
+
+                // Clear existing chapters and add parsed ones
+                state.chapters = [];
+                state.cumulativeTime = 0;
+
+                parsedChapters.forEach(ch => {
+                    addChapterMark(ch.title, ch.duration);
+                });
+
+                pasteChaptersPanel.classList.add('hidden');
+                pasteChaptersText.value = '';
+                showToast(`Added ${parsedChapters.length} chapters`, 'success');
             });
 
             elements.confirmAddChapterBtn.addEventListener('click', () => {
@@ -1229,6 +1381,69 @@
             return isNaN(num) ? null : num * 60; // Default to minutes if just a number
         }
 
+        function parsePastedChapters(text) {
+            const chapters = [];
+            const lines = text.split('\n').map(line => line.trim()).filter(line => line);
+
+            for (const line of lines) {
+                // Support formats like:
+                // "The Young Warriors = 1h 43m 02s"
+                // "My Father Sun Sun Johnson = 1h 30m 10s"
+                // "The Enchanted Island = 1h 01m 51s"
+                // Also support: "Title: Duration" or "Title - Duration"
+                const match = line.match(/^(.+?)\s*[=:–-]\s*(.+)$/);
+                if (match) {
+                    const title = match[1].trim();
+                    const durationStr = match[2].trim();
+
+                    // Parse duration string like "1h 43m 02s" or "1h 30m 10s"
+                    const duration = parseDurationString(durationStr);
+                    if (duration !== null && duration > 0) {
+                        chapters.push({ title, duration });
+                    }
+                }
+            }
+
+            return chapters;
+        }
+
+        function parseDurationString(str) {
+            // Parse formats like "1h 43m 02s", "1h 30m 10s", "1h 01m 51s"
+            // Also support "1:43:02", "90:30", "5430" (seconds)
+
+            str = str.trim().toLowerCase();
+
+            // Try to parse "Xh Ym Zs" format
+            const hmsMatch = str.match(/(?:(\d+)h\s*)?(?:(\d+)m\s*)?(?:(\d+(?:\.\d+)?)s)?/);
+            if (hmsMatch) {
+                const hours = parseInt(hmsMatch[1]) || 0;
+                const minutes = parseInt(hmsMatch[2]) || 0;
+                const seconds = parseFloat(hmsMatch[3]) || 0;
+
+                if (hours > 0 || minutes > 0 || seconds > 0) {
+                    return hours * 3600 + minutes * 60 + seconds;
+                }
+            }
+
+            // Try to parse "HH:MM:SS" or "MM:SS" format
+            if (str.includes(':')) {
+                const parts = str.split(':').map(p => parseFloat(p.trim()));
+                if (parts.length === 3) {
+                    return parts[0] * 3600 + parts[1] * 60 + parts[2];
+                } else if (parts.length === 2) {
+                    return parts[0] * 60 + parts[1];
+                }
+            }
+
+            // Try to parse as plain number (seconds)
+            const num = parseFloat(str);
+            if (!isNaN(num) && num > 0) {
+                return num;
+            }
+
+            return null;
+        }
+
         function removeChapter(id) {
             const idx = state.chapters.findIndex(c => c.id === id);
             if (idx === -1) return;
@@ -1247,12 +1462,17 @@
             elements.nextTimestamp.textContent = formatTime(state.cumulativeTime);
         }
 
+        window.updateChapterTitle = (id, newTitle) => {
+            const ch = state.chapters.find(c => c.id === id);
+            if (ch) ch.title = newTitle.trim() || ch.title;
+        };
+
         function renderManifest() {
             elements.chaptersContainer.innerHTML = state.chapters.map((ch, idx) => `
                 <div class="chapter-card">
                     <div class="chapter-header">
                         <div class="chapter-badge">#${idx + 1}</div>
-                        <div class="chapter-name">${ch.title}</div>
+                        <div class="chapter-name" contenteditable="true" onblur="updateChapterTitle(${ch.id}, this.innerText)" title="Click to edit chapter title">${ch.title}</div>
                         <div style="flex:1"></div>
                         <div class="remove-ch" onclick="removeChapter(${ch.id})">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 6L6 18M6 6l12 12"/></svg>
@@ -1319,23 +1539,155 @@
             setTimeout(() => toast.remove(), 4000);
         }
 
+        function startPipeline(jobId) {
+            state.isProcessing = true;
+            jobStartTime = Date.now();
+            elements.timeRemaining.classList.remove('hidden');
+            elements.progressBar.style.width = '2%';
+            elements.progressPercent.textContent = '2%';
+            elements.statusText.textContent = 'Initializing...';
+
+            if (jobId) {
+                setupSSE(jobId);
+            }
+        }
+
+        function setupSSE(jobId) {
+            const eventSource = new EventSource(`/api/progress/${jobId}`);
+
+            eventSource.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                if (data.percent !== undefined && data.percent !== null) {
+                    updateProgress(data.percent, data.message);
+                } else if (data.message) {
+                    log(data.message, 'info');
+                    elements.statusText.textContent = data.message;
+                }
+
+                if (data.percent === 100 || data.downloadUrl) {
+                    eventSource.close();
+                    if (data.downloadUrl) {
+                        finishPipeline(data.message || 'Complete', data.downloadUrl);
+                    }
+                }
+            };
+
+            eventSource.onerror = () => {
+                eventSource.close();
+            };
+        }
+
+        function updateProgress(percent, status) {
+            elements.progressBar.style.width = `${percent}%`;
+            elements.progressPercent.textContent = `${Math.round(percent)}%`;
+            if (status) {
+                elements.statusText.textContent = status;
+                log(status, 'info');
+            }
+
+            // Estimate time remaining
+            if (percent > 5 && jobStartTime) {
+                const elapsed = (Date.now() - jobStartTime) / 1000;
+                const totalEstimated = elapsed / (percent / 100);
+                const remaining = Math.max(0, totalEstimated - elapsed);
+
+                const mm = Math.floor(remaining / 60);
+                const ss = Math.floor(remaining % 60);
+                elements.timeRemaining.textContent = `Est: ${mm}:${ss.toString().padStart(2, '0')}`;
+            }
+        }
+
+        function downloadBlob(blob, filename) {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        function finishPipeline(msg, customUrl = null) {
+            state.isProcessing = false;
+            updateProgress(100, msg || 'Pipeline Complete');
+            showToast(msg || 'Success', 'success');
+            elements.timeRemaining.classList.add('hidden');
+
+            if (customUrl) {
+                const a = document.createElement('a');
+                a.href = customUrl;
+                a.download = '';
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+            }
+        }
+
+        function failPipeline(msg) {
+            state.isProcessing = false;
+            elements.progressBar.style.width = '0%';
+            elements.progressPercent.textContent = 'Error';
+            elements.statusText.textContent = 'Pipeline failed';
+            elements.timeRemaining.classList.add('hidden');
+            showToast(msg, 'error');
+        }
+
         // --- Pipeline Execution ---
 
         document.getElementById('convertBtn').addEventListener('click', async () => {
             const fileInput = document.getElementById('sourceFile');
             if (!fileInput.files.length) return showToast('Select source file', 'error');
 
-            startPipeline();
+            const jobId = 'job_' + Date.now();
+            startPipeline(jobId);
+
             const formData = new FormData();
             formData.append('source_file', fileInput.files[0]);
             formData.append('output_name', document.getElementById('outputName').value);
             formData.append('audio_quality', document.getElementById('audioQuality').value);
+            formData.append('jobId', jobId);
+
+            if (state.chapters.length > 0) {
+                // Ensure field names match backend expectations (start_time)
+                const mappedChapters = state.chapters.map(ch => ({
+                    title: ch.title,
+                    start_time: ch.startTime,
+                    end_time: ch.endTime
+                }));
+                formData.append('chapters', JSON.stringify(mappedChapters));
+            }
 
             try {
                 const res = await fetch('/api/convert', { method: 'POST', body: formData });
-                if (!res.ok) throw new Error('Pipeline failed');
-                downloadBlob(await res.blob(), document.getElementById('outputName').value || 'audiobook.m4b');
-                finishPipeline('Conversion Complete');
+                if (!res.ok) {
+                    const errData = await res.json().catch(() => ({}));
+                    throw new Error(errData.error || `Server error ${res.status}`);
+                }
+                // SSE handles the completion
+            } catch (e) {
+                failPipeline(e.message);
+            }
+        });
+
+        document.getElementById('convertM4bBtn').addEventListener('click', async () => {
+            const fileInput = document.getElementById('m4bFile');
+            if (!fileInput.files.length) return showToast('Select M4B/M4A file', 'error');
+
+            const jobId = 'job_' + Date.now();
+            startPipeline(jobId);
+
+            const formData = new FormData();
+            formData.append('source_file', fileInput.files[0]);
+            formData.append('output_name', document.getElementById('m4bOutputName').value);
+            formData.append('audio_quality', document.getElementById('m4bAudioQuality').value);
+            formData.append('jobId', jobId);
+
+            try {
+                const res = await fetch('/api/convert', { method: 'POST', body: formData });
+                if (!res.ok) {
+                    const errData = await res.json().catch(() => ({}));
+                    throw new Error(errData.error || `Server error ${res.status}`);
+                }
             } catch (e) {
                 failPipeline(e.message);
             }
@@ -1345,20 +1697,29 @@
             const fileInput = document.getElementById('docFile');
             if (!fileInput.files.length) return showToast('Select document', 'error');
 
-            startPipeline();
+            const jobId = 'job_' + Date.now();
+            startPipeline(jobId);
             log('Initializing Kokoro Local TTS...', 'info');
 
             const formData = new FormData();
             formData.append('document_file', fileInput.files[0]);
             formData.append('voice', document.getElementById('ttsVoice').value);
             formData.append('speed', document.getElementById('ttsSpeed').value);
-            formData.append('language', document.getElementById('ttsLanguage').value);
+            formData.append('jobId', jobId);
+
+            if (state.chapters.length > 0) {
+                formData.append('chapters', JSON.stringify(state.chapters.map(c => ({
+                    title: c.title,
+                    originalIndex: c.originalIndex
+                }))));
+            }
 
             try {
                 const res = await fetch('/api/document-to-audiobook', { method: 'POST', body: formData });
-                if (!res.ok) throw new Error('TTS Generation failed');
-                downloadBlob(await res.blob(), 'audiobook.m4b');
-                finishPipeline('Audiobook Generated');
+                if (!res.ok) {
+                    const errData = await res.json().catch(() => ({}));
+                    throw new Error(errData.error || `Server error ${res.status}`);
+                }
             } catch (e) {
                 failPipeline(e.message);
             }
@@ -1376,9 +1737,11 @@
                 const res = await fetch('/api/preview-chapters', { method: 'POST', body: formData });
                 const data = await res.json();
 
-                state.chapters = data.chapters.map(c => ({
+                state.chapters = data.chapters.map((c, i) => ({
+                    id: Date.now() + i,
+                    originalIndex: i,
                     title: c.title,
-                    duration: 0, // Duration unknown until TTS
+                    duration: 0,
                     startTime: 0
                 }));
                 renderManifest();
@@ -1387,49 +1750,6 @@
                 log('Analysis failed', 'error');
             }
         });
-
-        function startPipeline() {
-            state.isProcessing = true;
-            elements.progressBar.style.width = '10%';
-            elements.progressPercent.textContent = '10%';
-            elements.statusText.textContent = 'Processing Pipeline...';
-
-            // Simulate progress for better UX
-            let p = 10;
-            const iv = setInterval(() => {
-                if (p < 85 && state.isProcessing) {
-                    p += Math.random() * 5;
-                    elements.progressBar.style.width = `${p}%`;
-                    elements.progressPercent.textContent = `${Math.round(p)}%`;
-                } else {
-                    clearInterval(iv);
-                }
-            }, 1000);
-        }
-
-        function finishPipeline(msg) {
-            state.isProcessing = false;
-            elements.progressBar.style.width = '100%';
-            elements.progressPercent.textContent = '100%';
-            elements.statusText.textContent = msg;
-            showToast(msg, 'success');
-        }
-
-        function failPipeline(err) {
-            state.isProcessing = false;
-            elements.progressBar.style.width = '0%';
-            elements.statusText.textContent = 'Pipeline Error';
-            showToast(err, 'error');
-        }
-
-        function downloadBlob(blob, name) {
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = name;
-            a.click();
-            URL.revokeObjectURL(url);
-        }
 
         document.addEventListener('DOMContentLoaded', init);
     </script>
