@@ -1,6 +1,6 @@
 {
     "name": "bpm4b",
-    "version": "9.0.0",
+    "version": "11.0.0",
     "description": "Professional Multimedia Converter - Local Kokoro-82M TTS & Premium Audio Conversion",
     "main": "lib/server.js",
     "bin": {
@@ -10,7 +10,8 @@
         "start": "node bin/bpm4b.js web",
         "web": "node bin/bpm4b.js web",
         "convert": "node bin/bpm4b.js convert",
-        "test": "node test/basic-test.js"
+        "test": "test/basic-test.js",
+        "build:exe": "node scripts/build-exe.js"
     },
     "keywords": [
         "mp3",
@@ -58,8 +59,19 @@
         "minimatch": "^10.2.1"
     },
     "pkg": {
+        "scripts": [
+            "lib/**/*.js"
+        ],
         "assets": [
-            "node_modules/ffmpeg-static/**/*"
+            "node_modules/ffmpeg-static/**/*",
+            "templates/**/*",
+            "package.json"
+        ],
+        "targets": [
+            "node18-win-x64"
         ]
+    },
+    "devDependencies": {
+        "pkg": "^5.8.1"
     }
 }

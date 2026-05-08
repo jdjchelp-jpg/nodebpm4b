@@ -27,20 +27,21 @@ module.exports = async (req, res) => {
     }
 
     try {
-        // Check for file in request - support both mp3_file and source_file
-        const fileField = req.files?.mp3_file || req.files?.source_file;
+        // Check for file in request - support mp3_file, source_file, and document_file
+        const fileField = req.files?.mp3_file || req.files?.source_file || req.files?.document_file;
         if (!req.body || !fileField) {
             return res.status(400).json({ error: 'No source file provided' });
         }
 
-        const uploadedFile = fileField;
+        // Handle both single file and array of files
+        const uploadedFile = Array.isArray(fileField) ? fileField[0] : fileField;
 
         // Determine file type
         const fileExt = path.extname(uploadedFile.name).toLowerCase();
         const isMp3 = fileExt === '.mp3' || uploadedFile.mimetype === 'audio/mpeg';
         const isM3U8 = fileExt === '.m3u8' || fileExt === '.m3u' ||
-                      uploadedFile.mimetype === 'application/x-mpegurl' ||
-                      uploadedFile.mimetype === 'audio/mpegurl';
+            uploadedFile.mimetype === 'application/x-mpegurl' ||
+            uploadedFile.mimetype === 'audio/mpegurl';
 
         if (!isMp3 && !isM3U8) {
             return res.status(400).json({ error: 'Unsupported file type. Only MP3 and M3U8 files are allowed.' });

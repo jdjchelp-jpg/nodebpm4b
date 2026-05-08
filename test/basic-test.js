@@ -7,7 +7,6 @@ const { parseTimeToSeconds } = require('../lib/core');
 const { detectChapters, normalizeNumbersInText, parseChapterNumber, romanToInt } = require('../lib/chapter-detector');
 const { extractHeadingsFromText } = require('../lib/document-parser');
 const { splitTextIntoChunks } = require('../lib/tts-engine');
-const { validateActivationBytes } = require('../lib/aax-converter');
 
 function runTests() {
     console.log('Running bpm4b tests...\n');
@@ -137,14 +136,6 @@ function runTests() {
     assert(longChunks.length > 1, `Long text split into ${longChunks.length} chunks`);
     assert(longChunks.every(c => c.length <= 500), 'All chunks <= max length');
 
-    // ── Activation bytes validation ──
-    console.log('\n--- Activation Bytes ---');
-    assert(validateActivationBytes('1a2b3c4d') === true, '"1a2b3c4d" is valid');
-    assert(validateActivationBytes('AABBCCDD') === true, '"AABBCCDD" is valid');
-    assert(validateActivationBytes('12345678') === true, '"12345678" is valid');
-    assert(validateActivationBytes('1234567') === false, '"1234567" (7 chars) is invalid');
-    assert(validateActivationBytes('1234567g') === false, '"1234567g" (non-hex) is invalid');
-    assert(validateActivationBytes('') === false, 'Empty string is invalid');
 
     // ── Summary ──
     console.log(`\n${'─'.repeat(40)}`);

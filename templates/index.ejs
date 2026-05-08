@@ -4,9 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-        <%= title %> - BPM4B
-    </title>
+    <title>BPM4B v11 | Pro Audiobook Studio</title>
+    <script src="https://unpkg.com/wavesurfer.js@7"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -14,22 +13,16 @@
         rel="stylesheet">
     <style>
         :root {
-            /* Premium v9 Dashboard Palette (Dark Default) */
-            --bg-page: #020617;
-            --bg-sidebar: #0f172a;
-            --bg-card: #1e293b;
-            --bg-card-hover: #334155;
-            --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-            --text-muted: #64748b;
             --primary: #6366f1;
             --primary-glow: rgba(99, 102, 241, 0.4);
             --accent: #8b5cf6;
             --success: #10b981;
             --error: #ef4444;
             --warning: #f59e0b;
-            --border: rgba(255, 255, 255, 0.08);
-            --border-hover: rgba(255, 255, 255, 0.15);
+            --border: rgba(255, 255, 255, 0.05);
+            --border-hover: rgba(255, 255, 255, 0.12);
+            --glass-bg: rgba(30, 41, 59, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.08);
             --radius-sm: 8px;
             --radius-md: 12px;
             --radius-lg: 20px;
@@ -37,6 +30,23 @@
             --font-main: 'Outfit', sans-serif;
             --font-body: 'Inter', sans-serif;
             --sidebar-width: 280px;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+
+            /* Theme colors - Mesh Gradient logic */
+            --bg-app: #020617;
+            --bg-surface: #0f172a;
+            --slate-50: #0f172a;
+            --slate-100: #1e293b;
+            --slate-200: #334155;
+            --slate-300: #475569;
+            --slate-400: #64748b;
+            --slate-500: #94a3b8;
+            --slate-600: #cbd5e1;
+            --slate-700: #e2e8f0;
+            --slate-800: #f1f5f9;
+            --slate-900: #f8fafc;
         }
 
         [data-theme="light"] {
@@ -49,6 +59,7 @@
             --text-muted: #94a3b8;
             --border: rgba(0, 0, 0, 0.06);
             --border-hover: rgba(0, 0, 0, 0.1);
+            --slate-900: #0f172a;
         }
 
         [data-theme="light"] .log-vessel {
@@ -64,11 +75,11 @@
 
         body {
             font-family: var(--font-body);
-            background-color: var(--bg-page);
-            color: var(--text-primary);
+            background-color: var(--bg-app);
+            color: var(--slate-900);
             min-height: 100vh;
             display: flex;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         /* Layout Structure */
@@ -82,8 +93,8 @@
         /* Sidebar Styling */
         .sidebar {
             width: var(--sidebar-width);
-            background: var(--bg-sidebar);
-            border-right: 1px solid var(--border);
+            background: var(--bg-surface);
+            border-right: 1px solid var(--slate-200);
             display: flex;
             flex-direction: column;
             padding: 2rem 1.5rem;
@@ -95,9 +106,25 @@
             overflow-y: auto;
             position: relative;
             padding: 2.5rem;
-            background-image:
-                radial-gradient(circle at 0% 0%, rgba(99, 102, 241, 0.05) 0%, transparent 40%),
-                radial-gradient(circle at 100% 100%, rgba(139, 92, 246, 0.05) 0%, transparent 40%);
+            background-color: var(--bg-app);
+            background-image: 
+                radial-gradient(circle at 0% 0%, color-mix(in srgb, var(--primary) 8%, transparent) 0%, transparent 50%),
+                radial-gradient(circle at 100% 100%, color-mix(in srgb, var(--accent) 8%, transparent) 0%, transparent 50%);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-app);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--slate-100);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--slate-200);
         }
 
         /* Brand section */
@@ -124,6 +151,7 @@
             font-size: 1.5rem;
             font-weight: 700;
             letter-spacing: -0.025em;
+            color: var(--slate-900);
         }
 
         /* Navigation */
@@ -140,7 +168,7 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            color: var(--text-muted);
+            color: var(--slate-400);
             margin-bottom: 0.5rem;
             padding-left: 0.5rem;
         }
@@ -151,7 +179,7 @@
             gap: 0.75rem;
             padding: 0.75rem 1rem;
             border-radius: var(--radius-md);
-            color: var(--text-secondary);
+            color: var(--slate-600);
             text-decoration: none;
             font-weight: 600;
             font-size: 0.9375rem;
@@ -161,14 +189,14 @@
         }
 
         .nav-item:hover {
-            color: var(--text-primary);
-            background: var(--bg-card-hover);
+            color: var(--slate-900);
+            background: var(--slate-100);
         }
 
         .nav-item.active {
             color: var(--primary);
-            background: rgba(99, 102, 241, 0.1);
-            border-color: rgba(99, 102, 241, 0.2);
+            background: color-mix(in srgb, var(--primary) 10%, transparent);
+            border-color: color-mix(in srgb, var(--primary) 20%, transparent);
         }
 
         .nav-item svg {
@@ -194,7 +222,7 @@
 
         .version-tag {
             font-size: 0.75rem;
-            color: var(--text-muted);
+            color: var(--slate-400);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -206,7 +234,7 @@
             align-items: center;
             font-size: 0.875rem;
             font-weight: 600;
-            color: var(--text-secondary);
+            color: var(--slate-600);
         }
 
         /* Bento Dashboard Grid */
@@ -220,21 +248,34 @@
         }
 
         .bento-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
             border-radius: var(--radius-lg);
             padding: 1.75rem;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
             display: flex;
             flex-direction: column;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .bento-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
         }
 
         .bento-card:hover {
             border-color: var(--border-hover);
-            transform: translateY(-4px);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transform: translateY(-4px) scale(1.005);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+            background: rgba(30, 41, 59, 0.8);
         }
 
         /* Span Helpers */
@@ -282,7 +323,7 @@
             font-family: var(--font-main);
             font-size: 1.25rem;
             font-weight: 700;
-            color: var(--text-primary);
+            color: var(--slate-900);
             display: flex;
             align-items: center;
             gap: 0.875rem;
@@ -291,7 +332,7 @@
         .card-icon-sm {
             width: 36px;
             height: 36px;
-            background: rgba(99, 102, 241, 0.1);
+            background: color-mix(in srgb, var(--primary) 10%, transparent);
             border-radius: 10px;
             display: flex;
             align-items: center;
@@ -306,7 +347,8 @@
         }
 
         .tool-content.active {
-            display: block;
+            display: contents;
+            /* Allows children to participate in the dashboard-grid */
         }
 
         /* Inputs & Controls */
@@ -318,7 +360,7 @@
             display: block;
             font-size: 0.75rem;
             font-weight: 700;
-            color: var(--text-muted);
+            color: var(--slate-400);
             margin-bottom: 0.625rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
@@ -328,11 +370,11 @@
         .form-input,
         textarea {
             width: 100%;
-            background: var(--bg-sidebar);
-            border: 1px solid var(--border);
+            background: var(--slate-100);
+            border: 1px solid var(--slate-200);
             border-radius: var(--radius-md);
             padding: 0.875rem 1.125rem;
-            color: var(--text-primary);
+            color: var(--slate-900);
             font-family: var(--font-body);
             font-size: 0.9375rem;
             transition: all 0.2s ease;
@@ -343,7 +385,7 @@
         textarea:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+            box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 15%, transparent);
         }
 
         textarea {
@@ -353,13 +395,13 @@
 
         /* Drop Zone */
         .drop-zone {
-            border: 2px dashed var(--border);
+            border: 2px dashed var(--slate-300);
             border-radius: var(--radius-lg);
             padding: 3.5rem 2rem;
             text-align: center;
             cursor: pointer;
             transition: all 0.2s ease;
-            background: rgba(255, 255, 255, 0.015);
+            background: color-mix(in srgb, var(--slate-100) 50%, transparent);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -369,7 +411,7 @@
         .drop-zone:hover,
         .drop-zone.drag-over {
             border-color: var(--primary);
-            background: rgba(99, 102, 241, 0.04);
+            background: color-mix(in srgb, var(--primary) 4%, transparent);
             transform: scale(1.005);
         }
 
@@ -383,18 +425,19 @@
         .drop-zone p {
             font-weight: 600;
             font-size: 1rem;
+            color: var(--slate-700);
         }
 
         .drop-zone span {
             font-size: 0.8125rem;
-            color: var(--text-muted);
+            color: var(--slate-400);
         }
 
         .active-file-indicator {
             margin-top: 1.5rem;
             padding: 1rem 1.25rem;
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid rgba(16, 185, 129, 0.2);
+            background: color-mix(in srgb, var(--success) 10%, transparent);
+            border: 1px solid color-mix(in srgb, var(--success) 20%, transparent);
             border-radius: var(--radius-md);
             display: flex;
             align-items: center;
@@ -429,13 +472,13 @@
         }
 
         .status-ready {
-            background: rgba(16, 185, 129, 0.1);
-            color: #10b981;
+            background: color-mix(in srgb, var(--success) 10%, transparent);
+            color: var(--success);
         }
 
         .status-loading {
-            background: rgba(245, 158, 11, 0.1);
-            color: #f59e0b;
+            background: color-mix(in srgb, var(--warning) 10%, transparent);
+            color: var(--warning);
         }
 
         .status-dot {
@@ -465,18 +508,18 @@
         .btn-primary {
             background: linear-gradient(135deg, var(--primary), var(--accent));
             color: white;
-            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+            box-shadow: 0 4px 15px color-mix(in srgb, var(--primary) 30%, transparent);
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.45);
+            box-shadow: 0 8px 25px color-mix(in srgb, var(--primary) 45%, transparent);
         }
 
         .btn-secondary {
-            background: var(--bg-card-hover);
-            color: var(--text-primary);
-            border: 1px solid var(--border);
+            background: var(--slate-100);
+            color: var(--slate-900);
+            border: 1px solid var(--slate-200);
         }
 
         /* Progress Display */
@@ -489,10 +532,10 @@
 
         .progress-bar-container {
             height: 8px;
-            background: rgba(255, 255, 255, 0.05);
+            background: var(--slate-200);
             border-radius: 4px;
             overflow: hidden;
-            border: 1px solid var(--border);
+            border: 1px solid var(--slate-300);
         }
 
         .progress-fill {
@@ -630,6 +673,62 @@
             opacity: 1;
         }
 
+        .chapter-card.deselected {
+            opacity: 0.5;
+            background: rgba(0, 0, 0, 0.1);
+            filter: grayscale(1);
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .modal-content {
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            animation: slideIn 0.3s ease;
+        }
+
+        .modal-body {
+            overflow-y: auto;
+            padding: 1.5rem;
+            line-height: 1.8;
+            font-size: 1rem;
+            color: var(--text-secondary);
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+        }
+
+        .text-word-to-word {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: 'Inter', sans-serif;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
         /* Paste Chapters Panel */
         .paste-chapters-panel {
             background: rgba(99, 102, 241, 0.05);
@@ -728,11 +827,108 @@
                 opacity: 1;
             }
         }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Progress Bar Premium */
+        .progress-bar-container {
+            width: 100%;
+            height: 12px;
+            background: var(--slate-100);
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 1.5rem 0;
+            border: 1px solid var(--border);
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 6px;
+            transition: width 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+            position: relative;
+            box-shadow: 0 0 15px var(--primary-glow);
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.3),
+                transparent
+            );
+            animation: shimmer 2s infinite linear;
+        }
+
+        @keyframes shimmer {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(100%); }
+        }
+
+        /* Status Indicator Pulse */
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            position: relative;
+            display: inline-block;
+        }
+
+        .status-indicator::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: inherit;
+            animation: ring-pulse 2s infinite;
+            top: 0;
+            left: 0;
+        }
+
+        @keyframes ring-pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(3.5); opacity: 0; }
+        }
+
+        .status-indicator.ready { background: var(--success); }
+        .status-indicator.processing { background: var(--primary); }
+        .status-indicator.error { background: var(--error); }
     </style>
 </head>
 
 <body>
     <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Full Text Viewer Modal -->
+    <div id="textViewerModal" class="modal-overlay hidden">
+        <div class="modal-content bento-card">
+            <div class="card-header">
+                <h3 class="card-title" id="modalTitle">Chapter Content</h3>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button class="btn btn-primary" onclick="saveChapterText()" style="width: auto; padding: 0.5rem 1rem; font-size: 0.8rem;">Save Changes</button>
+                    <button class="btn-icon" onclick="closeModal()">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                    </button>
+                </div>
+            </div>
+            <div id="modalContent" class="modal-body text-word-to-word" contenteditable="true" spellcheck="false">
+                <!-- Text populated here -->
+            </div>
+            <div class="modal-footer" style="margin-top: 1.5rem; display: flex; justify-content: flex-end;">
+                <button class="btn btn-secondary" onclick="closeModal()" style="width: auto;">Close</button>
+            </div>
+        </div>
+    </div>
 
     <div class="app-shell">
         <!-- Sidebar Navigation -->
@@ -740,53 +936,88 @@
             <div class="brand">
                 <div class="brand-icon">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
-                        <path d="M9 18V5l12-2v13M6 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm12-3a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
                     </svg>
                 </div>
-                <h1>BPM4B</h1>
+                <h1 class="logo-text" style="font-family: var(--font-main); color: var(--text-primary); font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em;">BPM4B</h1>
             </div>
 
             <div class="nav-group">
-                <div class="nav-label">Tools</div>
+                <div class="nav-label">Main Pipeline</div>
                 <a class="nav-item active" data-tool="conversion">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M12 2v20M2 12h20" />
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
                     </svg>
-                    MP3 Conversion
-                </a>
-                <a class="nav-item" data-tool="m4b">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M4 12h16M12 4v16" />
-                    </svg>
-                    M4B to MP3
+                    Studio Dashboard
                 </a>
                 <a class="nav-item" data-tool="audiobook">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path
-                            d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5V4.5z" />
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2 0 0 1-2.5-2.5Z"/><path d="M8 7h6"/><path d="M8 11h8"/>
                     </svg>
                     Audiobook Gen
                 </a>
+                <a class="nav-item" data-tool="m4b">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+                    </svg>
+                    Extract Audio
+                </a>
             </div>
 
             <div class="nav-group">
-                <div class="nav-label">System</div>
-                <div class="engine-status">
-                    <div class="status-indicator ready" id="engineStatusDot"></div>
-                    <div style="flex: 1">
-                        <div style="font-size: 0.75rem; font-weight: 700; color: var(--text-primary)">Kokoro Local</div>
-                        <div style="font-size: 0.65rem; color: var(--text-muted)" id="engineStatusText">Core Ready</div>
-                    </div>
-                </div>
+                <div class="nav-label">Utility Tools</div>
+                <a class="nav-item" data-tool="metadata">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/>
+                    </svg>
+                    Metadata Editor
+                </a>
+                <a class="nav-item" data-tool="batch">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/>
+                    </svg>
+                    Batch Merge
+                </a>
+                <a class="nav-item" data-tool="converter">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 3h5v5"/><path d="M4 20L21 3"/><path d="M21 16v5h-5"/><path d="M15 15l6 6"/><path d="M4 4l5 5"/>
+                    </svg>
+                    Format Switcher
+                </a>
             </div>
+
 
             <div class="sidebar-footer">
                 <div class="theme-toggle-container">
-                    <span>Dark Appearance</span>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="themeToggle" checked>
-                        <span class="toggle-slider"></span>
-                    </label>
+                    <span>Theme</span>
+                    <select id="themeSelector" class="form-select"
+                        style="width: auto; padding: 0.5rem; font-size: 0.875rem;">
+                        <option value="dark">Dark Mode</option>
+                        <option value="classic">Classic</option>
+                        <option value="emerald-forest">Emerald Forest</option>
+                        <option value="purple-galaxy">Purple Galaxy</option>
+                        <option value="sunset-orange">Sunset Orange</option>
+                        <option value="blue-ocean">Blue Ocean</option>
+                        <option value="matrix">Matrix</option>
+                        <option value="cyberpunk">Cyberpunk</option>
+                        <option value="cherry-blossom">Cherry Blossom</option>
+                        <option value="golden-hour">Golden Hour</option>
+                        <option value="midnight-depth">Midnight Depth</option>
+                        <option value="royal-velvet">Royal Velvet</option>
+                        <option value="arctic-frost">Arctic Frost</option>
+                        <option value="volcanic-ash">Volcanic Ash</option>
+                        <option value="coffee-house">Coffee House</option>
+                        <option value="leafy-greens">Leafy Greens</option>
+                        <option value="ocean-breeze">Ocean Breeze</option>
+                        <option value="lavender-dream">Lavender Dream</option>
+                        <option value="steel-city">Steel City</option>
+                        <option value="ruby-red">Ruby Red</option>
+                        <option value="solarized-light">Solarized Light</option>
+                        <option value="dracula">Dracula</option>
+                        <option value="monokai">Monokai</option>
+                        <option value="vaporwave">Vaporwave</option>
+                        <option value="high-contrast">High Contrast</option>
+                    </select>
                 </div>
                 <div class="version-tag">
                     <span>Engine v<%= version %></span>
@@ -797,378 +1028,1283 @@
 
         <!-- Main Content Area -->
         <main class="main-content">
-            <!-- MP3 Conversion Panel -->
-            <div class="bento-card col-span-8 tool-content active" id="conversionPanel">
-                <div class="card-header">
-                    <h3 class="card-title">
-                        <div class="card-icon-sm">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            <div class="dashboard-grid">
+
+                <!-- MP3 to M4B Pipeline (Default Tool) -->
+                <div id="conversionPanel" class="tool-content active">
+                    <div class="bento-card col-span-8">
+                        <div class="card-header">
+                            <h2 class="card-title">
+                                <div class="card-icon-sm" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2)); color: var(--primary);">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                                    </svg>
+                                </div>
+                                MP3 Workflow Dashboard
+                            </h2>
+                        </div>
+
+                        <div class="input-group">
+                            <label>Source Audio (MP3)</label>
+                            <div class="drop-zone" id="mp3DropZone">
+                                <svg class="drop-zone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                    <polyline points="17 8 12 3 7 8" />
+                                    <line x1="12" y1="3" x2="12" y2="15" />
+                                </svg>
+                                <p>Drop MP3 here</p>
+                                <span>High-fidelity M4B conversion</span>
+                                <input type="file" id="sourceFile" class="hidden" accept=".mp3">
+                            </div>
+                            <div id="mp3FileInfo" class="active-file-indicator hidden"></div>
+                        </div>
+
+                        <div class="dashboard-grid" style="gap: 1rem; margin-bottom: 1.5rem;">
+                            <div class="col-span-6">
+                                <label>Output Name</label>
+                                <input type="text" id="outputName" class="form-input" placeholder="book_title_final">
+                            </div>
+                            <div class="col-span-6">
+                                <label>Audio Quality</label>
+                                <select id="audioQuality" class="form-select">
+                                    <option value="64k">Standard (64k)</option>
+                                    <option value="96k" selected>High (96k)</option>
+                                    <option value="128k">Studio (128k)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button id="convertMp3Btn" class="btn btn-primary">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2">
-                                <path d="M12 2v20M2 12h20" />
+                                <path d="M5 12h14M12 5l7 7-7 7" />
                             </svg>
+                            Convert to M4B
+                        </button>
+                    </div>
+                </div>
+
+                <!-- M4B to MP3 Extraction -->
+                <div id="m4bPanel" class="tool-content">
+                    <div class="bento-card col-span-8">
+                        <div class="card-header">
+                            <h2 class="card-title">
+                                <div class="card-icon-sm" style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(217, 70, 239, 0.2)); color: var(--accent);">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+                                    </svg>
+                                </div>
+                                M4B to MP3 Master
+                            </h2>
                         </div>
-                        MP3 to M4B Pipeline
-                    </h3>
-                </div>
 
-                <div class="input-group">
-                    <label>Source Audio</label>
-                    <div class="drop-zone" id="mp3DropZone">
-                        <svg class="drop-zone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
-                        </svg>
-                        <p>Drop MP3 here</p>
-                        <span>High-fidelity M4B conversion</span>
-                        <input type="file" id="sourceFile" class="hidden" accept=".mp3">
-                    </div>
-                    <div id="mp3FileInfo" class="active-file-indicator hidden"></div>
-                </div>
+                        <div class="input-group">
+                            <label>Source M4B/M4A Audiobook</label>
+                            <div class="drop-zone" id="m4bDropZone">
+                                <p>Drop M4B here</p>
+                                <span>Extract high-quality MP3 episodes</span>
+                                <input type="file" id="m4bFile" class="hidden" accept=".m4b,.m4a">
+                            </div>
+                            <div id="m4bFileInfo" class="active-file-indicator hidden"></div>
+                        </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                    <div class="input-group">
-                        <label>Output Filename</label>
-                        <input type="text" id="outputName" class="form-input" placeholder="my-audiobook.m4b">
-                    </div>
-                    <div class="input-group">
-                        <label>Audio Fidelity</label>
-                        <select id="audioQuality" class="form-select">
-                            <option value="copy">Stream Copy (Original)</option>
-                            <option value="128k">Standard (128k AAC)</option>
-                            <option value="256k" selected>High Fidelity (256k AAC)</option>
-                        </select>
-                    </div>
-                </div>
+                        <div class="dashboard-grid" style="gap: 1rem; margin-bottom: 1.5rem;">
+                            <div class="col-span-6">
+                                <label>Output Name</label>
+                                <input type="text" id="m4bOutputName" class="form-input" placeholder="output.mp3">
+                            </div>
+                            <div class="col-span-6">
+                                <label>Audio Quality</label>
+                                <select id="m4bAudioQuality" class="form-select">
+                                    <option value="128k">Standard (128k)</option>
+                                    <option value="192k">High (192k)</option>
+                                    <option value="256k" selected>Very High (256k)</option>
+                                </select>
+                            </div>
+                        </div>
 
-                <button id="convertBtn" class="btn btn-primary">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M5 12h14M12 5l7 7-7 7" />
-                    </svg>
-                    Initialize Conversion
-                </button>
-            </div>
-
-            <!-- M4B to MP3 Panel -->
-            <div class="bento-card col-span-8 tool-content" id="m4bPanel">
-                <div class="card-header">
-                    <h3 class="card-title">
-                        <div class="card-icon-sm">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        <button id="convertM4bBtn" class="btn btn-primary">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2">
-                                <path d="M4 12h16M12 4v16" />
+                                <path d="M5 12h14M12 5l7 7-7 7" />
                             </svg>
+                            Convert to MP3
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Document to Audiobook Panel -->
+                <div id="audiobookPanel" class="tool-content">
+                    <div class="bento-card col-span-8">
+                        <div class="card-header">
+                            <h2 class="card-title">
+                                <div class="card-icon-sm">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                        <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2 0 0 1-2.5-2.5Z" />
+                                        <path d="M8 7h6" />
+                                        <path d="M8 11h8" />
+                                    </svg>
+                                </div>
+                                Document to Audiobook Pro
+                            </h2>
                         </div>
-                        M4B to MP3
-                    </h3>
-                </div>
 
-                <div class="input-group">
-                    <label>Source M4B/M4A File</label>
-                    <div class="drop-zone" id="m4bDropZone">
-                        <svg class="drop-zone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
-                        </svg>
-                        <p>Drop M4B or M4A here</p>
-                        <span>High-quality audio container</span>
-                        <input type="file" id="m4bFile" class="hidden" accept=".m4b,.m4a">
-                    </div>
-                    <div id="m4bFileInfo" class="active-file-indicator hidden"></div>
-                </div>
-
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                    <div class="input-group">
-                        <label>Output Filename</label>
-                        <input type="text" id="m4bOutputName" class="form-input" placeholder="output.mp3">
-                    </div>
-                    <div class="input-group">
-                        <label>Audio Quality</label>
-                        <select id="m4bAudioQuality" class="form-select">
-                            <option value="128k">Standard (128k)</option>
-                            <option value="192k">High (192k)</option>
-                            <option value="256k" selected>Very High (256k)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <button id="convertM4bBtn" class="btn btn-primary">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M5 12h14M12 5l7 7-7 7" />
-                    </svg>
-                    Convert to MP3
-                </button>
-            </div>
-
-            <!-- Audiobook Generator Panel (Document) -->
-            <div class="bento-card col-span-8 tool-content" id="audiobookPanel">
-                <div class="card-header">
-                    <h3 class="card-title">
-                        <div class="card-icon-sm">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2">
-                                <path
-                                    d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5V4.5z" />
-                            </svg>
+                        <div class="input-group">
+                            <label>Upload Document (PDF/EPUB/DOCX)</label>
+                            <div class="drop-zone" id="docDropZone">
+                                <div class="drop-zone-icon" style="background: rgba(16, 185, 129, 0.1); padding: 1rem; border-radius: 50%; margin-bottom: 0.5rem;">
+                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+                                    </svg>
+                                </div>
+                                <p>Upload Any Document or Text File</p>
+                                <span style="color: var(--slate-400); font-size: 0.75rem;">PDF, EPUB, DOCX, TXT, MD, etc.</span>
+                                <input type="file" id="docFile" class="hidden" accept="*/*">
+                            </div>
+                            <div id="docFileInfo" class="active-file-indicator hidden"></div>
                         </div>
-                        Document to Audiobook
-                    </h3>
-                </div>
 
-                <div class="input-group">
-                    <label>E-Book or Document</label>
-                    <div class="drop-zone" id="docDropZone">
-                        <svg class="drop-zone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                            <polyline points="14 2 14 8 20 8" />
-                        </svg>
-                        <p>Upload PDF, EPUB, or DOCX</p>
-                        <span>Local Kokoro processing</span>
-                        <input type="file" id="docFile" class="hidden" accept=".pdf,.epub,.docx,.txt">
-                    </div>
-                    <div id="docFileInfo" class="active-file-indicator hidden"></div>
-                </div>
-
-                <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 1rem;">
-                    <div class="input-group">
-                        <label>Voice (Local Kokoro)</label>
-                        <select id="ttsVoice" class="form-select">
-                            <optgroup label="US English 🇺🇸">
-                                <option value="af_heart" selected>Heart (F) - Recommended</option>
-                                <option value="af_alloy">Alloy (F)</option>
-                                <option value="af_aoede">Aoede (F)</option>
-                                <option value="af_bella">Bella (F)</option>
-                                <option value="af_jessica">Jessica (F)</option>
-                                <option value="af_kore">Kore (F)</option>
-                                <option value="af_nicole">Nicole (F)</option>
-                                <option value="af_nova">Nova (F)</option>
-                                <option value="af_river">River (F)</option>
-                                <option value="af_sarah">Sarah (F)</option>
-                                <option value="af_sky">Sky (F)</option>
-                                <option value="am_adam">Adam (M)</option>
-                                <option value="am_echo">Echo (M)</option>
-                                <option value="am_eric">Eric (M)</option>
-                                <option value="am_fenrir">Fenrir (M)</option>
-                                <option value="am_liam">Liam (M)</option>
-                                <option value="am_michael">Michael (M)</option>
-                                <option value="am_onyx">Onyx (M)</option>
-                                <option value="am_puck">Puck (M)</option>
-                                <option value="am_santa">Santa (M)</option>
-                            </optgroup>
-                            <optgroup label="British English 🇬🇧">
-                                <option value="bf_alice">Alice (F)</option>
-                                <option value="bf_emma">Emma (F)</option>
-                                <option value="bf_isabella">Isabella (F)</option>
-                                <option value="bf_lily">Lily (F)</option>
-                                <option value="bm_daniel">Daniel (M)</option>
-                                <option value="bm_fable">Fable (M)</option>
-                                <option value="bm_george">George (M)</option>
-                                <option value="bm_lewis">Lewis (M)</option>
-                            </optgroup>
-                            <optgroup label="Spanish 🇪🇸">
-                                <option value="ef_dora">Dora (F)</option>
-                                <option value="em_alex">Alex (M)</option>
-                                <option value="em_santa">Santa (M)</option>
-                            </optgroup>
-                            <optgroup label="French 🇫🇷">
-                                <option value="ff_siwis">Siwis (F)</option>
-                            </optgroup>
-                            <optgroup label="Other Languages">
-                                <option value="if_sara">Italian (F)</option>
-                                <option value="im_nicola">Italian (M)</option>
-                                <option value="hf_alpha">Hindi (F)</option>
-                                <option value="hf_beta">Hindi (F)</option>
-                                <option value="hm_omega">Hindi (M)</option>
-                                <option value="jf_alpha">Japanese (F)</option>
-                                <option value="pf_dora">Portuguese (F)</option>
-                                <option value="zf_xiaobei">Mandarin (F)</option>
-                            </optgroup>
-                        </select>
-                    </div>
-                    <div class="input-group">
-                        <label>Speech Speed</label>
-                        <select id="ttsSpeed" class="form-select">
-                            <option value="0.5">0.5x (Slow)</option>
-                            <option value="0.8">0.8x</option>
-                            <option value="1.0" selected>1.0x (Natural)</option>
-                            <option value="1.2">1.2x</option>
-                            <option value="1.5">1.5x (Fast)</option>
-                            <option value="2.0">2.0x</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="chapter-actions mt-3">
-                    <button id="previewChaptersBtn" class="btn btn-secondary">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2">
-                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                            <circle cx="12" cy="12" r="3" />
-                        </svg>
-                        Analyze Chapters
-                    </button>
-                    <button id="generateAudiobookBtn" class="btn btn-primary">
-                        Generate Audiobook
-                    </button>
-                </div>
-            </div>
-
-
-            <!-- Sidebar/Right Column Bento Cards -->
-            <div class="bento-card col-span-4 row-span-2">
-                <div class="card-header">
-                    <h3 class="card-title">Metadata & Status</h3>
-                </div>
-
-                <div class="progress-card">
-                    <div class="stat-card">
-                        <div class="stat-value" id="progressPercent">0%</div>
-                        <div class="stat-label">Pipeline Progress</div>
-                        <div class="progress-bar-container">
-                            <div class="progress-fill" id="progressBar"></div>
+                        <div class="dashboard-grid" style="gap: 1rem; margin-bottom: 1.5rem;">
+                            <div class="col-span-6">
+                                <label>Primary Narrator Voice</label>
+                                <select id="ttsVoice" class="form-select">
+                                    <option value="" disabled selected>Loading voices...</option>
+                                </select>
+                            </div>
+                            <div class="col-span-6">
+                                <label>Speech Speed</label>
+                                <select id="ttsSpeed" class="form-select">
+                                    <option value="0.5">0.5x</option>
+                                    <option value="0.8">0.8x</option>
+                                    <option value="0.85" selected>0.85x (Natural)</option>
+                                    <option value="1.0">1.0x</option>
+                                    <option value="1.2">1.2x</option>
+                                    <option value="1.5">1.5x</option>
+                                </select>
+                            </div>
                         </div>
+
+                        <!-- Narration Studio Settings -->
+                        <div class="bento-card col-span-12" id="narrationStudioSettings"
+                            style="margin-top: 1rem; padding: 1.5rem; background: rgba(255,255,255,0.04); border: 1px solid var(--primary-glow);">
+                            <div class="card-header" style="margin-bottom: 1.25rem;">
+                                <h3 class="card-title" style="font-size: 1rem; color: var(--primary);">
+                                    <div class="card-icon-sm" style="width: 28px; height: 28px; background: var(--primary); color: white;">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/>
+                                        </svg>
+                                    </div>
+                                    Narration Studio
+                                </h3>
+                            </div>
+
+                            <div class="dashboard-grid" style="gap: 1.5rem;">
+                                <!-- Multi-Voice Toggle -->
+                                <div class="col-span-6" style="display: flex; flex-direction: column; gap: 1rem;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <div>
+                                            <div style="font-weight: 600; font-size: 0.9rem;">Multi-Voice Dialogue</div>
+                                            <div style="font-size: 0.75rem; color: var(--text-muted);">Use different voice for quoted text</div>
+                                        </div>
+                                        <div class="toggle-switch">
+                                            <input type="checkbox" id="enableMultiVoice">
+                                            <label for="enableMultiVoice"></label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div id="multiVoiceOptions" class="hidden">
+                                        <label style="font-size: 0.8rem;">Dialogue Voice</label>
+                                        <select id="dialogueVoice" class="form-select" style="padding: 0.4rem; font-size: 0.85rem;">
+                                            <!-- Voices populated here -->
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Chapter Announcement Toggle -->
+                                <div class="col-span-6" style="display: flex; flex-direction: column; gap: 1rem;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <div>
+                                            <div style="font-weight: 600; font-size: 0.9rem;">Speak Chapter Titles</div>
+                                            <div style="font-size: 0.75rem; color: var(--text-muted);">Speak titles at start of segments</div>
+                                        </div>
+                                        <div class="toggle-switch">
+                                            <input type="checkbox" id="announceChapters" checked>
+                                            <label for="announceChapters"></label>
+                                        </div>
+                                    </div>
+
+                                    <div style="font-size: 0.75rem; background: rgba(0,0,0,0.2); padding: 0.75rem; border-radius: 8px; border-left: 3px solid var(--accent);">
+                                        <div style="font-weight: 700; color: var(--accent); margin-bottom: 0.2rem;">Narration Tip</div>
+                                        Combine voices and spoken titles for a professional "Published" audiobook feel.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="chapter-actions mt-3">
+                            <button id="previewChaptersBtn" class="btn btn-secondary">Analyze Chapters</button>
+                            <button id="generateAudiobookBtn" class="btn btn-primary">Generate Audiobook</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Voice Cloning Panel (Kokoclone) -->
+                <div id="clonePanel" class="tool-content">
+                    <div class="bento-card col-span-8">
+                        <div class="card-header">
+                            <h2 class="card-title">
+                                <div class="card-icon-sm">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                                        <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                                        <line x1="12" y1="19" x2="12" y2="23"></line>
+                                        <line x1="8" y1="23" x2="16" y2="23"></line>
+                                    </svg>
+                                </div>
+                                Voice Cloning Engine
+                            </h2>
+                        </div>
+
                         <div
-                            style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted);">
-                            <span id="statusText">V9 System Ready.</span>
-                            <span id="timeRemaining" class="hidden">Est: --:--</span>
-                            <span id="progressPercent">0%</span>
+                            style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 4rem 2rem; text-align: center;">
+                            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1.5" style="color: var(--text-muted); margin-bottom: 1.5rem;">
+                                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                                <line x1="12" y1="19" x2="12" y2="23"></line>
+                                <line x1="8" y1="23" x2="16" y2="23"></line>
+                            </svg>
+                            <h3
+                                style="font-size: 1.5rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.75rem;">
+                                Coming Soon</h3>
+                            <p
+                                style="color: var(--text-muted); font-size: 0.9375rem; max-width: 400px; line-height: 1.6;">
+                                Voice cloning functionality is currently under development. This feature will allow you
+                                to clone voices from audio samples and generate speech in the cloned voice.
+                            </p>
                         </div>
                     </div>
                 </div>
 
-                <div class="log-vessel mt-3" id="processLog">
-                    <!-- Logs will appear here -->
-                    <div class="log-line info">V9 System Ready.</div>
+                <!-- Metadata Editor Panel -->
+                <div id="metadataPanel" class="tool-content">
+                    <div class="bento-card col-span-8">
+                        <div class="card-header">
+                            <h2 class="card-title">
+                                <div class="card-icon-sm">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                        <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                                    </svg>
+                                </div>
+                                Book Metadata Editor
+                            </h2>
+                        </div>
+
+                        <div class="input-group">
+                            <label>Upload M4B File (to load metadata)</label>
+                            <div class="drop-zone" id="m4bMetadataDropZone" style="padding: 1.5rem;">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="1.5" style="margin-bottom: 0.5rem;">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                    <polyline points="17 8 12 3 7 8" />
+                                    <line x1="12" y1="3" x2="12" y2="15" />
+                                </svg>
+                                <p>Drop M4B file here to load metadata</p>
+                                <span>or click to browse</span>
+                                <input type="file" id="m4bMetadataUpload" class="hidden" accept=".m4b,.m4a">
+                            </div>
+                            <div id="m4bMetadataFileInfo" class="active-file-indicator hidden">
+                                <span id="m4bMetadataFileName"></span>
+                                <button id="clearM4bMetadata" class="btn btn-secondary"
+                                    style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Clear</button>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label>Book Title</label>
+                            <div style="display: flex; gap: 0.75rem;">
+                                <input type="text" id="meta-title" class="form-input" placeholder="Enter book title...">
+                                <button class="btn btn-secondary" id="btn-meta-lookup"
+                                    style="width: auto; white-space: nowrap;">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2.5">
+                                        <circle cx="11" cy="11" r="8" />
+                                        <path d="m21 21-4.3-4.3" />
+                                    </svg>
+                                    Auto-Fill
+                                </button>
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div class="input-group">
+                                <label>Author</label>
+                                <input type="text" id="meta-author" class="form-input" placeholder="Author name...">
+                            </div>
+                            <div class="input-group">
+                                <label>Genre / Category</label>
+                                <input type="text" id="meta-genre" class="form-input"
+                                    placeholder="e.g. Fiction, History...">
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label>Description / Blurb</label>
+                            <textarea id="meta-description" class="form-input"
+                                placeholder="Enter book description..."></textarea>
+                        </div>
+
+                        <button class="btn btn-primary" id="btn-apply-metadata" style="margin-top: 1rem;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5">
+                                <path d="M5 12h14M12 5l7 7-7 7" />
+                            </svg>
+                            Apply Metadata to M4B
+                        </button>
+                    </div>
+
+                    <div class="bento-card col-span-4">
+                        <div class="card-header">
+                            <h2 class="card-title">Cover Art</h2>
+                        </div>
+                        <div class="drop-zone" id="cover-drop-zone" style="padding: 2rem 1rem;">
+                            <div id="cover-preview-container"
+                                style="width: 100%; aspect-ratio: 2/3; background: rgba(0,0,0,0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 1rem;">
+                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)"
+                                    stroke-width="1.5">
+                                    <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
+                                    <circle cx="9" cy="9" r="2" />
+                                    <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
+                                </svg>
+                            </div>
+                            <p style="font-size: 0.875rem;">Click to upload cover art</p>
+                            <span>JPG or PNG (Recommended: 600x900)</span>
+                            <input type="file" id="cover-upload" hidden accept="image/*">
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Batch Merge Panel -->
+                <div id="batchPanel" class="tool-content">
+                    <div class="bento-card col-span-8">
+                        <div class="card-header">
+                            <h2 class="card-title">
+                                <div class="card-icon-sm">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                        <path d="M12 2v20M2 12h20" />
+                                        <path d="m15 5 3 3-3 3M9 13l-3 3 3 3" />
+                                    </svg>
+                                </div>
+                                Audio Glue (Batch Merge)
+                            </h2>
+                        </div>
+                        <div class="input-group">
+                            <label>Upload MP3 Files</label>
+                            <div class="drop-zone" id="batchDropZone">
+                                <p>Drag & Drop multiple MP3s</p>
+                                <input type="file" id="batchFiles" class="hidden" multiple accept=".mp3">
+                            </div>
+                        </div>
+                        <div id="batchFileList" class="manifest-list"
+                            style="max-height: 250px; overflow-y: auto; margin-top: 1rem;"></div>
+                        <button class="btn btn-primary" id="btn-start-merge" style="margin-top: 1.5rem;" disabled>Start
+                            Merge</button>
+                    </div>
+                </div>
+
+                <!-- Audio Converter Panel -->
+                <div id="converterPanel" class="tool-content">
+                    <div class="bento-card col-span-8">
+                        <div class="card-header">
+                            <h2 class="card-title">
+                                <div class="card-icon-sm" style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(217, 119, 6, 0.2)); color: var(--warning);">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M16 3h5v5"/><path d="M4 20L21 3"/><path d="M21 16v5h-5"/><path d="M15 15l6 6"/><path d="M4 4l5 5"/>
+                                    </svg>
+                                </div>
+                                Audio Format Switcher
+                            </h2>
+                        </div>
+                        <div class="input-group">
+                            <label>Upload Audio File</label>
+                            <div class="drop-zone" id="converterDropZone">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="1.5" style="margin-bottom: 0.5rem;">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                    <polyline points="17 8 12 3 7 8" />
+                                    <line x1="12" y1="3" x2="12" y2="15" />
+                                </svg>
+                                <p>Drop audio file here</p>
+                                <span>MP3, WAV, FLAC, AAC, OGG, ALAC</span>
+                                <input type="file" id="converterFile" class="hidden"
+                                    accept=".mp3,.wav,.flac,.aac,.ogg,.m4a,.alac">
+                            </div>
+                            <div id="converterFileInfo" class="active-file-indicator hidden">
+                                <span id="converterFileName"></span>
+                                <button id="clearConverterFile" class="btn btn-secondary"
+                                    style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Clear</button>
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div class="input-group">
+                                <label>Source Format</label>
+                                <input type="text" id="sourceFormat" class="form-input" readonly
+                                    placeholder="Auto-detected">
+                            </div>
+                            <div class="input-group">
+                                <label>Target Format</label>
+                                <select id="targetFormat" class="form-select">
+                                    <option value="">Select target format...</option>
+                                    <option value="mp3">MP3</option>
+                                    <option value="wav">WAV</option>
+                                    <option value="flac">FLAC</option>
+                                    <option value="aac">AAC</option>
+                                    <option value="ogg">OGG</option>
+                                    <option value="alac">ALAC</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label>Audio Quality (Bitrate)</label>
+                            <select id="converterQuality" class="form-select">
+                                <option value="128k">128 kbps (Standard)</option>
+                                <option value="192k">192 kbps (High)</option>
+                                <option value="256k" selected>256 kbps (Very High)</option>
+                                <option value="320k">320 kbps (Maximum)</option>
+                                <option value="lossless">Lossless (FLAC/ALAC only)</option>
+                            </select>
+                        </div>
+
+                        <button class="btn btn-primary" id="btn-convert-audio" style="margin-top: 1rem;" disabled>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5">
+                                <path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4" />
+                            </svg>
+                            Convert Audio
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Metadata & Status Sidebar -->
+                <div class="bento-card col-span-4 row-span-2" style="height: fit-content;">
+                    <div class="card-header">
+                        <h3 class="card-title">System Status</h3>
+                    </div>
+                    <div class="progress-card">
+                        <div class="stat-card">
+                            <div class="stat-value" id="progressPercent">0%</div>
+                            <div class="stat-label">Pipeline Progress</div>
+                            <div class="progress-bar-container">
+                                <div class="progress-fill" id="progressBar"></div>
+                            </div>
+                            <div
+                                style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;">
+                                <span id="statusText">V9 Ready.</span>
+                                <div>
+                                    <span id="timeRemaining" class="hidden"
+                                        style="margin-right: 0.5rem; color: var(--primary);">Est: 00:00</span>
+                                    <span id="progressPercentSmall">0%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Waveform Visualizer -->
+                    <div id="waveform-container" class="mt-3">
+                        <label style="font-size: 0.7rem;">Audio Waveform</label>
+                        <div id="waveform"
+                            style="background: rgba(0,0,0,0.2); border-radius: 8px; height: 80px; margin-top: 0.5rem;">
+                        </div>
+                        <div id="waveform-time"
+                            style="text-align: center; font-size: 0.7rem; color: var(--text-muted); margin-top: 0.375rem;">
+                            0:00 / 0:00</div>
+                    </div>
+
+                    <div class="log-vessel mt-3" id="processLog"
+                        style="height: 160px; overflow-y: auto; font-family: monospace; font-size: 0.7rem; background: rgba(0,0,0,0.3); padding: 0.5rem; border-radius: 4px; border: 1px solid var(--border);">
+                        <div class="log-line info">V9 System Ready.</div>
+                    </div>
+                </div>
+
+                <!-- Chapter Manifest (Bottom — forced to a fresh row) -->
+                <div id="chapterPreviewPanel" class="bento-card active" style="grid-column: span 12; grid-row: 3;">
+                    <div class="card-header">
+                        <h3 class="card-title">Chapter Manifest</h3>
+                        <div class="chapter-actions">
+                            <button class="btn btn-sm btn-secondary" id="detectSilenceBtn">Auto-Detect</button>
+                            <button class="btn btn-sm btn-secondary" id="addChapterBtn">Add Mark</button>
+                            <button class="btn btn-sm btn-secondary" id="pasteChaptersBtn">Paste</button>
+                            <button class="btn btn-sm btn-secondary" id="clearChaptersBtn">Clear All</button>
+                        </div>
+                    </div>
+
+                    <div id="pasteChaptersPanel" class="hidden mt-3">
+                        <textarea id="pasteChaptersText" class="form-input" rows="4"
+                            placeholder="Chapter 1 = 00:00..."></textarea>
+                        <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+                            <button class="btn btn-primary btn-sm" id="parsePasteBtn">Parse</button>
+                            <button class="btn btn-secondary btn-sm" id="cancelPasteBtn">Cancel</button>
+                        </div>
+                    </div>
+
+                    <div id="quickEntryBar" class="hidden mt-3"
+                        style="display: flex; gap: 0.5rem; align-items: center;">
+                        <input type="text" id="chapterTitle" class="form-input" placeholder="Title">
+                        <input type="text" id="chapterDuration" class="form-input" placeholder="Duration">
+                        <button class="btn btn-primary btn-sm" id="confirmAddChapterBtn">Store</button>
+                    </div>
+
+                    <div class="chapter-grid" id="chaptersContainer"
+                        style="margin-top: 1.5rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem;">
+                        <!-- Chapters rendered here -->
+                    </div>
                 </div>
             </div>
-
-            <!-- Preview Grid Card -->
-            <div class="bento-card col-span-12 tool-content active" id="chapterPreviewPanel">
-                <div class="card-header">
-                    <h3 class="card-title">Chapter Manifest</h3>
-                    <div class="chapter-actions">
-                        <button class="btn btn-sm btn-secondary" id="addChapterBtn">Add Mark</button>
-                        <button class="btn btn-sm btn-secondary" id="pasteChaptersBtn">Paste Chapters</button>
-                        <button class="btn btn-sm btn-secondary" id="clearChaptersBtn">Clear All</button>
-                    </div>
-                </div>
-
-                <!-- Paste Chapters Panel -->
-                <div id="pasteChaptersPanel" class="paste-chapters-panel hidden">
-                    <div class="input-group">
-                        <label>Paste Chapter List</label>
-                        <textarea id="pasteChaptersText" class="form-input" rows="6"
-                            placeholder="Paste chapters in format:&#10;Example 1 = 1h 43m 02s&#10;Example 2 = 1h 30m 10s&#10;Example 3 = 1h 01m 51s"></textarea>
-                    </div>
-                    <div class="paste-actions">
-                        <button class="btn btn-secondary btn-sm" id="cancelPasteBtn">Cancel</button>
-                        <button class="btn btn-primary btn-sm" id="parsePasteBtn">Parse Chapters</button>
-                    </div>
-                </div>
-
-                <div class="chapter-grid" id="chaptersContainer">
-                    <!-- Chapters will be rendered here as cards -->
-                </div>
-
-                <div id="quickEntryBar" class="quick-entry-bar hidden">
-                    <div class="input-group" style="margin: 0;">
-                        <input type="text" id="chapterTitle" class="form-input" placeholder="Chapter Title">
-                    </div>
-                    <div class="input-group" style="margin: 0;">
-                        <input type="text" id="chapterDuration" class="form-input"
-                            placeholder="Duration (min or MM:SS)">
-                    </div>
-                    <div class="entry-actions">
-                        <div class="next-mark">Starts: <span id="nextTimestamp">00:00:00</span></div>
-                        <button class="btn btn-primary btn-sm" id="confirmAddChapterBtn">Add</button>
-                    </div>
-                </div>
-            </div>
-
+        </main>
     </div>
-    </main>
-    </div>
-    </div>
-
     <script>
-        // Premium v9 Orchestration Logic
+        // Premium v10 Orchestration Logic
         const state = {
             activeTool: 'conversion',
+            isProcessing: false,
             chapters: [],
             cumulativeTime: 0,
-            isProcessing: false,
-            theme: 'dark'
-        };
-
-        const elements = {
-            navItems: document.querySelectorAll('.nav-item'),
-            toolPanels: document.querySelectorAll('.tool-content'),
-            progressBar: document.getElementById('progressBar'),
-            progressPercent: document.getElementById('progressPercent'),
-            statusText: document.getElementById('statusText'),
-            processLog: document.getElementById('processLog'),
-            engineStatusDot: document.getElementById('engineStatusDot'),
-            engineStatusText: document.getElementById('engineStatusText'),
-            toastContainer: document.getElementById('toastContainer'),
-            chaptersContainer: document.getElementById('chaptersContainer'),
-            themeToggle: document.getElementById('themeToggle'),
-            quickEntryBar: document.getElementById('quickEntryBar'),
-            chapterTitle: document.getElementById('chapterTitle'),
-            chapterDuration: document.getElementById('chapterDuration'),
-            confirmAddChapterBtn: document.getElementById('confirmAddChapterBtn'),
-            nextTimestamp: document.getElementById('nextTimestamp'),
-            addChapterBtn: document.getElementById('addChapterBtn'),
-            timeRemaining: document.getElementById('timeRemaining')
+            coverBase64: null
         };
 
         const config = {
-            version: '<%= version %>'
+            version: '10.0.0'
         };
+
+        const themes = [
+            {
+                id: 'dark',
+                name: 'Dark Mode',
+                colors: {
+                    primary: '#818CF8', secondary: '#34D399', accent: '#FBBF24',
+                    bgApp: '#0F172A', bgSurface: '#1E293B',
+                    slate50: '#1E293B', slate100: '#334155', slate200: '#475569', slate300: '#64748B', slate400: '#94A3B8',
+                    slate500: '#CBD5E1', slate600: '#E2E8F0', slate700: '#F1F5F9', slate800: '#F8FAFC', slate900: '#FFFFFF'
+                }
+            },
+            {
+                id: 'classic',
+                name: 'Classic',
+                colors: {
+                    primary: '#4F46E5', secondary: '#10B981', accent: '#F59E0B',
+                    bgApp: '#F9FAFB', bgSurface: '#FFFFFF',
+                    slate50: '#F8FAFC', slate100: '#F1F5F9', slate200: '#E2E8F0', slate300: '#CBD5E1', slate400: '#94A3B8',
+                    slate500: '#64748B', slate600: '#475569', slate700: '#334155', slate800: '#1E293B', slate900: '#0F172A'
+                }
+            },
+            {
+                id: 'emerald-forest',
+                name: 'Emerald Forest',
+                colors: {
+                    primary: '#059669', secondary: '#65A30D', accent: '#D97706',
+                    bgApp: '#F0FDF4', bgSurface: '#FFFFFF',
+                    slate50: '#F0FDF4', slate100: '#DCFCE7', slate200: '#BBF7D0', slate300: '#86EFAC', slate400: '#4ADE80',
+                    slate500: '#22C55E', slate600: '#16A34A', slate700: '#15803D', slate800: '#166534', slate900: '#14532D'
+                }
+            },
+            {
+                id: 'purple-galaxy',
+                name: 'Purple Galaxy',
+                colors: {
+                    primary: '#7C3AED', secondary: '#C026D3', accent: '#4ADE80',
+                    bgApp: '#F5F3FF', bgSurface: '#FFFFFF',
+                    slate50: '#F5F3FF', slate100: '#EDE9FE', slate200: '#DDD6FE', slate300: '#C4B5FD', slate400: '#A78BFA',
+                    slate500: '#8B5CF6', slate600: '#7C3AED', slate700: '#6D28D9', slate800: '#5B21B6', slate900: '#4C1D95'
+                }
+            },
+            {
+                id: 'sunset-orange',
+                name: 'Sunset Orange',
+                colors: {
+                    primary: '#EA580C', secondary: '#E11D48', accent: '#FBBF24',
+                    bgApp: '#FFF7ED', bgSurface: '#FFFFFF',
+                    slate50: '#FFF7ED', slate100: '#FFEDD5', slate200: '#FED7AA', slate300: '#FDBA74', slate400: '#FB923C',
+                    slate500: '#F97316', slate600: '#EA580C', slate700: '#C2410C', slate800: '#9A3412', slate900: '#7C2D12'
+                }
+            },
+            {
+                id: 'blue-ocean',
+                name: 'Blue Ocean',
+                colors: {
+                    primary: '#2563EB', secondary: '#06B6D4', accent: '#FACC15',
+                    bgApp: '#EFF6FF', bgSurface: '#FFFFFF',
+                    slate50: '#F0F9FF', slate100: '#E0F2FE', slate200: '#BAE6FD', slate300: '#7DD3FC', slate400: '#38BDF8',
+                    slate500: '#0EA5E9', slate600: '#0284C7', slate700: '#0369A1', slate800: '#075985', slate900: '#0C4A6E'
+                }
+            },
+            {
+                id: 'matrix',
+                name: 'Matrix',
+                colors: {
+                    primary: '#00FF41', secondary: '#008F11', accent: '#FFFFFF',
+                    bgApp: '#0D0208', bgSurface: '#003B00',
+                    slate50: '#0D0208', slate100: '#001400', slate200: '#002800', slate300: '#003B00', slate400: '#005C00',
+                    slate500: '#008F11', slate600: '#00FF41', slate700: '#5CFF81', slate800: '#99FFB1', slate900: '#FFFFFF'
+                }
+            },
+            {
+                id: 'cyberpunk',
+                name: 'Cyberpunk',
+                colors: {
+                    primary: '#FF00FF', secondary: '#00FFFF', accent: '#FFFF00',
+                    bgApp: '#120424', bgSurface: '#280847',
+                    slate50: '#120424', slate100: '#2A0944', slate200: '#4C1D6E', slate300: '#75379B', slate400: '#A155C7',
+                    slate500: '#C775E6', slate600: '#E699FF', slate700: '#F2CCFF', slate800: '#FCE6FF', slate900: '#FFFFFF'
+                }
+            },
+            {
+                id: 'cherry-blossom',
+                name: 'Cherry Blossom',
+                colors: {
+                    primary: '#EC4899', secondary: '#F472B6', accent: '#FBBF24',
+                    bgApp: '#FDF2F8', bgSurface: '#FFFFFF',
+                    slate50: '#FDF2F8', slate100: '#FCE7F3', slate200: '#FBCFE8', slate300: '#F9A8D4', slate400: '#F472B6',
+                    slate500: '#EC4899', slate600: '#DB2777', slate700: '#BE185D', slate800: '#9D174D', slate900: '#831843'
+                }
+            },
+            {
+                id: 'golden-hour',
+                name: 'Golden Hour',
+                colors: {
+                    primary: '#D97706', secondary: '#B45309', accent: '#FDE047',
+                    bgApp: '#FFFBEB', bgSurface: '#FFFFFF',
+                    slate50: '#FFFBEB', slate100: '#FEF3C7', slate200: '#FDE68A', slate300: '#FCD34D', slate400: '#FBBF24',
+                    slate500: '#F59E0B', slate600: '#D97706', slate700: '#B45309', slate800: '#92400E', slate900: '#78350F'
+                }
+            },
+            {
+                id: 'midnight-depth',
+                name: 'Midnight Depth',
+                colors: {
+                    primary: '#6366F1', secondary: '#4338CA', accent: '#A5B4FC',
+                    bgApp: '#1E1B4B', bgSurface: '#312E81',
+                    slate50: '#1E1B4B', slate100: '#312E81', slate200: '#3730A3', slate300: '#4338CA', slate400: '#4F46E5',
+                    slate500: '#6366F1', slate600: '#818CF8', slate700: '#A5B4FC', slate800: '#C7D2FE', slate900: '#E0E7FF'
+                }
+            },
+            {
+                id: 'royal-velvet',
+                name: 'Royal Velvet',
+                colors: {
+                    primary: '#7E22CE', secondary: '#581C87', accent: '#D8B4FE',
+                    bgApp: '#3B0764', bgSurface: '#581C87',
+                    slate50: '#3B0764', slate100: '#581C87', slate200: '#6B21A8', slate300: '#7E22CE', slate400: '#9333EA',
+                    slate500: '#A855F7', slate600: '#C084FC', slate700: '#D8B4FE', slate800: '#E9D5FF', slate900: '#F3E8FF'
+                }
+            },
+            {
+                id: 'arctic-frost',
+                name: 'Arctic Frost',
+                colors: {
+                    primary: '#06B6D4', secondary: '#0891B2', accent: '#67E8F9',
+                    bgApp: '#ECFEFF', bgSurface: '#FFFFFF',
+                    slate50: '#ECFEFF', slate100: '#CFFAFE', slate200: '#A5F3FC', slate300: '#67E8F9', slate400: '#22D3EE',
+                    slate500: '#06B6D4', slate600: '#0891B2', slate700: '#0E7490', slate800: '#155E75', slate900: '#164E63'
+                }
+            },
+            {
+                id: 'volcanic-ash',
+                name: 'Volcanic Ash',
+                colors: {
+                    primary: '#EF4444', secondary: '#7F1D1D', accent: '#FCA5A5',
+                    bgApp: '#18181B', bgSurface: '#27272A',
+                    slate50: '#18181B', slate100: '#27272A', slate200: '#3F3F46', slate300: '#52525B', slate400: '#71717A',
+                    slate500: '#A1A1AA', slate600: '#D4D4D8', slate700: '#E4E4E7', slate800: '#F4F4F5', slate900: '#FAFAFA'
+                }
+            },
+            {
+                id: 'coffee-house',
+                name: 'Coffee House',
+                colors: {
+                    primary: '#78350F', secondary: '#451A03', accent: '#D97706',
+                    bgApp: '#FFF7ED', bgSurface: '#FFEDD5',
+                    slate50: '#FFF7ED', slate100: '#FFEDD5', slate200: '#FED7AA', slate300: '#FDBA74', slate400: '#FB923C',
+                    slate500: '#F97316', slate600: '#EA580C', slate700: '#C2410C', slate800: '#9A3412', slate900: '#7C2D12'
+                }
+            },
+            {
+                id: 'leafy-greens',
+                name: 'Leafy Greens',
+                colors: {
+                    primary: '#65A30D', secondary: '#365314', accent: '#BEF264',
+                    bgApp: '#F7FEE7', bgSurface: '#FFFFFF',
+                    slate50: '#F7FEE7', slate100: '#ECFCCB', slate200: '#D9F99D', slate300: '#BEF264', slate400: '#A3E635',
+                    slate500: '#84CC16', slate600: '#65A30D', slate700: '#4D7C0F', slate800: '#3F6212', slate900: '#365314'
+                }
+            },
+            {
+                id: 'ocean-breeze',
+                name: 'Ocean Breeze',
+                colors: {
+                    primary: '#14B8A6', secondary: '#0F766E', accent: '#5EEAD4',
+                    bgApp: '#F0FDFA', bgSurface: '#FFFFFF',
+                    slate50: '#F0FDFA', slate100: '#CCFBF1', slate200: '#99F6E4', slate300: '#5EEAD4', slate400: '#2DD4BF',
+                    slate500: '#14B8A6', slate600: '#0D9488', slate700: '#0F766E', slate800: '#115E59', slate900: '#134E4A'
+                }
+            },
+            {
+                id: 'lavender-dream',
+                name: 'Lavender Dream',
+                colors: {
+                    primary: '#8B5CF6', secondary: '#5B21B6', accent: '#C4B5FD',
+                    bgApp: '#F5F3FF', bgSurface: '#FFFFFF',
+                    slate50: '#F5F3FF', slate100: '#EDE9FE', slate200: '#DDD6FE', slate300: '#C4B5FD', slate400: '#A78BFA',
+                    slate500: '#8B5CF6', slate600: '#7C3AED', slate700: '#6D28D9', slate800: '#5B21B6', slate900: '#4C1D95'
+                }
+            },
+            {
+                id: 'steel-city',
+                name: 'Steel City',
+                colors: {
+                    primary: '#52525B', secondary: '#18181B', accent: '#A1A1AA',
+                    bgApp: '#FAFAFA', bgSurface: '#FFFFFF',
+                    slate50: '#FAFAFA', slate100: '#F4F4F5', slate200: '#E4E4E7', slate300: '#D4D4D8', slate400: '#A1A1AA',
+                    slate500: '#71717A', slate600: '#52525B', slate700: '#3F3F46', slate800: '#27272A', slate900: '#18181B'
+                }
+            },
+            {
+                id: 'ruby-red',
+                name: 'Ruby Red',
+                colors: {
+                    primary: '#DC2626', secondary: '#991B1B', accent: '#FCA5A5',
+                    bgApp: '#FEF2F2', bgSurface: '#FFFFFF',
+                    slate50: '#FEF2F2', slate100: '#FEE2E2', slate200: '#FECACA', slate300: '#FCA5A5', slate400: '#F87171',
+                    slate500: '#EF4444', slate600: '#DC2626', slate700: '#B91C1C', slate800: '#991B1B', slate900: '#7F1D1D'
+                }
+            },
+            {
+                id: 'solarized-light',
+                name: 'Solarized Light',
+                colors: {
+                    primary: '#B58900', secondary: '#CB4B16', accent: '#2AA198',
+                    bgApp: '#FDF6E3', bgSurface: '#EEE8D5',
+                    slate50: '#FDF6E3', slate100: '#EEE8D5', slate200: '#93A1A1', slate300: '#839496', slate400: '#657B83',
+                    slate500: '#586E75', slate600: '#B58900', slate700: '#CB4B16', slate800: '#D33682', slate900: '#2AA198'
+                }
+            },
+            {
+                id: 'dracula',
+                name: 'Dracula',
+                colors: {
+                    primary: '#BD93F9', secondary: '#FF79C6', accent: '#50FA7B',
+                    bgApp: '#282A36', bgSurface: '#44475A',
+                    slate50: '#282A36', slate100: '#44475A', slate200: '#6272A4', slate300: '#8BE9FD', slate400: '#50FA7B',
+                    slate500: '#FFB86C', slate600: '#FF79C6', slate700: '#BD93F9', slate800: '#FF5555', slate900: '#F1FA8C'
+                }
+            },
+            {
+                id: 'monokai',
+                name: 'Monokai',
+                colors: {
+                    primary: '#A6E22E', secondary: '#F92672', accent: '#66D9EF',
+                    bgApp: '#272822', bgSurface: '#3E3D32',
+                    slate50: '#272822', slate100: '#3E3D32', slate200: '#75715E', slate300: '#A6E22E', slate400: '#F92672',
+                    slate500: '#66D9EF', slate600: '#FD971F', slate700: '#AE81FF', slate800: '#F8F8F2', slate900: '#E6DB74'
+                }
+            },
+            {
+                id: 'vaporwave',
+                name: 'Vaporwave',
+                colors: {
+                    primary: '#FF71CE', secondary: '#01CDFE', accent: '#B967FF',
+                    bgApp: '#2B1B4E', bgSurface: '#41326E',
+                    slate50: '#2B1B4E', slate100: '#41326E', slate200: '#5A4A8A', slate300: '#7664A9', slate400: '#9582C9',
+                    slate500: '#B5A3EA', slate600: '#FF71CE', slate700: '#01CDFE', slate800: '#05FFA1', slate900: '#B967FF'
+                }
+            },
+            {
+                id: 'high-contrast',
+                name: 'High Contrast',
+                colors: {
+                    primary: '#000000', secondary: '#FFFFFF', accent: '#FFFF00',
+                    bgApp: '#FFFFFF', bgSurface: '#000000',
+                    slate50: '#FFFFFF', slate100: '#E5E5E5', slate200: '#CCCCCC', slate300: '#B2B2B2', slate400: '#999999',
+                    slate500: '#7F7F7F', slate600: '#666666', slate700: '#4C4C4C', slate800: '#333333', slate900: '#191919'
+                }
+            }
+        ];
+
+        let elements = {};
+        let wavesurfer;
 
         // --- Core Functions ---
 
         function init() {
-            setupNavigation();
-            setupTheme();
-            setupDropZones();
-            setupChapterBuilder();
-            checkEngineHealth();
-            log('V9 Pipeline Initialized', 'info');
+            elements = {
+                // Core layout
+                mainContent: document.getElementById('mainContent'),
+                sidebarLinks: document.querySelectorAll('.nav-link'),
+                systemStatus: document.getElementById('systemStatus'),
+                processLog: document.getElementById('processLog'),
+                themeSelector: document.getElementById('themeSelector'),
+                engineStatusDot: document.querySelector('.status-indicator'),
+                engineStatusText: document.getElementById('engineStatusText'),
+                toastContainer: document.getElementById('toastContainer'),
+
+                // Common components
+                progressBar: document.querySelector('.progress-fill'),
+                progressPercent: document.getElementById('progressPercent'),
+                statusText: document.getElementById('statusText'),
+                statusPercent: document.getElementById('statusPercent'),
+                timeRemaining: document.getElementById('timeRemaining'),
+                addChapterBtn: document.getElementById('addChapterBtn'),
+                confirmAddChapterBtn: document.getElementById('confirmAddChapterBtn'),
+                chapterTitle: document.getElementById('chapterTitle'),
+                chapterDuration: document.getElementById('chapterDuration'),
+                chaptersContainer: document.getElementById('chaptersContainer'),
+                nextTimestamp: document.getElementById('next-timestamp'),
+                quickEntryBar: document.getElementById('quick-entry-bar'),
+
+                // Metadata elements
+                metaTitle: document.getElementById('meta-title'),
+                metaAuthor: document.getElementById('meta-author'),
+                metaGenre: document.getElementById('meta-genre'),
+                metaDescription: document.getElementById('meta-description'),
+                metaLookupBtn: document.getElementById('btn-meta-lookup'),
+                coverUpload: document.getElementById('cover-upload'),
+                coverDropZone: document.getElementById('cover-drop-zone'),
+                coverPreview: document.getElementById('cover-preview-container'),
+                m4bMetadataUpload: document.getElementById('m4bMetadataUpload'),
+                m4bMetadataDropZone: document.getElementById('m4bMetadataDropZone'),
+                m4bMetadataFileInfo: document.getElementById('m4bMetadataFileInfo'),
+                m4bMetadataFileName: document.getElementById('m4bMetadataFileName'),
+                clearM4bMetadata: document.getElementById('clearM4bMetadata'),
+                btnApplyMetadata: document.getElementById('btn-apply-metadata'),
+
+                // Pipeline elements
+                sourceFile: document.getElementById('sourceFile'),
+                docFile: document.getElementById('docFile'),
+                m4bFile: document.getElementById('m4bFile'),
+
+                // Clone Elements
+                cloneRefFile: document.getElementById('cloneRefFile'),
+                cloneRefDropZone: document.getElementById('cloneRefDropZone'),
+                cloneRefFileInfo: document.getElementById('cloneRefFileInfo'),
+                cloneSrcFile: document.getElementById('cloneSrcFile'),
+                cloneSrcDropZone: document.getElementById('cloneSrcDropZone'),
+                cloneSrcFileInfo: document.getElementById('cloneSrcFileInfo'),
+                modeTtsRadio: document.getElementById('modeTtsRadio'),
+                modeConvertRadio: document.getElementById('modeConvertRadio'),
+                cloneTtsInputs: document.getElementById('cloneTtsInputs'),
+                cloneConvertInputs: document.getElementById('cloneConvertInputs'),
+                cloneText: document.getElementById('cloneText'),
+                cloneLang: document.getElementById('cloneLang'),
+                btnCloneVoice: document.getElementById('btnCloneVoice'),
+
+                // Batch Merge
+                batchDropZone: document.getElementById('batchDropZone'),
+                batchFiles: document.getElementById('batchFiles'),
+                batchFileList: document.getElementById('batchFileList'),
+                btnStartMerge: document.getElementById('btn-start-merge'),
+
+                // Audio Converter
+                converterDropZone: document.getElementById('converterDropZone'),
+                converterFile: document.getElementById('converterFile'),
+                converterFileInfo: document.getElementById('converterFileInfo'),
+                converterFileName: document.getElementById('converterFileName'),
+                clearConverterFile: document.getElementById('clearConverterFile'),
+                sourceFormat: document.getElementById('sourceFormat'),
+                targetFormat: document.getElementById('targetFormat'),
+                converterQuality: document.getElementById('converterQuality'),
+                btnConvertAudio: document.getElementById('btn-convert-audio'),
+
+                // Waveform
+                waveformContainer: document.getElementById('waveform-container'),
+                waveformTitle: document.getElementById('waveform-title'),
+
+                // Panels (for display toggling)
+                panels: {
+                    conversion: document.getElementById('conversionPanel'),
+                    m4b: document.getElementById('m4bPanel'),
+                    audiobook: document.getElementById('audiobookPanel'),
+                    clone: document.getElementById('clonePanel'),
+                    metadata: document.getElementById('metadataPanel'),
+                    batch: document.getElementById('batchPanel'),
+                    converter: document.getElementById('converterPanel'),
+                    waveform: document.getElementById('waveformPanel')
+                }
+            };
+
+            try {
+                setupNavigation();
+                setupListeners();
+                setupTheme();
+                setupDropZones();
+                setupChapterBuilder();
+                initMetadataHandlers();
+                initMultiVoiceHandlers();
+                initBatchHandlers();
+                initCloneHandlers();
+                initConverterHandlers();
+                initWaveform();
+                checkEngineHealth();
+                initializeVoices();
+                setInterval(checkEngineHealth, 30000);
+            } catch (e) {
+                console.error('[BPM4B] init() FAILED:', e);
+            }
         }
 
+        function setupListeners() {
+            console.log('[BPM4B] Setting up listeners...');
+
+            // MP3 Conversion
+            const btnConvert = document.getElementById('convertBtn') || document.getElementById('convertMp3Btn');
+            if (btnConvert) btnConvert.addEventListener('click', handleMp3Conversion);
+
+            // M4B Extraction
+            const btnConvertM4b = document.getElementById('convertM4bBtn');
+            if (btnConvertM4b) btnConvertM4b.addEventListener('click', handleM4bExtraction);
+
+            // Audiobook Generation
+            const btnGenerate = document.getElementById('generateAudiobookBtn');
+            if (btnGenerate) btnGenerate.addEventListener('click', handleAudiobookGeneration);
+
+            // Chapter Preview
+            const btnPreviewChapters = document.getElementById('previewChaptersBtn');
+            if (btnPreviewChapters) btnPreviewChapters.addEventListener('click', handlePreviewChapters);
+
+            // Silence Detection
+            const btnDetectSilence = document.getElementById('detectSilenceBtn');
+            if (btnDetectSilence) btnDetectSilence.addEventListener('click', handleDetectSilence);
+        }
+
+        async function initializeVoices() {
+            try {
+                const res = await fetch('/api/voices');
+                const data = await res.json();
+
+                const selects = [document.getElementById('ttsVoice'), document.getElementById('dialogueVoice')];
+                selects.forEach(s => {
+                    if (!s) return;
+                    s.innerHTML = ''; // Clear loading state
+
+                    data.voices.forEach(v => {
+                        const opt = document.createElement('option');
+                        opt.value = v.id;
+                        opt.textContent = `${v.lang} ${v.name}`;
+                        if (v.id === 'af_heart') opt.selected = true;
+                        s.appendChild(opt);
+                    });
+                });
+
+                log('Professional voice list loaded', 'success');
+            } catch (e) {
+                log('Failed to load voices: ' + e.message, 'error');
+            }
+        }
+
+        function initMetadataHandlers() {
+            if (!elements.metaLookupBtn || !elements.coverDropZone || !elements.coverUpload) return;
+            elements.metaLookupBtn.addEventListener('click', async () => {
+                const title = elements.metaTitle.value.trim();
+                if (!title) return showToast('Enter a title to search', 'warning');
+
+                elements.metaLookupBtn.disabled = true;
+                elements.metaLookupBtn.innerHTML = '<svg class="animate-spin" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>';
+
+                try {
+                    const res = await fetch(`/api/metadata/lookup?title=${encodeURIComponent(title)}`);
+                    const data = await res.json();
+
+                    if (data.error) throw new Error(data.error);
+
+                    elements.metaTitle.value = data.title || title;
+                    elements.metaAuthor.value = data.author || '';
+                    elements.metaGenre.value = data.genre || '';
+                    elements.metaDescription.value = data.description || '';
+
+                    if (data.coverUrl) {
+                        elements.coverPreview.innerHTML = `<img src="${data.coverUrl}" style="width: 100%; height: 100%; object-fit: cover;">`;
+                        // Optionally fetch image and convert to blob/base64 for embedding later
+                    }
+
+                    showToast('Metadata fetched!', 'success');
+                } catch (e) {
+                    showToast('Lookup failed: ' + e.message, 'error');
+                } finally {
+                    elements.metaLookupBtn.disabled = false;
+                    elements.metaLookupBtn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg> Auto-Fill';
+                }
+            });
+
+            elements.coverDropZone.addEventListener('click', () => elements.coverUpload.click());
+            elements.coverUpload.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) handleCoverFile(file);
+            });
+
+            elements.coverDropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                elements.coverDropZone.classList.add('drag-over');
+            });
+
+            elements.coverDropZone.addEventListener('dragleave', () => {
+                elements.coverDropZone.classList.remove('drag-over');
+            });
+
+            elements.coverDropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                elements.coverDropZone.classList.remove('drag-over');
+                const file = e.dataTransfer.files[0];
+                if (file && file.type.startsWith('image/')) handleCoverFile(file);
+            });
+
+            // M4B Metadata Upload handlers
+            if (elements.m4bMetadataDropZone && elements.m4bMetadataUpload) {
+                elements.m4bMetadataDropZone.addEventListener('click', () => elements.m4bMetadataUpload.click());
+
+                elements.m4bMetadataUpload.addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    if (file) handleM4bMetadataFile(file);
+                });
+
+                elements.m4bMetadataDropZone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    elements.m4bMetadataDropZone.classList.add('drag-over');
+                });
+
+                elements.m4bMetadataDropZone.addEventListener('dragleave', () => {
+                    elements.m4bMetadataDropZone.classList.remove('drag-over');
+                });
+
+                elements.m4bMetadataDropZone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    elements.m4bMetadataDropZone.classList.remove('drag-over');
+                    const file = e.dataTransfer.files[0];
+                    if (file && (file.name.endsWith('.m4b') || file.name.endsWith('.m4a'))) {
+                        handleM4bMetadataFile(file);
+                    }
+                });
+
+                if (elements.clearM4bMetadata) {
+                    elements.clearM4bMetadata.addEventListener('click', () => {
+                        state.m4bMetadataFile = null;
+                        elements.m4bMetadataUpload.value = '';
+                        elements.m4bMetadataFileInfo.classList.add('hidden');
+                        showToast('M4B file cleared', 'info');
+                    });
+                }
+            }
+
+            // Apply Metadata to M4B button handler
+            if (elements.btnApplyMetadata) {
+                elements.btnApplyMetadata.addEventListener('click', async () => {
+                    if (!state.m4bMetadataFile) {
+                        showToast('Please upload an M4B file first', 'warning');
+                        return;
+                    }
+
+                    const metadata = {
+                        title: elements.metaTitle.value.trim(),
+                        author: elements.metaAuthor.value.trim(),
+                        genre: elements.metaGenre.value.trim(),
+                        description: elements.metaDescription.value.trim()
+                    };
+
+                    if (!metadata.title && !metadata.author && !metadata.genre && !metadata.description) {
+                        showToast('Please enter at least one metadata field', 'warning');
+                        return;
+                    }
+
+                    elements.btnApplyMetadata.disabled = true;
+                    elements.btnApplyMetadata.innerHTML = '<svg class="animate-spin" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Applying...';
+
+                    const formData = new FormData();
+                    formData.append('file', state.m4bMetadataFile);
+                    formData.append('metadata', JSON.stringify(metadata));
+                    if (state.coverBase64) formData.append('cover_base64', state.coverBase64);
+
+                    try {
+                        const res = await fetch('/api/metadata/apply', {
+                            method: 'POST',
+                            body: formData
+                        });
+
+                        const data = await res.json();
+
+                        if (data.error) throw new Error(data.error);
+
+                        showToast('Metadata applied successfully!', 'success');
+
+                        // Trigger download
+                        if (data.downloadUrl) {
+                            const a = document.createElement('a');
+                            a.href = data.downloadUrl;
+                            a.download = data.filename || 'updated_metadata.m4b';
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                        }
+                    } catch (e) {
+                        showToast('Failed to apply metadata: ' + e.message, 'error');
+                    } finally {
+                        elements.btnApplyMetadata.disabled = false;
+                        elements.btnApplyMetadata.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7" /></svg> Apply Metadata to M4B';
+                    }
+                });
+            }
+        }
+
+        async function handleM4bMetadataFile(file) {
+            if (!file.name.endsWith('.m4b') && !file.name.endsWith('.m4a')) {
+                showToast('Please upload an M4B or M4A file', 'error');
+                return;
+            }
+
+            state.m4bMetadataFile = file;
+            elements.m4bMetadataFileName.textContent = file.name;
+            elements.m4bMetadataFileInfo.classList.remove('hidden');
+
+            showToast('Loading metadata from ' + file.name + '...', 'info');
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const res = await fetch('/api/metadata/extract', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await res.json();
+
+                if (data.error) throw new Error(data.error);
+
+                if (data.title) elements.metaTitle.value = data.title;
+                if (data.author) elements.metaAuthor.value = data.author;
+                if (data.genre) elements.metaGenre.value = data.genre;
+                if (data.description) elements.metaDescription.value = data.description;
+
+                if (data.coverBase64) {
+                    state.coverBase64 = data.coverBase64;
+                    elements.coverPreview.innerHTML = `<img src="${data.coverBase64}" style="width: 100%; height: 100%; object-fit: cover;">`;
+                }
+
+                showToast('Metadata loaded successfully!', 'success');
+            } catch (e) {
+                showToast('Failed to load metadata: ' + e.message, 'error');
+            }
+        }
+
+        function handleCoverFile(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                state.coverBase64 = e.target.result;
+                elements.coverPreview.innerHTML = `<img src="${e.target.result}" style="width: 100%; height: 100%; object-fit: cover;">`;
+                showToast('Cover updated', 'success');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // WaveSurfer instance is declared globally above
+
+        function initWaveform() {
+            if (typeof WaveSurfer === 'undefined') return;
+
+            wavesurfer = WaveSurfer.create({
+                container: '#waveform',
+                waveColor: '#4f46e5',
+                progressColor: '#818cf8',
+                cursorColor: '#ffffff',
+                barWidth: 2,
+                barRadius: 3,
+                responsive: true,
+                height: 80,
+                normalize: true,
+                interact: true
+            });
+
+            wavesurfer.on('click', () => {
+                const time = wavesurfer.getCurrentTime();
+                addChapterAtTime(time);
+            });
+
+            wavesurfer.on('audioprocess', () => updateWaveformTime());
+            wavesurfer.on('ready', () => {
+                updateWaveformTime();
+                elements.waveformContainer.classList.remove('hidden');
+            });
+        }
+
+        function updateWaveformTime() {
+            if (!wavesurfer) return;
+            const current = formatSeconds(wavesurfer.getCurrentTime());
+            const total = formatSeconds(wavesurfer.getDuration());
+            elements.waveformTime.innerText = `${current} / ${total}`;
+        }
+
+        function formatSeconds(seconds) {
+            const m = Math.floor(seconds / 60);
+            const s = Math.floor(seconds % 60);
+            return `${m}:${s.toString().padStart(2, '0')}`;
+        }
+
+        function addChapterAtTime(time) {
+            const title = `Marker at ${formatSeconds(time)}`;
+            const id = Date.now();
+
+            state.chapters.push({
+                id,
+                title,
+                startTime: time,
+                duration: 0
+            });
+            state.chapters.sort((a, b) => a.startTime - b.startTime);
+
+            renderManifest();
+            showToast(`Added marker at ${formatSeconds(time)}`, 'info');
+        }
+
+        let monitoringInterval = null;
+        let jobStartTime = null;
+
         function setupNavigation() {
-            elements.navItems.forEach(item => {
+            document.querySelectorAll('.nav-item').forEach(item => {
                 item.addEventListener('click', () => {
                     const tool = item.dataset.tool;
+                    if (state.isProcessing && tool !== state.activeTool) {
+                        return showToast('Please wait for current task to finish', 'warning');
+                    }
                     switchTool(tool);
                 });
             });
-            let monitoringInterval = null;
-            let jobStartTime = null;
         }
 
         function switchTool(toolId) {
             state.activeTool = toolId;
 
-            elements.navItems.forEach(nav => {
+            document.querySelectorAll('.nav-item').forEach(nav => {
                 nav.classList.toggle('active', nav.dataset.tool === toolId);
             });
 
-            elements.toolPanels.forEach(panel => {
+            document.querySelectorAll('.tool-content').forEach(panel => {
                 const isMatch = panel.id === (toolId + 'Panel');
                 panel.classList.toggle('active', isMatch);
             });
 
             // Manifest visibility logic
             const manifestTools = ['conversion', 'audiobook'];
-            document.getElementById('chapterPreviewPanel').classList.toggle('hidden', !manifestTools.includes(toolId));
+            const previewPanel = document.getElementById('chapterPreviewPanel');
+            if (previewPanel) {
+                previewPanel.classList.toggle('hidden', !manifestTools.includes(toolId));
+            }
 
             // CLEAR previous file selections and chapter data safe-guards
             if (!state.isProcessing) {
                 // Keep chapters if switching between conversion/audiobook? 
                 // Peer feedback suggests clearing if switching to a new data source.
                 // For now, let's just clear the "FileInfo" displays for other tools
-                ['mp3', 'm4b', 'doc', 'aax'].forEach(id => {
+                ['mp3', 'm4b', 'doc'].forEach(id => {
                     const info = document.getElementById(`${id}FileInfo`);
                     if (id !== toolId && (toolId !== 'conversion' || id !== 'mp3')) {
                         // info.classList.add('hidden'); // Optional: clear previous info
@@ -1176,28 +2312,51 @@
                 });
             }
 
+            console.log(`[BPM4B] Switched to ${toolId} pipeline`);
             log(`Switched to ${toolId} pipeline`, 'info');
         }
 
         function setupTheme() {
             const savedTheme = localStorage.getItem('theme') || 'dark';
             applyTheme(savedTheme);
-            elements.themeToggle.checked = savedTheme === 'dark';
+            elements.themeSelector.value = savedTheme;
 
-            elements.themeToggle.addEventListener('change', (e) => {
-                const newTheme = e.target.checked ? 'dark' : 'light';
-                applyTheme(newTheme);
+            elements.themeSelector.addEventListener('change', (e) => {
+                applyTheme(e.target.value);
             });
         }
 
-        function applyTheme(theme) {
-            document.documentElement.setAttribute('data-theme', theme);
-            localStorage.setItem('theme', theme);
-            state.theme = theme;
+        function applyTheme(themeId) {
+            const theme = themes.find(t => t.id === themeId);
+            if (!theme) return;
+
+            // Apply CSS custom properties
+            const root = document.documentElement;
+            root.style.setProperty('--primary', theme.colors.primary);
+            root.style.setProperty('--secondary', theme.colors.secondary);
+            root.style.setProperty('--accent', theme.colors.accent);
+            root.style.setProperty('--bg-app', theme.colors.bgApp);
+            root.style.setProperty('--bg-surface', theme.colors.bgSurface);
+            root.style.setProperty('--slate-50', theme.colors.slate50);
+            root.style.setProperty('--slate-100', theme.colors.slate100);
+            root.style.setProperty('--slate-200', theme.colors.slate200);
+            root.style.setProperty('--slate-300', theme.colors.slate300);
+            root.style.setProperty('--slate-400', theme.colors.slate400);
+            root.style.setProperty('--slate-500', theme.colors.slate500);
+            root.style.setProperty('--slate-600', theme.colors.slate600);
+            root.style.setProperty('--slate-700', theme.colors.slate700);
+            root.style.setProperty('--slate-800', theme.colors.slate800);
+            root.style.setProperty('--slate-900', theme.colors.slate900);
+
+            // Set data-theme attribute for backward compatibility
+            root.setAttribute('data-theme', themeId === 'dark' ? 'dark' : 'light');
+
+            localStorage.setItem('theme', themeId);
+            state.theme = themeId;
         }
 
         function setupDropZones() {
-            ['mp3', 'm4b', 'doc', 'aax'].forEach(id => {
+            ['mp3', 'm4b', 'doc', 'cloneRef', 'cloneSrc'].forEach(id => {
                 const dz = document.getElementById(`${id}DropZone`);
                 const input = document.getElementById(id === 'mp3' ? 'sourceFile' : `${id}File`);
                 const info = document.getElementById(`${id}FileInfo`);
@@ -1241,10 +2400,20 @@
             info.classList.remove('hidden');
             log(`Loaded: ${file.name}`, 'success');
 
+            if (id === 'mp3') {
+                elements.waveformContainer.classList.remove('hidden');
+                if (file.type.startsWith('audio/')) {
+                    const url = URL.createObjectURL(file);
+                    wavesurfer.load(url);
+                } else {
+                    elements.waveformContainer.classList.add('hidden');
+                }
+            }
+
             if (id === 'doc') {
                 document.getElementById('audiobookPanel').querySelectorAll('input, select').forEach(el => {
                     if (el.id === 'audiobookOutputName' || el.id === 'outputName') {
-                        el.value = file.name.split('.')[0] + '.m4b';
+                        el.value = file.name.split('.')[0] + '.mp3';
                     }
                 });
             }
@@ -1355,6 +2524,137 @@
             };
         }
 
+        function initMultiVoiceHandlers() {
+            const enableMultiVoice = document.getElementById('enableMultiVoice');
+            const multiVoiceOptions = document.getElementById('multiVoiceOptions');
+            const announceChapters = document.getElementById('announceChapters');
+
+            if (enableMultiVoice && multiVoiceOptions) {
+                enableMultiVoice.addEventListener('change', (e) => {
+                    if (e.target.checked) {
+                        multiVoiceOptions.classList.remove('hidden');
+                        showToast('Multi-Voice Dialogue Enabled', 'info');
+                    } else {
+                        multiVoiceOptions.classList.add('hidden');
+                    }
+                });
+            }
+
+            if (announceChapters) {
+                announceChapters.addEventListener('change', (e) => {
+                    if (e.target.checked) {
+                        showToast('Chapter Announcements Enabled', 'success');
+                    }
+                });
+            }
+        }
+
+        function initCloneHandlers() {
+            if (!elements.btnCloneVoice) return;
+
+            // Mode switching
+            elements.modeTtsRadio.addEventListener('change', () => {
+                elements.cloneTtsInputs.classList.remove('hidden');
+                elements.cloneConvertInputs.classList.add('hidden');
+            });
+            elements.modeConvertRadio.addEventListener('change', () => {
+                elements.cloneTtsInputs.classList.add('hidden');
+                elements.cloneConvertInputs.classList.remove('hidden');
+            });
+
+            // Submission
+            elements.btnCloneVoice.addEventListener('click', async () => {
+                const refFile = elements.cloneRefFile.files ? elements.cloneRefFile.files[0] : null;
+                if (!refFile) {
+                    alert('Please drop or select a Reference Voice file (WAV/MP3).');
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append('reference_audio', refFile);
+
+                const isTts = elements.modeTtsRadio.checked;
+                formData.append('mode', isTts ? 'tts' : 'convert');
+
+                if (isTts) {
+                    const text = elements.cloneText.value.trim();
+                    if (!text) {
+                        alert('Please enter text to synthesize.');
+                        return;
+                    }
+                    formData.append('text', text);
+                    formData.append('lang', elements.cloneLang.value);
+                } else {
+                    const srcFile = elements.cloneSrcFile.files ? elements.cloneSrcFile.files[0] : null;
+                    if (!srcFile) {
+                        alert('Please drop or select a Source Audio file to re-voice.');
+                        return;
+                    }
+                    formData.append('source_audio', srcFile);
+                }
+
+                const jobId = 'clone_' + Date.now();
+                formData.append('jobId', jobId);
+
+                startPipeline('clone');
+                updateProgress(5, 'Uploading audio and starting generator...');
+
+                try {
+                    const res = await fetch('/api/clone-voice', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (!res.ok) {
+                        const err = await res.json();
+                        throw new Error(err.error || 'Failed to start cloning');
+                    }
+
+                    // Listen for SSE progress
+                    const evtSource = new EventSource(`/api/progress/${jobId}`);
+
+                    let simulatedProgress = 10;
+                    evtSource.onmessage = (event) => {
+                        const data = JSON.parse(event.data);
+
+                        if (data.message && data.percent !== 100) {
+                            log(data.message, 'info');
+                            if (simulatedProgress < 95) {
+                                simulatedProgress += 2;
+                                updateProgress(simulatedProgress, 'Cloning in progress: ' + data.message.substring(0, 30));
+                            }
+                        }
+
+                        if (data.percent === 100) {
+                            evtSource.close();
+                            finishPipeline('clone', 'Processing Complete!');
+                            log(data.message, 'success');
+
+                            if (data.downloadUrl) {
+                                const a = document.createElement('a');
+                                a.href = data.downloadUrl;
+                                a.download = data.downloadUrl.split('/').pop();
+                                document.body.appendChild(a);
+                                a.click();
+                                document.body.removeChild(a);
+                            }
+                        } else if (data.percent === 0 && data.message.includes('Error')) {
+                            evtSource.close();
+                            failPipeline('clone', data.message);
+                        }
+                    };
+
+                    evtSource.onerror = () => {
+                        evtSource.close();
+                        failPipeline('clone', 'Connection to server lost during Voice Cloning pipeline.');
+                    };
+
+                } catch (e) {
+                    failPipeline('clone', e.message);
+                }
+            });
+        }
+
         function parseDuration(input) {
             if (!input) return null;
             // Support formats like HH:MM:SS.mmm, MM:SS.mmm, SS.mmm
@@ -1444,6 +2744,69 @@
             return null;
         }
 
+        function viewFullText(id) {
+            const ch = state.chapters.find(c => c.id == id);
+            if (!ch) return;
+
+            state.currentViewingId = id;
+            document.getElementById('modalTitle').textContent = `Editing: ${ch.type || 'Chapter'} ${ch.number || ''}: ${ch.title}`;
+            document.getElementById('modalContent').innerText = ch.content; // Use innerText for plain text editing
+            document.getElementById('textViewerModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function saveChapterText() {
+            const id = state.currentViewingId;
+            const ch = state.chapters.find(c => c.id == id);
+            if (!ch) return;
+
+            const newContent = document.getElementById('modalContent').innerText.trim();
+            if (!newContent) return showToast('Chapter content cannot be empty', 'error');
+
+            ch.content = newContent;
+            ch.contentLength = newContent.length;
+            ch.wordCount = newContent.split(/\s+/).length;
+            
+            // Re-calculate previews
+            ch.preview = newContent.substring(0, 500) + (newContent.length > 500 ? '...' : '');
+            ch.endPreview = newContent.length > 500 ? '...' + newContent.substring(newContent.length - 500) : '';
+
+            renderManifest();
+            showToast('Changes saved locally', 'success');
+            closeModal();
+        }
+
+        function mergeWithNext(id) {
+            const idx = state.chapters.findIndex(c => c.id == id);
+            if (idx === -1 || idx === state.chapters.length - 1) return;
+
+            const current = state.chapters[idx];
+            const next = state.chapters[idx + 1];
+
+            // Merge content and update metadata
+            current.content += '\n\n' + next.content;
+            current.contentLength = current.content.length;
+            current.wordCount = current.content.split(/\s+/).length;
+            current.preview = current.content.substring(0, 500) + (current.content.length > 500 ? '...' : '');
+            current.endPreview = current.content.length > 500 ? '...' + current.content.substring(current.content.length - 500) : '';
+
+            // Remove next chapter
+            state.chapters.splice(idx + 1, 1);
+            
+            renderManifest();
+            showToast('Chapters merged', 'success');
+        }
+
+        function closeModal() {
+            document.getElementById('textViewerModal').classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        // Close modal on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+
         function removeChapter(id) {
             const idx = state.chapters.findIndex(c => c.id === id);
             if (idx === -1) return;
@@ -1462,6 +2825,15 @@
             elements.nextTimestamp.textContent = formatTime(state.cumulativeTime);
         }
 
+        function toggleChapterSelection(id, selected) {
+            const ch = state.chapters.find(c => c.id == id);
+            if (ch) {
+                ch.selected = selected;
+                const card = document.getElementById(`ch-card-${id}`);
+                if (card) card.classList.toggle('deselected', !selected);
+            }
+        }
+
         window.updateChapterTitle = (id, newTitle) => {
             const ch = state.chapters.find(c => c.id === id);
             if (ch) ch.title = newTitle.trim() || ch.title;
@@ -1469,16 +2841,42 @@
 
         function renderManifest() {
             elements.chaptersContainer.innerHTML = state.chapters.map((ch, idx) => `
-                <div class="chapter-card">
+                <div class="chapter-card ${ch.selected === false ? 'deselected' : ''}" id="ch-card-${ch.id}">
                     <div class="chapter-header">
+                        <input type="checkbox" class="ch-select" ${ch.selected !== false ? 'checked' : ''} onchange="toggleChapterSelection('${ch.id}', this.checked)" style="margin-right: 0.5rem;">
                         <div class="chapter-badge">#${idx + 1}</div>
-                        <div class="chapter-name" contenteditable="true" onblur="updateChapterTitle(${ch.id}, this.innerText)" title="Click to edit chapter title">${ch.title}</div>
+                        <div class="chapter-name" contenteditable="true" onblur="updateChapterTitle('${ch.id}', this.innerText)" title="Click to edit chapter title">${ch.title}</div>
                         <div style="flex:1"></div>
-                        <div class="remove-ch" onclick="removeChapter(${ch.id})">
+                        <button class="btn-icon" onclick="viewFullText('${ch.id}')" title="View/Edit Full Text" style="margin-right: 0.5rem; color: var(--text-muted);">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                        </button>
+                        ${idx < state.chapters.length - 1 ? `
+                            <button class="btn-icon" onclick="mergeWithNext('${ch.id}')" title="Merge with Next" style="margin-right: 0.5rem; color: var(--secondary);">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M7 11V7l-5 5 5 5v-4h14v-2z"/><path d="M17 13v4l5-5-5-5v4H3v2z"/></svg>
+                            </button>
+                        ` : ''}
+                        <button class="btn-icon" onclick="previewChapter('${ch.id}')" title="Preview Voice" id="btn-preview-${ch.id}" style="margin-right: 0.5rem; color: var(--primary);">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 3l14 9-14 9V3z"/></svg>
+                        </button>
+                        <div class="remove-ch" onclick="removeChapter('${ch.id}')">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 6L6 18M6 6l12 12"/></svg>
                         </div>
                     </div>
-                    <div class="chapter-meta">${formatTime(ch.startTime)} • ${formatTime(ch.duration)}</div>
+                    <div class="chapter-meta">${ch.type || 'Chapter'} • ${formatTime(ch.startTime)} • ${formatTime(ch.duration || 0)}</div>
+                    
+                    <div class="chapter-preview-container" style="margin-top: 0.75rem;">
+                        <div class="preview-label" style="font-size: 0.6rem; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px;">Start</div>
+                        <div class="chapter-preview" style="font-size: 0.7rem; color: var(--text-muted); max-height: 40px; overflow: hidden; font-style: italic; background: rgba(255,255,255,0.02); padding: 4px; border-radius: 4px; border-left: 2px solid var(--primary);">
+                            ${ch.preview}
+                        </div>
+                        
+                        ${ch.endPreview ? `
+                            <div class="preview-label" style="font-size: 0.6rem; color: var(--secondary); text-transform: uppercase; letter-spacing: 1px; margin-top: 6px; margin-bottom: 2px;">End</div>
+                            <div class="chapter-preview" style="font-size: 0.7rem; color: var(--text-muted); max-height: 40px; overflow: hidden; font-style: italic; background: rgba(255,255,255,0.02); padding: 4px; border-radius: 4px; border-left: 2px solid var(--secondary);">
+                                ${ch.endPreview}
+                            </div>
+                        ` : ''}
+                    </div>
                 </div>
             `).join('');
 
@@ -1542,9 +2940,9 @@
         function startPipeline(jobId) {
             state.isProcessing = true;
             jobStartTime = Date.now();
-            elements.timeRemaining.classList.remove('hidden');
+            if (elements.timeRemaining) elements.timeRemaining.classList.remove('hidden');
             elements.progressBar.style.width = '2%';
-            elements.progressPercent.textContent = '2%';
+            elements.progressPercent.innerText = '0%';
             elements.statusText.textContent = 'Initializing...';
 
             if (jobId) {
@@ -1593,7 +2991,9 @@
 
                 const mm = Math.floor(remaining / 60);
                 const ss = Math.floor(remaining % 60);
-                elements.timeRemaining.textContent = `Est: ${mm}:${ss.toString().padStart(2, '0')}`;
+                if (elements.timeRemaining) {
+                    elements.timeRemaining.textContent = `Est: ${mm}:${ss.toString().padStart(2, '0')}`;
+                }
             }
         }
 
@@ -1611,7 +3011,7 @@
             state.isProcessing = false;
             updateProgress(100, msg || 'Pipeline Complete');
             showToast(msg || 'Success', 'success');
-            elements.timeRemaining.classList.add('hidden');
+            if (elements.timeRemaining) elements.timeRemaining.classList.add('hidden');
 
             if (customUrl) {
                 const a = document.createElement('a');
@@ -1628,13 +3028,13 @@
             elements.progressBar.style.width = '0%';
             elements.progressPercent.textContent = 'Error';
             elements.statusText.textContent = 'Pipeline failed';
-            elements.timeRemaining.classList.add('hidden');
+            if (elements.timeRemaining) elements.timeRemaining.classList.add('hidden');
             showToast(msg, 'error');
         }
 
         // --- Pipeline Execution ---
 
-        document.getElementById('convertBtn').addEventListener('click', async () => {
+        async function handleMp3Conversion() {
             const fileInput = document.getElementById('sourceFile');
             if (!fileInput.files.length) return showToast('Select source file', 'error');
 
@@ -1646,6 +3046,19 @@
             formData.append('output_name', document.getElementById('outputName').value);
             formData.append('audio_quality', document.getElementById('audioQuality').value);
             formData.append('jobId', jobId);
+
+            // Add metadata
+            const metadata = {
+                title: elements.metaTitle.value,
+                author: elements.metaAuthor.value,
+                genre: elements.metaGenre.value,
+                description: elements.metaDescription.value
+            };
+            formData.append('metadata', JSON.stringify(metadata));
+
+            if (state.coverBase64) {
+                formData.append('cover_base64', state.coverBase64);
+            }
 
             if (state.chapters.length > 0) {
                 // Ensure field names match backend expectations (start_time)
@@ -1667,9 +3080,9 @@
             } catch (e) {
                 failPipeline(e.message);
             }
-        });
+        }
 
-        document.getElementById('convertM4bBtn').addEventListener('click', async () => {
+        async function handleM4bExtraction() {
             const fileInput = document.getElementById('m4bFile');
             if (!fileInput.files.length) return showToast('Select M4B/M4A file', 'error');
 
@@ -1691,10 +3104,11 @@
             } catch (e) {
                 failPipeline(e.message);
             }
-        });
+        }
 
-        document.getElementById('generateAudiobookBtn').addEventListener('click', async () => {
-            const fileInput = document.getElementById('docFile');
+        async function handleAudiobookGeneration() {
+            console.log('[BPM4B] handleAudiobookGeneration clicked');
+            const fileInput = elements.docFile;
             if (!fileInput.files.length) return showToast('Select document', 'error');
 
             const jobId = 'job_' + Date.now();
@@ -1707,25 +3121,80 @@
             formData.append('speed', document.getElementById('ttsSpeed').value);
             formData.append('jobId', jobId);
 
-            if (state.chapters.length > 0) {
-                formData.append('chapters', JSON.stringify(state.chapters.map(c => ({
+            // Multi-Voice settings
+            if (document.getElementById('enableMultiVoice').checked) {
+                formData.append('multi_voice', 'true');
+                formData.append('dialogue_voice', document.getElementById('dialogueVoice').value);
+            }
+
+            // Pro Output settings
+            if (document.getElementById('announceChapters').checked) {
+                formData.append('announce_chapters', 'true');
+            }
+
+            // Add metadata
+            const metadata = {
+                title: elements.metaTitle.value,
+                author: elements.metaAuthor.value,
+                genre: elements.metaGenre.value,
+                description: elements.metaDescription.value
+            };
+            formData.append('metadata', JSON.stringify(metadata));
+
+            if (state.coverBase64) {
+                formData.append('cover_base64', state.coverBase64);
+            }
+
+            const selectedChapters = state.chapters.filter(c => c.selected !== false);
+            if (selectedChapters.length > 0) {
+                formData.append('chapters', JSON.stringify(selectedChapters.map(c => ({
                     title: c.title,
                     originalIndex: c.originalIndex
                 }))));
             }
+            if (selectedChapters.length === 0 && state.chapters.length > 0) {
+                return showToast('Please select at least one chapter', 'error');
+            }
 
             try {
                 const res = await fetch('/api/document-to-audiobook', { method: 'POST', body: formData });
+
+                const contentType = res.headers.get('content-type');
+                if (contentType && contentType.includes('application/json')) {
+                    const data = await res.json();
+                    if (!res.ok || data.error) {
+                        throw new Error(data.error || `Server error ${res.status}`);
+                    }
+
+                    // The backend returned JSON indicating generation started asynchronously.
+                    // SSE will report progress and eventually provide a downloadUrl.
+                    return;
+                }
+
                 if (!res.ok) {
                     const errData = await res.json().catch(() => ({}));
                     throw new Error(errData.error || `Server error ${res.status}`);
                 }
+
+                // Fallback for legacy synchronous generation
+                const blob = await res.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = (elements.metaTitle.value || 'audiobook') + '.mp3';
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+
+                showToast('Audiobook generated successfully!', 'success');
             } catch (e) {
                 failPipeline(e.message);
+            } finally {
+                state.isProcessing = false;
             }
-        });
+        }
 
-        document.getElementById('previewChaptersBtn').addEventListener('click', async () => {
+        async function handlePreviewChapters() {
             const fileInput = document.getElementById('docFile');
             if (!fileInput.files.length) return showToast('Select document', 'error');
 
@@ -1737,20 +3206,366 @@
                 const res = await fetch('/api/preview-chapters', { method: 'POST', body: formData });
                 const data = await res.json();
 
+                if (!res.ok) {
+                    throw new Error(data.error || 'Analysis failed');
+                }
+
                 state.chapters = data.chapters.map((c, i) => ({
                     id: Date.now() + i,
                     originalIndex: i,
                     title: c.title,
+                    type: c.type,
+                    content: c.content, // Store full content
+                    preview: c.preview,
+                    endPreview: c.endPreview,
+                    selected: true,
                     duration: 0,
                     startTime: 0
                 }));
                 renderManifest();
                 showToast(`Detected ${data.chapters.length} chapters`, 'success');
             } catch (e) {
-                log('Analysis failed', 'error');
+                const errorMsg = e.message || 'Analysis failed';
+                log('Analysis failed: ' + errorMsg, 'error');
+                showToast('Analysis failed: ' + errorMsg, 'error');
             }
-        });
+        }
 
+        async function handleDetectSilence() {
+            const fileInput = document.getElementById('sourceFile');
+            if (!fileInput.files.length) return showToast('Select an MP3 in standard conversion to detect silence', 'warning');
+
+            log('Scanning audio for silence...', 'info');
+            const formData = new FormData();
+            formData.append('audio_file', fileInput.files[0]);
+
+            try {
+                const res = await fetch('/api/detect-silence', { method: 'POST', body: formData });
+                const data = await res.json();
+
+                if (data.silences && data.silences.length > 0) {
+                    state.chapters = [];
+                    let lastEnd = 0;
+                    data.silences.forEach((s, i) => {
+                        state.chapters.push({
+                            id: Date.now() + i,
+                            title: `Chapter ${i + 1}`,
+                            startTime: lastEnd,
+                            duration: s.start - lastEnd
+                        });
+                        lastEnd = s.end;
+                    });
+                    // Add final chapter
+                    state.chapters.push({
+                        id: Date.now() + 999,
+                        title: `Final Chapter`,
+                        startTime: lastEnd,
+                        duration: 0 // Will need to be set or estimated
+                    });
+
+                    state.cumulativeTime = lastEnd;
+                    renderManifest();
+                    showToast(`Detected ${data.silences.length + 1} potential chapters`, 'success');
+                } else {
+                    showToast('No silence detected with current settings', 'warning');
+                }
+            } catch (e) {
+                log('Silence detection failed', 'error');
+            }
+        }
+
+        function initMultiVoiceHandlers() {
+            const toggle = document.getElementById('enableMultiVoice');
+            const settings = document.getElementById('multiVoiceOptions');
+            if (!toggle || !settings) return;
+            toggle.addEventListener('change', () => {
+                settings.classList.toggle('hidden', !toggle.checked);
+            });
+        }
+
+        let batchFilesArray = [];
+
+        function initBatchHandlers() {
+            if (!elements.batchDropZone || !elements.batchFiles || !elements.btnStartMerge) return;
+            elements.batchDropZone.addEventListener('click', () => elements.batchFiles.click());
+            elements.batchFiles.addEventListener('change', (e) => {
+                addBatchFiles(Array.from(e.target.files));
+            });
+
+            elements.batchDropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                elements.batchDropZone.classList.add('drag-over');
+            });
+
+            elements.batchDropZone.addEventListener('dragleave', () => {
+                elements.batchDropZone.classList.remove('drag-over');
+            });
+
+            elements.batchDropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                elements.batchDropZone.classList.remove('drag-over');
+                addBatchFiles(Array.from(e.dataTransfer.files));
+            });
+
+            elements.btnStartMerge.addEventListener('click', handleStartMerge);
+        }
+
+        function initConverterHandlers() {
+            if (!elements.converterDropZone || !elements.converterFile || !elements.btnConvertAudio) return;
+
+            elements.converterDropZone.addEventListener('click', () => elements.converterFile.click());
+
+            elements.converterFile.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) handleConverterFile(file);
+            });
+
+            elements.converterDropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                elements.converterDropZone.classList.add('drag-over');
+            });
+
+            elements.converterDropZone.addEventListener('dragleave', () => {
+                elements.converterDropZone.classList.remove('drag-over');
+            });
+
+            elements.converterDropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                elements.converterDropZone.classList.remove('drag-over');
+                const file = e.dataTransfer.files[0];
+                if (file) handleConverterFile(file);
+            });
+
+            if (elements.clearConverterFile) {
+                elements.clearConverterFile.addEventListener('click', () => {
+                    state.converterFile = null;
+                    elements.converterFile.value = '';
+                    elements.converterFileInfo.classList.add('hidden');
+                    elements.sourceFormat.value = '';
+                    elements.targetFormat.value = '';
+                    elements.btnConvertAudio.disabled = true;
+                    showToast('File cleared', 'info');
+                });
+            }
+
+            elements.targetFormat.addEventListener('change', () => {
+                elements.btnConvertAudio.disabled = !state.converterFile || !elements.targetFormat.value;
+            });
+
+            elements.btnConvertAudio.addEventListener('click', handleConvertAudio);
+        }
+
+        function handleConverterFile(file) {
+            const validExtensions = ['.mp3', '.wav', '.flac', '.aac', '.ogg', '.m4a', '.alac'];
+            const ext = '.' + file.name.split('.').pop().toLowerCase();
+
+            if (!validExtensions.includes(ext)) {
+                showToast('Please upload a valid audio file (MP3, WAV, FLAC, AAC, OGG, ALAC)', 'error');
+                return;
+            }
+
+            state.converterFile = file;
+            elements.converterFileName.textContent = file.name;
+            elements.converterFileInfo.classList.remove('hidden');
+
+            // Auto-detect source format
+            const formatMap = {
+                '.mp3': 'MP3',
+                '.wav': 'WAV',
+                '.flac': 'FLAC',
+                '.aac': 'AAC',
+                '.ogg': 'OGG',
+                '.m4a': 'AAC (M4A)',
+                '.alac': 'ALAC'
+            };
+            elements.sourceFormat.value = formatMap[ext] || ext.toUpperCase();
+
+            elements.btnConvertAudio.disabled = !elements.targetFormat.value;
+            showToast('File loaded: ' + file.name, 'success');
+        }
+
+        async function handleConvertAudio() {
+            if (!state.converterFile || !elements.targetFormat.value) {
+                showToast('Please select a file and target format', 'warning');
+                return;
+            }
+
+            const targetFormat = elements.targetFormat.value;
+            const quality = elements.converterQuality.value;
+
+            // Validate lossless option
+            if (quality === 'lossless' && !['flac', 'alac'].includes(targetFormat)) {
+                showToast('Lossless quality only available for FLAC and ALAC formats', 'warning');
+                return;
+            }
+
+            state.isProcessing = true;
+            elements.btnConvertAudio.disabled = true;
+            elements.btnConvertAudio.innerHTML = '<svg class="animate-spin" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Converting...';
+
+            const formData = new FormData();
+            formData.append('file', state.converterFile);
+            formData.append('target_format', targetFormat);
+            formData.append('quality', quality);
+
+            const jobId = 'convert-' + Date.now();
+            setupSSE(jobId);
+            formData.append('job_id', jobId);
+
+            try {
+                const res = await fetch('/api/convert-audio', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await res.json();
+
+                if (data.error) throw new Error(data.error);
+
+                showToast('Conversion completed!', 'success');
+
+                // Trigger download
+                if (data.downloadUrl) {
+                    const a = document.createElement('a');
+                    a.href = data.downloadUrl;
+                    a.download = data.filename || `converted.${targetFormat}`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                }
+            } catch (e) {
+                showToast('Conversion failed: ' + e.message, 'error');
+            } finally {
+                state.isProcessing = false;
+                elements.btnConvertAudio.disabled = false;
+                elements.btnConvertAudio.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4" /></svg> Convert Audio';
+            }
+        }
+
+        function addBatchFiles(files) {
+            const mp3s = files.filter(f => f.name.toLowerCase().endsWith('.mp3'));
+            if (mp3s.length === 0) return showToast('Only MP3 files are supported for merging', 'warning');
+
+            batchFilesArray = [...batchFilesArray, ...mp3s];
+            renderBatchList();
+            elements.btnStartMerge.disabled = batchFilesArray.length < 2;
+        }
+
+        function renderBatchList() {
+            elements.batchFileList.innerHTML = batchFilesArray.map((file, i) => `
+                <div class="manifest-item" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: rgba(255,255,255,0.03); margin-bottom: 0.5rem; border-radius: 6px;">
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <span style="color: var(--text-muted); font-size: 0.8rem; font-family: monospace;">#${i + 1}</span>
+                        <span style="font-weight: 500;">${file.name}</span>
+                    </div>
+                    <button class="btn-icon" onclick="removeBatchFile(${i})" style="color: var(--error);">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        window.removeBatchFile = (index) => {
+            batchFilesArray.splice(index, 1);
+            renderBatchList();
+            elements.btnStartMerge.disabled = batchFilesArray.length < 2;
+        };
+
+        function removeChapter(index) {
+            state.chapters.splice(index, 1);
+            renderManifest();
+        }
+
+        async function previewChapter(id) {
+            const index = state.chapters.findIndex(c => c.id == id);
+            if (index === -1) return;
+            const chapter = state.chapters[index];
+            const btn = document.getElementById(`btn-preview-${id}`);
+            const originalHTML = btn.innerHTML;
+
+            btn.disabled = true;
+            btn.innerHTML = '<svg class="spin" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>';
+
+            try {
+                const res = await fetch('/api/preview-chapter', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        text: chapter.content || chapter.title, // content exists for doc-based chapters
+                        voice: document.getElementById('ttsVoice').value,
+                        speed: document.getElementById('ttsSpeed').value,
+                        multiVoice: document.getElementById('enableMultiVoice')?.checked || false,
+                        dialogueVoice: document.getElementById('dialogueVoice')?.value || null
+                    })
+                });
+
+                if (!res.ok) throw new Error(await res.text());
+
+                const blob = await res.blob();
+                const url = URL.createObjectURL(blob);
+                const audio = new Audio(url);
+                audio.play();
+
+                showToast(`Playing preview for Chapter ${index + 1}...`, 'info');
+            } catch (e) {
+                showToast(`Preview failed: ${e.message}`, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalHTML;
+            }
+        }
+
+        async function handleStartMerge() {
+            if (batchFilesArray.length < 2) return;
+
+            state.isProcessing = true;
+            elements.btnStartMerge.disabled = true;
+            log('Starting batch merge of ' + batchFilesArray.length + ' files...', 'info');
+
+            const jobId = 'merge-' + Date.now();
+            setupSSE(jobId);
+
+            const formData = new FormData();
+            batchFilesArray.forEach(file => formData.append('audio_files', file));
+            formData.append('jobId', jobId);
+
+            // Add metadata
+            const metadata = {
+                title: elements.metaTitle.value || 'Merged Audiobook',
+                author: elements.metaAuthor.value || 'Various Authors',
+                genre: elements.metaGenre.value || 'Audiobook',
+                description: elements.metaDescription.value || 'Created with BPM4B Batch Merge'
+            };
+            formData.append('metadata', JSON.stringify(metadata));
+            if (state.coverBase64) formData.append('cover_base64', state.coverBase64);
+
+            try {
+                const res = await fetch('/api/batch-merge', { method: 'POST', body: formData });
+                if (!res.ok) throw new Error(await res.text());
+
+                const data = await res.json();
+                if (data.success) {
+                    showToast('Batch merge complete!', 'success');
+                    log('Batch merge completed! File: ' + data.filename, 'success');
+                    // Show download link
+                    if (data.downloadUrl) {
+                        log('Download URL: ' + data.downloadUrl, 'info');
+                    }
+                    batchFilesArray = [];
+                    renderBatchList();
+                } else {
+                    throw new Error(data.error || 'Batch merge failed');
+                }
+            } catch (e) {
+                log('Merge failed: ' + e.message, 'error');
+                showToast('Merge failed', 'error');
+            } finally {
+                state.isProcessing = false;
+                elements.btnStartMerge.disabled = false;
+            }
+        }
+
+        // --- Bootstrap ---
         document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>

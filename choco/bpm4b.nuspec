@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>bpm4b</id>
+    <version>10.0.0</version>
+    <title>bpm4b (Professional Multimedia Converter)</title>
+    <authors>JDJCHELP</authors>
+    <projectUrl>https://github.com/jdjchelp-jpg/nodebpm4b</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/jdjchelp-jpg/nodebpm4b/main/icon.png</iconUrl>
+    <copyright>2024 JDJCHELP</copyright>
+    <licenseUrl>https://github.com/jdjchelp-jpg/nodebpm4b/blob/main/LICENSE</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <projectSourceUrl>https://github.com/jdjchelp-jpg/nodebpm4b</projectSourceUrl>
+    <tags>bpm4b audiobook converter m4b mp3 tts kokoro</tags>
+    <summary>Professional Multimedia Converter - Local Kokoro-82M TTS and Premium Audio Conversion</summary>
+    <description>
+BPM4B is a professional multimedia converter designed for speed and quality.
+
+### Features
+- **MP3 to M4B**: Create high-quality audiobooks with chapter support.
+- **Document to Audiobook**: Convert PDF, DOCX, TXT, and EPUB to audiobooks using local Kokoro-82M TTS.
+- **M3U8 to MKV**: Convert streaming lists to standalone video files.
+- **AAX to M4B**: Convert Audible files (requires activation bytes).
+- **Web Interface**: Easy to use browser-based GUI.
+
+### Installation
+This package installs the `bpm4b` CLI and its required dependencies (including FFmpeg via the bundled binary).
+    </description>
+    <releaseNotes>Initial Chocolatey release for v10.0.0.</releaseNotes>
+  </metadata>
+  <files>
+    <file src="tools\**" target="tools" />
+  </files>
+</package>

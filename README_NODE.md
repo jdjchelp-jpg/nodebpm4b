@@ -4,7 +4,7 @@ A Node.js web application for converting MP3 to M4B, M4B to MP3, and generating 
 
 **Install and run with:** `npm install -g bpm4b` then `bpm4b`
 
-**Version:** 9.0.0
+**Version:** 10.0.0
 
 ## Features
 
@@ -15,8 +15,8 @@ A Node.js web application for converting MP3 to M4B, M4B to MP3, and generating 
 
 ### 📁 File Conversion Section
 - **MP3 to M4B**: Convert MP3 files to audiobook format with embedded chapters
-- **M4B to MP3**: High-fidelity conversion from M4B/M4A containers to MP3 (NEW in v9)
-- **Document to Audiobook**: Generate high-quality voiceovers from PDF/Text using Kokoro-82M AI (NEW in v9)
+- **M4B to MP3**: High-fidelity conversion from M4B/M4A containers to MP3 (NEW in v10)
+- **Document to Audiobook**: Generate high-quality voiceovers from PDF/Text using Kokoro-82M AI (NEW in v10)
 - Drag-and-drop file upload with visual feedback
 - Real-time progress monitoring with SSE (Server-Sent Events)
 - Visual progress bar and live terminal logging

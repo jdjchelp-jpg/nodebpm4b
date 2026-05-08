@@ -1,20 +1,10 @@
-# BPM4B - Professional Multimedia Suite (v9.0.0)
+# BPM4B - Professional Multimedia Suite (v11.0.0 "The Editor's Cut")
 
-A professional multimedia processing suite for converting MP3 to M4B, M4B to MP3, and generating AI Audiobooks with high-fidelity TTS and automatic chapter support.
-
-**Available in two versions:**
-- **Python** (Flask): `pip install bpm4b` then `bpm4b`
-- **Node.js** (Express): `npm install -g bpm4b` then `bpm4b`
+A professional multimedia processing suite for converting MP3 to M4B, M4B to MP3, and generating AI Audiobooks with high-fidelity TTS and interactive chapter editing.
 
 ## Installation
 
-### Python Version (Original)
-```bash
-pip install bpm4b
-bpm4b web
-```
-
-### Node.js Version
+### Standard Installation
 ```bash
 npm install -g bpm4b
 bpm4b web
@@ -30,27 +20,54 @@ npm start
 
 **Update:**
 ```bash
-# Update Python version
-pip install --upgrade bpm4b
-
 # Update Node.js version
 npm update -g bpm4b
 ```
 
 ## Features
 
-### 🎯 Unified Smart Mode
-- Single toggle switch: Conversion Mode vs Chapter Builder Only
-- Automatic chapter attachment to MKV/M4B output when conversion mode is ON
-- Standalone timestamp generator when mode is OFF
+### ✍️ Interactive Pro Editor (v11)
+- **Full Text Viewer (Word-to-Word)**: Review and edit chapter content before generation.
+- **Manual Manifest Control**: Merge chapters, rename titles, and exclude segments with one click.
+- **Dual Boundary Verification**: Preview the exact start and end snippets of every chapter card.
+- **Universal Document Engine**: Support for ANY text-based file (PDF, EPUB, DOCX, TXT, MD, etc.).
+
+### 🎙️ Neural Narration Studio (v11)
+- **Professional Chapter Announcements**: Automatically injects "Chapter X: [Title]" or "Episode X" audio headers.
+- **Multi-Voice Dialogue**: Differentiate narrative text from dialogue using unique neural voices.
+- **Kokoro-82M High Fidelity**: Powered by local, high-speed neural TTS for human-like narration.
+
+### 📝 Metadata Editor
+- **Edit M4B Metadata**: Upload an M4B file and edit its metadata (title, author, genre, description)
+- **Auto-Fill from Open Library**: Search for book titles and automatically fetch metadata
+- **Cover Art Management**: Upload and embed cover art into your audiobook files
+- **Apply Changes**: One-click button to apply metadata changes directly to your M4B file
+- **Download Updated File**: Automatically download the M4B file with updated metadata
+- **Requires FFmpeg**: FFmpeg is bundled with the Node version
 
 ### 📁 File Conversion Section
 - **MP3 to M4B**: Convert MP3 files to audiobook format with embedded chapters
-- **M4B to MP3**: High-fidelity conversion from M4B/M4A containers to MP3 (NEW in v9)
-- **Document to Audiobook**: Generate high-quality voiceovers from PDF/Text using Kokoro-82M AI (NEW in v9)
+- **M4B to MP3**: High-fidelity conversion from M4B/M4A containers to MP3 (NEW in v10)
+- **Document to Audiobook**: Generate high-quality voiceovers from PDF/Text using Kokoro-82M AI (NEW in v10)
+- **Audio Format Converter**: Convert between multiple audio formats (NEW in v10)
+  - MP3 ↔ WAV (bidirectional)
+  - FLAC → MP3
+  - AAC → OGG
+  - OGG → WAV
+  - ALAC → FLAC
+  - Adjustable quality settings (128k, 192k, 256k, 320k, lossless)
 - Drag-and-drop file upload for all tools
 - Real-time progress monitoring with SSE (Server-Sent Events)
 - Visual progress bar and live terminal logging
+
+### 🎨 Theme System
+- **25+ Color Themes**: Choose from a variety of beautiful color schemes
+- **Dark Mode**: Original dark theme for low-light environments
+- **Classic**: Clean light theme for traditional look
+- **Specialty Themes**: Matrix, Cyberpunk, Dracula, Monokai, Vaporwave, and more
+- **Custom Themes**: Emerald Forest, Purple Galaxy, Sunset Orange, Blue Ocean, Cherry Blossom, Golden Hour, Midnight Depth, Royal Velvet, Arctic Frost, Volcanic Ash, Coffee House, Leafy Greens, Ocean Breeze, Lavender Dream, Steel City, Ruby Red, Solarized Light, High Contrast
+- **Persistent Selection**: Theme choice saved to localStorage
+- **Real-time Switching**: Change themes instantly without page reload
 
 ### ⏱ Automatic Chapter Builder
 - **Always enabled** - core functionality
@@ -87,42 +104,7 @@ npm update -g bpm4b
 
 ## Prerequisites
 
-### Node.js Version
 **No additional prerequisites needed!** FFmpeg is bundled with the Node.js version, so it works out of the box.
-
-### Python Version (Original)
-- Python 3.8+
-- FFmpeg (required for MP3 to M4B conversion)
-
-### Installing FFmpeg (Python Version Only)
-
-**Windows:**
-1. Go to https://www.gyan.dev/ffmpeg/builds/ (recommended Windows builds)
-2. Download "ffmpeg-git-full.7z" or "ffmpeg-release-full.7z"
-3. Extract the archive using 7-Zip or similar
-4. Open the extracted folder, navigate to the `bin` folder
-5. Copy the path to the `bin` folder (contains ffmpeg.exe)
-6. Add to PATH:
-   - Press Win + X, select "System"
-   - Click "Advanced system settings"
-   - Click "Environment Variables"
-   - Under "System variables", find and select "Path", click "Edit"
-   - Click "New" and paste the path to the `bin` folder
-   - Click OK on all windows
-7. Open a new command prompt and verify: `ffmpeg -version`
-
-**macOS:**
-```bash
-brew install ffmpeg
-```
-
-**Ubuntu/Debian:**
-```bash
-sudo apt-get update
-sudo apt-get install ffmpeg
-```
-
-**Note:** The Python version requires FFmpeg. The Node.js version includes FFmpeg automatically.
 
 ## Usage
 
@@ -179,18 +161,9 @@ Chapter start times accept:
 - Seconds as integer (e.g., `390`)
 - Minutes:seconds format (e.g., `"6:30"` or `"6:30.5"` for fractional seconds)
 
-### Using Python Module
+### Using the CLI
 
-Alternatively, you can run it as a Python module:
-
-```bash
-python -m bpm4b.cli web --port 5000
-python -m bpm4b.cli convert input.mp3 output.m4b
-```
-
-### Using the CLI (Package Installation)
-
-After installing with `pip install -e .`, use the `bpm4b` command:
+After installing with `npm install -g bpm4b`, use the `bpm4b` command:
 
 ```bash
 # Start web interface
@@ -208,15 +181,6 @@ bpm4b convert input.mp3 output.m4b --chapter "Chapter 1" 0
 bpm4b --help
 bpm4b web --help
 bpm4b convert --help
-```
-
-### Using Python Module
-
-Alternatively, you can run it as a Python module:
-
-```bash
-python -m bpm4b.cli web --port 5000
-python -m bpm4b.cli convert input.mp3 output.m4b
 ```
 
 ### Using the Traditional Method
@@ -249,6 +213,27 @@ Once the server is running:
 - Powered by Kokoro-82M Local TTS engine
 - High-quality, human-like voice synthesis
 - Automatic chapter detection and manifest generation
+
+**Metadata Editor**: Edit metadata on existing M4B/M4A files
+- Upload an M4B file to load its current metadata
+- Edit title, author, genre, and description fields
+- Use "Auto-Fill" to fetch metadata from Open Library by title
+- Upload and embed cover art
+- Click "Apply Metadata to M4B" to save changes and download the updated file
+
+**Voice Cloning (KokoClone)**: Generate speech in a cloned voice
+- Upload a 3-10 second reference voice sample
+- Enter text to synthesize or upload source audio
+- Select language (English, Hindi, French, Japanese, Chinese, Italian, Portuguese, Spanish)
+- Generate cloned speech or re-voice existing audio recordings
+- Powered by Kokoro-ONNX and Kanade voice conversion models
+
+**Batch Merge (Audio Glue)**: Combine multiple audio files into one
+- Upload multiple MP3 files to merge them sequentially
+- Add metadata (title, author, genre, description) to the merged file
+- Upload and embed cover art
+- Download the merged audio file
+- Perfect for combining chapter files or creating compilations
 
 ## API Endpoints
 
@@ -283,6 +268,73 @@ Generates an audiobook from a document.
 - `voice`: Selection from available Kokoro voices
 - `output_name`: Custom filename
 
+### POST /api/metadata/extract
+Extracts metadata from an M4B/M4A file.
+
+**Form Data:**
+- `file`: The M4B/M4A file to extract metadata from
+
+**Response:**
+```json
+{
+  "title": "Book Title",
+  "author": "Author Name",
+  "genre": "Fiction",
+  "description": "Book description...",
+  "coverBase64": "data:image/jpeg;base64,..."
+}
+```
+
+### POST /api/metadata/apply
+Applies metadata to an M4B/M4A file.
+
+**Form Data:**
+- `file`: The M4B/M4A file to update
+- `metadata`: JSON object with metadata fields:
+```json
+{
+  "title": "New Title",
+  "author": "New Author",
+  "genre": "New Genre",
+  "description": "New description..."
+}
+```
+- `cover_base64` (optional): Base64-encoded cover art image
+
+**Response:**
+```json
+{
+  "success": true,
+  "downloadUrl": "/api/download/updated_metadata.m4b",
+  "filename": "updated_metadata.m4b"
+}
+```
+
+### POST /api/convert-audio
+Converts audio files between different formats.
+
+**Form Data:**
+- `file`: The audio file to convert
+- `target_format`: Target format (mp3, wav, flac, aac, ogg, alac)
+- `quality`: Audio quality/bitrate (128k, 192k, 256k, 320k, lossless)
+- `job_id` (optional): Job ID for SSE progress updates
+
+**Supported Conversions:**
+- MP3 ↔ WAV (bidirectional)
+- FLAC → MP3
+- AAC → OGG
+- OGG → WAV
+- ALAC → FLAC
+
+**Response:**
+```json
+{
+  "success": true,
+  "downloadUrl": "/api/download/converted_file.mp3",
+  "filename": "converted_file.mp3"
+}
+```
+
 ### GET /api/health
 Health check endpoint. Returns JSON with status and FFmpeg availability.
 
@@ -291,47 +343,24 @@ Returns an M4B file as a download.
 
 ## Project Structure
 
-### Python Version
-```
-.
-├── bpm4b/              # Main package directory
-│   ├── __init__.py    # Package initialization
-│   ├── app.py         # Flask application (for local development)
-│   ├── cli.py         # Command-line interface entry point
-│   ├── core.py        # Shared core functions
-│   ├── api/
-│   │   ├── __init__.py
-│   │   └── index.py   # Vercel serverless function
-│   └── templates/
-│       └── index.html # Frontend interface
-├── setup.py           # Package installation configuration
-├── vercel.json        # Vercel configuration
-├── requirements.txt   # Python dependencies
-├── uploads/           # Temporary uploaded files (created automatically)
-├── outputs/           # Generated files (created automatically)
-└── README.md          # This file
-```
-
-### Node.js Version
 ```
 .
 ├── bin/
 │   └── bpm4b.js       # CLI entry point
 ├── lib/
 │   ├── core.js        # Core conversion functions
-│   └── server.js      # Express web server
+│   ├── server.js      # Express web server
+│   ├── audiobook-builder.js # TTS Narration Logic
+│   └── chapter-detector.js # Regex Chapter Parsing
 ├── templates/
-│   └── index.ejs      # Frontend template
+│   └── index.ejs      # Frontend dashboard
 ├── api/
 │   └── index.js       # Vercel serverless function
-├── examples/          # Usage examples
-├── test/              # Unit tests
 ├── package.json       # NPM package configuration
-├── vercel.json        # Vercel configuration
-├── uploads/           # Temporary uploaded files (created automatically)
-├── outputs/           # Generated files (created automatically)
-└── README_NODE.md     # Node.js specific documentation
+├── uploads/           # Temporary uploaded files
+└── outputs/           # Generated files
 ```
+
 
 ## Notes
 

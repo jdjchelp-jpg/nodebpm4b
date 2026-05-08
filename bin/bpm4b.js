@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * BPM4B - Professional Multimedia Converter v9.0.0
+ * BPM4B - Professional Multimedia Converter v10.0.0
  * Command-line interface for converting MP3 to M4B, M3U8 to MKV,
  * Documents to Audiobooks (Local Kokoro-82M), and AAX to M4B/M4A
  */
@@ -16,7 +16,7 @@ const program = new Command();
 program
   .name('bpm4b')
   .description('Professional Multimedia Converter - Local Kokoro-82M TTS & Premium Audio Conversion')
-  .version('9.0.0 (AudioBPM4B v9)');
+  .version('10.0.0 (AudioBPM4B v10)');
 
 // Web command
 program
@@ -28,7 +28,7 @@ program
   .action(async (options) => {
     console.log(`
 ╔═══════════════════════════════════════════════════════════════╗
-║          BPM4B Professional Converter v9.0.0                 ║
+║          BPM4B Professional Converter v10.0.0                ║
 ║  (Local Kokoro-82M Engine | No API Keys Required)             ║
 ║                                                               ║
 ║  Web interface starting...                                    ║
@@ -213,53 +213,6 @@ program
     }
   });
 
-// AAX Conversion command
-program
-  .command('convert-aax')
-  .description('Convert Audible AAX to M4B/M4A (preserves chapters and cover art)')
-  .argument('<input>', 'Input AAX file path')
-  .argument('<output>', 'Output file path (.m4b or .m4a)')
-  .requiredOption('--activation-bytes <hex>', '8-character hex activation bytes for your Audible account')
-  .option('--extract-cover', 'Extract cover art as a separate image', false)
-  .action(async (input, output, options) => {
-    try {
-      if (!fs.existsSync(input)) {
-        console.error(`Error: Input file '${input}' not found`);
-        process.exit(1);
-      }
-
-      const ext = path.extname(input).toLowerCase();
-      if (ext !== '.aax' && ext !== '.aa') {
-        console.error('Error: Input must be an AAX or AA file');
-        process.exit(1);
-      }
-
-      try {
-        await checkFFmpeg();
-      } catch (error) {
-        console.error('Error: FFmpeg is not available');
-        process.exit(1);
-      }
-
-      const { convertAAX } = require('../lib/aax-converter');
-      const outputDir = path.dirname(output);
-      if (outputDir) fs.mkdirSync(outputDir, { recursive: true });
-
-      console.log(`\nConverting AAX: ${input} -> ${output}`);
-
-      const result = await convertAAX(input, output, options.activationBytes, {
-        extractCover: options.extractCover
-      });
-
-      console.log(`\u2713 Conversion complete: ${output}`);
-      if (result.coverPath) {
-        console.log(`\u2713 Cover art extracted: ${result.coverPath}`);
-      }
-    } catch (error) {
-      console.error('Error during AAX conversion:', error.message);
-      process.exit(1);
-    }
-  });
 
 // Parse command line arguments
 program.parse();
