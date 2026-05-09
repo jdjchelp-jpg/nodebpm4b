@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BPM4B v11 | Pro Audiobook Studio</title>
+    <title>BPM4B v12 | Ultimate Production Suite</title>
     <script src="https://unpkg.com/wavesurfer.js@7"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -93,14 +93,54 @@
         /* Sidebar Styling */
         .sidebar {
             width: var(--sidebar-width);
+            height: 100vh;
             background: var(--bg-surface);
             border-right: 1px solid var(--slate-200);
             display: flex;
             flex-direction: column;
             padding: 2rem 1.5rem;
             z-index: 50;
+            overflow-y: auto;
+            overflow-x: hidden;
+            scrollbar-width: thin;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
+        /* Sidebar Scrollbar */
+        .sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .sidebar::-webkit-scrollbar-thumb {
+            background: var(--slate-200);
+            border-radius: 10px;
+        }
+
+        .sidebar.collapsed {
+            width: 80px;
+            padding: 2rem 0.75rem;
+        }
+
+        .sidebar.collapsed .logo-text,
+        .sidebar.collapsed .nav-label,
+        .sidebar.collapsed .nav-item span,
+        .sidebar.collapsed .version-tag,
+        .sidebar.collapsed .theme-toggle-container label,
+        .sidebar.collapsed .input-group label {
+            display: none;
+        }
+
+        .sidebar.collapsed .nav-item {
+            justify-content: center;
+            padding: 0.75rem;
+        }
+
+        .sidebar.collapsed .nav-group {
+            align-items: center;
+        }
+
+        .sidebar.collapsed #sidebarCollapseBtn svg {
+            transform: rotate(180deg);
+        }
         .main-content {
             flex: 1;
             overflow-y: auto;
@@ -249,7 +289,7 @@
 
         .bento-card {
             background: var(--glass-bg);
-            backdrop-filter: blur(12px);
+            backdrop-filter: blur(var(--blur-intensity, 12px));
             border: 1px solid var(--glass-border);
             border-radius: var(--radius-lg);
             padding: 1.75rem;
@@ -596,6 +636,10 @@
             padding-right: 0.5rem;
         }
 
+        /* Reorder handles */
+        .reorder-handle { cursor: grab; color: var(--slate-400); padding: 0.25rem; }
+        .reorder-handle:active { cursor: grabbing; }
+
         .chapter-card {
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid var(--border);
@@ -909,9 +953,54 @@
 <body>
     <div class="toast-container" id="toastContainer"></div>
 
+    <!-- Tool Quick-Switcher Modal -->
+    <div id="quickSwitcherModal" class="modal-overlay hidden">
+        <div class="modal-content bento-card" style="max-width: 500px; padding: 1.5rem;">
+            <div class="card-header">
+                <h3 class="card-title">Jump to Tool</h3>
+            </div>
+            <input type="text" id="quickSwitcherInput" class="form-input" placeholder="Type tool name (e.g. merge, cleanup)..." autofocus>
+            <div id="quickSwitcherResults" style="margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem;">
+                <!-- Search results -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Keyboard Shortcuts Modal -->
+    <div id="shortcutsModal" class="modal-overlay hidden">
+        <div class="modal-content bento-card" style="max-width: 400px; padding: 1.5rem;">
+            <div class="card-header">
+                <h3 class="card-title">Keyboard Shortcuts</h3>
+            </div>
+            <div style="margin-top: 1rem; display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.85rem;">
+                <div style="display: flex; justify-content: space-between;"><span>Quick Switcher</span><kbd>Ctrl+K</kbd></div>
+                <div style="display: flex; justify-content: space-between;"><span>Toggle Sidebar</span><kbd>Ctrl+B</kbd></div>
+                <div style="display: flex; justify-content: space-between;"><span>Export Manifest</span><kbd>Ctrl+S</kbd></div>
+                <div style="display: flex; justify-content: space-between;"><span>Show Shortcuts</span><kbd>?</kbd></div>
+                <div style="display: flex; justify-content: space-between;"><span>Close Modals</span><kbd>Esc</kbd></div>
+            </div>
+            <button class="btn btn-secondary btn-sm mt-3" onclick="closeAllModals()">Close</button>
+        </div>
+    </div>
+
     <!-- Full Text Viewer Modal -->
     <div id="textViewerModal" class="modal-overlay hidden">
         <div class="modal-content bento-card">
+            <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+                <h2 class="card-title">Recent Activity</h2>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button class="btn btn-secondary btn-sm" id="downloadAllBtn" title="Download All (Zip)">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    </button>
+                    <button class="btn btn-secondary btn-sm" id="exportLogBtn" title="Export Production Log">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="input-group" style="margin-top: 1rem;">
+                <input type="text" id="activitySearch" class="form-input" placeholder="Search history..." style="padding: 0.5rem;">
+            </div>
             <div class="card-header">
                 <h3 class="card-title" id="modalTitle">Chapter Content</h3>
                 <div style="display: flex; gap: 0.5rem;">
@@ -940,6 +1029,12 @@
                     </svg>
                 </div>
                 <h1 class="logo-text" style="font-family: var(--font-main); color: var(--text-primary); font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em;">BPM4B</h1>
+                
+                <div id="bpiStatus" style="margin-left: 0.75rem; background: rgba(255,255,255,0.9); color: #0f172a; padding: 4px 10px; border-radius: 100px; display: flex; align-items: center; gap: 6px; font-size: 0.7rem; font-weight: 800; box-shadow: 0 4px 10px rgba(0,0,0,0.2); cursor: pointer;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                    <span>BPI</span>
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="opacity: 0.5;"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                </div>
             </div>
 
             <div class="nav-group">
@@ -948,19 +1043,19 @@
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
                     </svg>
-                    Studio Dashboard
+                    <span>Studio Dashboard</span>
                 </a>
                 <a class="nav-item" data-tool="audiobook">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2 0 0 1-2.5-2.5Z"/><path d="M8 7h6"/><path d="M8 11h8"/>
                     </svg>
-                    Audiobook Gen
+                    <span>Audiobook Gen</span>
                 </a>
                 <a class="nav-item" data-tool="m4b">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
                     </svg>
-                    Extract Audio
+                    <span>Extract Audio</span>
                 </a>
             </div>
 
@@ -970,26 +1065,95 @@
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/>
                     </svg>
-                    Metadata Editor
+                    <span>Metadata Editor</span>
+                </a>
+                <a class="nav-item" data-tool="clone">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/>
+                    </svg>
+                    <span>Voice Cloner</span>
+                </a>
+                <a class="nav-item" data-tool="clean">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2v2M7 8v2M17 8v2M3 13h18M3 17h18M3 21h18"/>
+                    </svg>
+                    <span>Audio Cleaner</span>
+                </a>
+                <a class="nav-item" data-tool="quality">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 11 11 13 15 9"/>
+                    </svg>
+                    <span>Quality Lab</span>
                 </a>
                 <a class="nav-item" data-tool="batch">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/>
                     </svg>
-                    Batch Merge
+                    <span>Batch Merge</span>
                 </a>
                 <a class="nav-item" data-tool="converter">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M16 3h5v5"/><path d="M4 20L21 3"/><path d="M21 16v5h-5"/><path d="M15 15l6 6"/><path d="M4 4l5 5"/>
                     </svg>
-                    Format Switcher
+                    <span>Format Switcher</span>
                 </a>
+                <a class="nav-item" data-tool="activity">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2v20"/><path d="m17 5 3 3-3 3"/><path d="m7 19-3-3 3-3"/><path d="M2 12h20"/>
+                    </svg>
+                    <span>Recent Activity</span>
+                </a>
+                <button class="btn btn-secondary btn-sm" id="sidebarCollapseBtn" style="margin-top: auto; padding: 0.5rem;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+                </button>
             </div>
 
 
             <div class="sidebar-footer">
+                <div class="input-group" style="margin-bottom: 0.75rem;">
+                    <label style="font-size: 0.65rem;">OpenRouter API Key</label>
+                    <input type="password" id="openRouterKey" class="form-input" style="padding: 0.4rem; font-size: 0.8rem;" placeholder="sk-or-v1-...">
+                </div>
+                <div class="input-group" style="margin-bottom: 1rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <label style="font-size: 0.65rem;">AI Model</label>
+                        <button id="refreshModels" style="background:none; border:none; color:var(--primary); cursor:pointer; font-size:0.6rem; padding: 0;">↻ Refresh</button>
+                    </div>
+                    <input type="text" id="aiModel" class="form-input" list="modelList" style="padding: 0.4rem; font-size: 0.8rem;" value="google/gemini-2.0-flash-001">
+                    <datalist id="modelList">
+                        <option value="google/gemini-2.0-flash-001">
+                        <option value="openai/gpt-4o">
+                        <option value="anthropic/claude-3.5-sonnet">
+                        <option value="poolside/laguna-m.1:free">
+                    </datalist>
+                </div>
+                <div class="input-group" style="margin-top: 1rem;">
+                    <label style="font-size: 0.65rem;">AI Production Tools</label>
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                        <button class="btn btn-secondary btn-sm" id="aiVoiceSuggestBtn" style="justify-content: flex-start; gap: 0.5rem; font-size: 0.75rem; padding: 0.4rem;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg>
+                            AI Voice Matcher
+                        </button>
+                        <button class="btn btn-secondary btn-sm" id="aiBlurbBtn" style="justify-content: flex-start; gap: 0.5rem; font-size: 0.75rem; padding: 0.4rem;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                            AI Cover Blurb
+                        </button>
+                        <button class="btn btn-secondary btn-sm" id="aiSentimentBtn" style="justify-content: flex-start; gap: 0.5rem; font-size: 0.75rem; padding: 0.4rem;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                            AI Sentiment Tags
+                        </button>
+                        <button class="btn btn-secondary btn-sm" id="aiHardWordsBtn" style="justify-content: flex-start; gap: 0.5rem; font-size: 0.75rem; padding: 0.4rem;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"/><path d="m4.93 4.93 4.24 4.24M14.83 14.83l4.24 4.24"/></svg>
+                            AI Hard Words
+                        </button>
+                    </div>
+                </div>
+
                 <div class="theme-toggle-container">
-                    <span>Theme</span>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <div id="localStatusIcon" style="width: 10px; height: 10px; border-radius: 50%; background: var(--success); box-shadow: 0 0 10px var(--success);"></div>
+                        <span>Theme</span>
+                    </div>
                     <select id="themeSelector" class="form-select"
                         style="width: auto; padding: 0.5rem; font-size: 0.875rem;">
                         <option value="dark">Dark Mode</option>
@@ -1019,9 +1183,19 @@
                         <option value="high-contrast">High Contrast</option>
                     </select>
                 </div>
+
+                <div class="input-group" style="margin-top: 1rem; padding: 0 1.5rem;">
+                    <label style="font-size: 0.65rem;">Glass Blur Intensity</label>
+                    <input type="range" id="blurSlider" min="0" max="40" value="20" style="width: 100%;">
+                </div>
+
+                <div class="input-group" style="margin-top: 1rem; padding: 0 1.5rem;">
+                    <label style="font-size: 0.65rem;">Primary Color</label>
+                    <input type="color" id="primaryColorPicker" value="#4f46e5" style="width: 100%; height: 30px; border: none; padding: 0; background: transparent; cursor: pointer;">
+                </div>
                 <div class="version-tag">
-                    <span>Engine v<%= version %></span>
-                    <span>Stable</span>
+                    <span>Engine v12.0.0</span>
+                    <span>Stable Release</span>
                 </div>
             </div>
         </aside>
@@ -1163,6 +1337,12 @@
                                 <input type="file" id="docFile" class="hidden" accept="*/*">
                             </div>
                             <div id="docFileInfo" class="active-file-indicator hidden"></div>
+                            <button class="btn btn-secondary" id="ai-director-btn" style="margin-top: 1rem; width: 100%; border: 1px dashed var(--primary);">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                                </svg>
+                                AI Narration Director
+                            </button>
                         </div>
 
                         <div class="dashboard-grid" style="gap: 1rem; margin-bottom: 1.5rem;">
@@ -1242,10 +1422,20 @@
                             </div>
                         </div>
 
-                        <div class="chapter-actions mt-3">
-                            <button id="previewChaptersBtn" class="btn btn-secondary">Analyze Chapters</button>
-                            <button id="generateAudiobookBtn" class="btn btn-primary">Generate Audiobook</button>
+                        <div class="chapter-actions mt-3" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <button id="previewChaptersBtn" class="btn btn-primary" style="padding: 1rem; font-weight: 700; font-size: 1rem; box-shadow: 0 10px 15px -3px var(--primary-glow);">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;"><path d="m21 21-4.3-4.3"/><circle cx="11" cy="11" r="8"/><path d="M7 11h8M11 7v8"/></svg>
+                                Analyze Chapters
+                            </button>
+                            <button id="generateAudiobookBtn" class="btn btn-primary" style="padding: 1rem; font-weight: 700; font-size: 1rem; background: linear-gradient(135deg, var(--success), var(--primary));">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                                Generate Audiobook
+                            </button>
                         </div>
+                        <button id="stopGenerationBtn" class="btn hidden" style="margin-top: 0.75rem; width: 100%; background: rgba(239,68,68,0.15); border: 1px solid var(--error); color: var(--error); font-weight: 700; padding: 0.85rem;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 0.5rem;"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
+                            Stop Generation
+                        </button>
                     </div>
                 </div>
 
@@ -1254,7 +1444,7 @@
                     <div class="bento-card col-span-8">
                         <div class="card-header">
                             <h2 class="card-title">
-                                <div class="card-icon-sm">
+                                <div class="card-icon-sm" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2)); color: var(--primary);">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                                         <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
                                         <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
@@ -1266,23 +1456,142 @@
                             </h2>
                         </div>
 
-                        <div
-                            style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 4rem 2rem; text-align: center;">
-                            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="1.5" style="color: var(--text-muted); margin-bottom: 1.5rem;">
-                                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
-                                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
-                                <line x1="12" y1="19" x2="12" y2="23"></line>
-                                <line x1="8" y1="23" x2="16" y2="23"></line>
+                        <div class="dashboard-grid" style="gap: 1.5rem;">
+                            <div class="col-span-12">
+                                <label>Operation Mode</label>
+                                <select id="cloneMode" class="form-select">
+                                    <option value="tts">Text-to-Clone (Generate speech from text)</option>
+                                    <option value="convert">Audio-to-Clone (Voice conversion / re-voicing)</option>
+                                </select>
+                            </div>
+
+                            <div class="col-span-6">
+                                <label>Reference Voice (The voice to copy)</label>
+                                <div class="drop-zone" id="cloneRefDropZone" style="padding: 2rem 1rem;">
+                                    <p>Drop Reference WAV</p>
+                                    <input type="file" id="cloneRefFile" class="hidden" accept=".wav,.mp3">
+                                </div>
+                                <div id="cloneRefInfo" class="active-file-indicator hidden"></div>
+                            </div>
+
+                            <div class="col-span-6" id="cloneSourceGroup" style="display: none;">
+                                <label>Source Audio (Speech to re-voice)</label>
+                                <div class="drop-zone" id="cloneSourceDropZone" style="padding: 2rem 1rem;">
+                                    <p>Drop Source WAV</p>
+                                    <input type="file" id="cloneSourceFile" class="hidden" accept=".wav,.mp3">
+                                </div>
+                                <div id="cloneSourceInfo" class="active-file-indicator hidden"></div>
+                            </div>
+
+                            <div class="col-span-12" id="cloneTextGroup">
+                                <label>Text to Synthesize</label>
+                                <textarea id="cloneText" class="form-input" placeholder="Enter the text you want the cloned voice to speak..."></textarea>
+                                <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                                    <div style="flex: 1;">
+                                        <label>Language</label>
+                                        <select id="cloneLang" class="form-select">
+                                            <option value="en">English</option>
+                                            <option value="hi">Hindi</option>
+                                            <option value="fr">French</option>
+                                            <option value="ja">Japanese</option>
+                                            <option value="zh">Chinese</option>
+                                            <option value="es">Spanish</option>
+                                            <option value="it">Italian</option>
+                                            <option value="pt">Portuguese</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button id="startCloneBtn" class="btn btn-primary" style="margin-top: 2rem;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2v20M2 12h20" />
                             </svg>
-                            <h3
-                                style="font-size: 1.5rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.75rem;">
-                                Coming Soon</h3>
-                            <p
-                                style="color: var(--text-muted); font-size: 0.9375rem; max-width: 400px; line-height: 1.6;">
-                                Voice cloning functionality is currently under development. This feature will allow you
-                                to clone voices from audio samples and generate speech in the cloned voice.
-                            </p>
+                            Generate Cloned Speech
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Audio Cleanup Panel -->
+                <div id="cleanPanel" class="tool-content">
+                    <div class="bento-card col-span-8">
+                        <div class="card-header">
+                            <h2 class="card-title">
+                                <div class="card-icon-sm" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.2)); color: var(--success);">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                        <path d="M12 2v2M7 8v2M17 8v2M3 13h18M3 17h18M3 21h18"/>
+                                    </svg>
+                                </div>
+                                Audio Cleanup Studio
+                            </h2>
+                        </div>
+
+                        <div class="input-group">
+                            <label>Source Audio File</label>
+                            <div class="drop-zone" id="cleanDropZone">
+                                <p>Drop Audio for Cleaning</p>
+                                <span>Noise reduction & normalization</span>
+                                <input type="file" id="cleanFile" class="hidden" accept=".mp3,.wav,.flac,.m4a">
+                            </div>
+                            <div id="cleanFileInfo" class="active-file-indicator hidden"></div>
+                        </div>
+
+                        <div class="dashboard-grid" style="gap: 1rem; margin-bottom: 1.5rem;">
+                            <div class="col-span-12">
+                                <label>Cleaning Profile</label>
+                                <select id="cleanProfile" class="form-select">
+                                    <option value="standard">Standard (Gentle noise reduction)</option>
+                                    <option value="deep">Deep (Aggressive noise suppression)</option>
+                                    <option value="vocal">Vocal Enhance (Boost voice clarity)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button id="startCleanBtn" class="btn btn-primary">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 3v19M5 8h14M8 13h8M11 18h2"/>
+                            </svg>
+                            Process & Clean Audio
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quality Lab Panel -->
+                <div id="qualityPanel" class="tool-content">
+                    <div class="bento-card col-span-8">
+                        <div class="card-header">
+                            <h2 class="card-title">
+                                <div class="card-icon-sm" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(220, 38, 38, 0.2)); color: var(--error);">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 11 11 13 15 9"/>
+                                    </svg>
+                                </div>
+                                Quality Lab (QA Check)
+                            </h2>
+                        </div>
+
+                        <div class="input-group">
+                            <label>Verify M4B Audiobook</label>
+                            <div class="drop-zone" id="qualityDropZone">
+                                <p>Drop M4B for Verification</p>
+                                <span>Check chapters, metadata, and bitstream</span>
+                                <input type="file" id="qualityFile" class="hidden" accept=".m4b">
+                            </div>
+                            <div id="qualityFileInfo" class="active-file-indicator hidden"></div>
+                        </div>
+
+                        <div style="display: flex; gap: 1rem;">
+                            <button id="startQualityBtn" class="btn btn-primary" style="flex: 2;">
+                                Run QA Analysis
+                            </button>
+                            <button id="getChecksumBtn" class="btn btn-secondary" style="flex: 1;">
+                                Get Checksum
+                            </button>
+                        </div>
+
+                        <div id="qualityResults" class="log-vessel mt-3" style="height: 250px; display: none;">
+                            <!-- Results will be injected here -->
                         </div>
                     </div>
                 </div>
@@ -1334,6 +1643,13 @@
                                     </svg>
                                     Auto-Fill
                                 </button>
+                                <button class="btn btn-primary" id="ai-meta-btn"
+                                    style="width: auto; white-space: nowrap; background: linear-gradient(135deg, #6366f1, #a855f7);">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                                    </svg>
+                                    AI Assist
+                                </button>
                             </div>
                         </div>
 
@@ -1348,12 +1664,11 @@
                                     placeholder="e.g. Fiction, History...">
                             </div>
                         </div>
-
                         <div class="input-group">
-                            <label>Description / Blurb</label>
-                            <textarea id="meta-description" class="form-input"
-                                placeholder="Enter book description..."></textarea>
+                            <label>Description / Summary</label>
+                            <textarea id="meta-description" class="form-input" rows="4" placeholder="Brief summary of the book..."></textarea>
                         </div>
+
 
                         <button class="btn btn-primary" id="btn-apply-metadata" style="margin-top: 1rem;">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -1401,14 +1716,49 @@
                             </h2>
                         </div>
                         <div class="input-group">
-                            <label>Upload MP3 Files</label>
+                            <label>Option A: Upload MP3 Files</label>
                             <div class="drop-zone" id="batchDropZone">
                                 <p>Drag & Drop multiple MP3s</p>
                                 <input type="file" id="batchFiles" class="hidden" multiple accept=".mp3">
                             </div>
                         </div>
-                        <div id="batchFileList" class="manifest-list"
-                            style="max-height: 250px; overflow-y: auto; margin-top: 1rem;"></div>
+
+                        <div class="input-group" style="margin-top: 1rem;">
+                            <label>Option B: Local Folder Path (Fastest)</label>
+                            <div style="display: flex; gap: 0.75rem;">
+                                <input type="text" id="localFolderPath" class="form-input" placeholder="e.g. C:\Users\Name\Music\MyBook">
+                                <button class="btn btn-secondary" id="btn-scan-folder" style="width: auto;">Scan Folder</button>
+                            </div>
+                            <span style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.25rem;">Server must be running on this machine. Files won't be uploaded.</span>
+                        </div>
+                        <div class="input-group" style="margin-top: 1rem;">
+                            <label>Batch Renamer (Prefix/Suffix)</label>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <input type="text" id="renamePrefix" class="form-input" placeholder="Prefix">
+                                <input type="text" id="renameSuffix" class="form-input" placeholder="Suffix">
+                                <button class="btn btn-secondary btn-sm" id="btn-apply-batch-rename">Apply</button>
+                            </div>
+                        </div>
+
+                        <div class="input-group" style="margin-top: 1rem;">
+                            <label class="checkbox-container" style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                <input type="checkbox" id="normalizeChapters" style="width: 1.2rem; height: 1.2rem;">
+                                <span style="font-size: 0.85rem;">Loudness Normalization (Recommended)</span>
+                            </label>
+                        </div>
+
+                        <div style="margin-top: 1rem; display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted);">
+                            <span>Total Files: <span id="batchTotalCount">0</span></span>
+                            <span>Total Size: <span id="batchTotalSize">0 MB</span></span>
+                        </div>
+
+                        <div class="input-group" style="margin-top: 1rem;">
+                            <label class="checkbox-container" style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                <input type="checkbox" id="multiFormatExport" style="width: 1.2rem; height: 1.2rem;">
+                                <span style="font-size: 0.85rem;">Multi-Format Export (Save as M4B, MP3, and OPUS)</span>
+                            </label>
+                        </div>
+
                         <button class="btn btn-primary" id="btn-start-merge" style="margin-top: 1.5rem;" disabled>Start
                             Merge</button>
                     </div>
@@ -1468,15 +1818,21 @@
                             </div>
                         </div>
 
-                        <div class="input-group">
+                        <div class="input-group" style="margin-top: 1rem;">
                             <label>Audio Quality (Bitrate)</label>
-                            <select id="converterQuality" class="form-select">
-                                <option value="128k">128 kbps (Standard)</option>
-                                <option value="192k">192 kbps (High)</option>
-                                <option value="256k" selected>256 kbps (Very High)</option>
-                                <option value="320k">320 kbps (Maximum)</option>
-                                <option value="lossless">Lossless (FLAC/ALAC only)</option>
-                            </select>
+                            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                <button class="btn btn-secondary btn-sm" onclick="setQuality('64k')">Mobile (64k)</button>
+                                <button class="btn btn-secondary btn-sm" onclick="setQuality('128k')">Standard (128k)</button>
+                                <button class="btn btn-secondary btn-sm" onclick="setQuality('256k')">Hi-Fi (256k)</button>
+                            </div>
+                        </div>
+
+                        <div class="input-group" style="margin-top: 1rem;">
+                            <label>Production Trimming</label>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <input type="text" id="trimStart" class="form-input" placeholder="Start (e.g. 0:05)">
+                                <input type="text" id="trimEnd" class="form-input" placeholder="End (e.g. 12:30)">
+                            </div>
                         </div>
 
                         <button class="btn btn-primary" id="btn-convert-audio" style="margin-top: 1rem;" disabled>
@@ -1486,6 +1842,36 @@
                             </svg>
                             Convert Audio
                         </button>
+                    </div>
+                </div>
+
+                <!-- Recent Activity Panel -->
+                <div id="activityPanel" class="tool-content">
+                    <div class="bento-card col-span-12">
+                        <div class="card-header">
+                            <h2 class="card-title">
+                                <div class="card-icon-sm" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.2)); color: var(--success);">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                        <path d="M12 2v20"/><path d="m17 5 3 3-3 3"/><path d="m7 19-3-3 3-3"/><path d="M2 12h20"/>
+                                    </svg>
+                                </div>
+                                Recent Production Activity
+                            </h2>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button class="btn btn-secondary btn-sm" id="downloadAllBtn" title="Download All">Download All</button>
+                                <button class="btn btn-secondary btn-sm" id="exportLogBtn" title="Export Log">Log TXT</button>
+                                <button class="btn btn-secondary btn-sm" id="clearHistoryBtn">Clear</button>
+                            </div>
+                        </div>
+                        <div class="input-group" style="margin-top: 1rem;">
+                            <input type="text" id="activitySearch" class="form-input" placeholder="Search history..." style="padding: 0.5rem;">
+                        </div>
+                        <div class="manifest-list mt-3" id="activityList" style="max-height: 500px; overflow-y: auto;">
+                            <!-- History items will be injected here -->
+                            <div style="padding: 2rem; text-align: center; color: var(--text-muted);">
+                                No recent activity found. Start a conversion to see it here!
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -1515,7 +1901,13 @@
 
                     <!-- Waveform Visualizer -->
                     <div id="waveform-container" class="mt-3">
-                        <label style="font-size: 0.7rem;">Audio Waveform</label>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <label style="font-size: 0.7rem;">Audio Waveform</label>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                                <input type="range" id="waveformZoom" min="10" max="200" value="50" style="width: 60px;">
+                            </div>
+                        </div>
                         <div id="waveform"
                             style="background: rgba(0,0,0,0.2); border-radius: 8px; height: 80px; margin-top: 0.5rem;">
                         </div>
@@ -1535,8 +1927,13 @@
                     <div class="card-header">
                         <h3 class="card-title">Chapter Manifest</h3>
                         <div class="chapter-actions">
+                            <button class="btn btn-sm btn-secondary" id="aiChapterNamesBtn">AI Chapter Names</button>
                             <button class="btn btn-sm btn-secondary" id="detectSilenceBtn">Auto-Detect</button>
                             <button class="btn btn-sm btn-secondary" id="addChapterBtn">Add Mark</button>
+                            <button class="btn btn-sm btn-secondary" id="exportChaptersBtn">Export JSON</button>
+                            <button class="btn btn-sm btn-secondary" id="exportCSVBtn">Export CSV</button>
+                            <button class="btn btn-sm btn-secondary" id="exportM3UBtn">Export M3U</button>
+                            <button class="btn btn-sm btn-secondary" id="importChaptersBtn">Import JSON</button>
                             <button class="btn btn-sm btn-secondary" id="pasteChaptersBtn">Paste</button>
                             <button class="btn btn-sm btn-secondary" id="clearChaptersBtn">Clear All</button>
                         </div>
@@ -1566,18 +1963,20 @@
             </div>
         </main>
     </div>
+
     <script>
         // Premium v10 Orchestration Logic
         const state = {
             activeTool: 'conversion',
             isProcessing: false,
+            isLocalMode: false,
             chapters: [],
             cumulativeTime: 0,
             coverBase64: null
         };
 
         const config = {
-            version: '10.0.0'
+            version: '12.0.0'
         };
 
         const themes = [
@@ -1887,19 +2286,6 @@
 
                 // Clone Elements
                 cloneRefFile: document.getElementById('cloneRefFile'),
-                cloneRefDropZone: document.getElementById('cloneRefDropZone'),
-                cloneRefFileInfo: document.getElementById('cloneRefFileInfo'),
-                cloneSrcFile: document.getElementById('cloneSrcFile'),
-                cloneSrcDropZone: document.getElementById('cloneSrcDropZone'),
-                cloneSrcFileInfo: document.getElementById('cloneSrcFileInfo'),
-                modeTtsRadio: document.getElementById('modeTtsRadio'),
-                modeConvertRadio: document.getElementById('modeConvertRadio'),
-                cloneTtsInputs: document.getElementById('cloneTtsInputs'),
-                cloneConvertInputs: document.getElementById('cloneConvertInputs'),
-                cloneText: document.getElementById('cloneText'),
-                cloneLang: document.getElementById('cloneLang'),
-                btnCloneVoice: document.getElementById('btnCloneVoice'),
-
                 // Batch Merge
                 batchDropZone: document.getElementById('batchDropZone'),
                 batchFiles: document.getElementById('batchFiles'),
@@ -1926,10 +2312,11 @@
                     conversion: document.getElementById('conversionPanel'),
                     m4b: document.getElementById('m4bPanel'),
                     audiobook: document.getElementById('audiobookPanel'),
-                    clone: document.getElementById('clonePanel'),
                     metadata: document.getElementById('metadataPanel'),
                     batch: document.getElementById('batchPanel'),
                     converter: document.getElementById('converterPanel'),
+                    activity: document.getElementById('activityPanel'),
+                    settings: document.getElementById('settingsPanel'),
                     waveform: document.getElementById('waveformPanel')
                 }
             };
@@ -1943,11 +2330,11 @@
                 initMetadataHandlers();
                 initMultiVoiceHandlers();
                 initBatchHandlers();
-                initCloneHandlers();
                 initConverterHandlers();
                 initWaveform();
                 checkEngineHealth();
                 initializeVoices();
+                initAdvancedFeatures(); // New 20 features
                 setInterval(checkEngineHealth, 30000);
             } catch (e) {
                 console.error('[BPM4B] init() FAILED:', e);
@@ -1968,6 +2355,25 @@
             // Audiobook Generation
             const btnGenerate = document.getElementById('generateAudiobookBtn');
             if (btnGenerate) btnGenerate.addEventListener('click', handleAudiobookGeneration);
+
+            // Stop Generation
+            const btnStop = document.getElementById('stopGenerationBtn');
+            if (btnStop) btnStop.addEventListener('click', async () => {
+                const jobId = state.activeJobId;
+                if (!jobId) return;
+                btnStop.disabled = true;
+                btnStop.textContent = 'Stopping...';
+                try {
+                    await fetch('/api/cancel-job', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ jobId })
+                    });
+                    showToast('Stop signal sent — generation will halt after the current chunk', 'info');
+                } catch (e) {
+                    showToast('Failed to send stop signal', 'error');
+                }
+            });
 
             // Chapter Preview
             const btnPreviewChapters = document.getElementById('previewChaptersBtn');
@@ -2549,111 +2955,6 @@
             }
         }
 
-        function initCloneHandlers() {
-            if (!elements.btnCloneVoice) return;
-
-            // Mode switching
-            elements.modeTtsRadio.addEventListener('change', () => {
-                elements.cloneTtsInputs.classList.remove('hidden');
-                elements.cloneConvertInputs.classList.add('hidden');
-            });
-            elements.modeConvertRadio.addEventListener('change', () => {
-                elements.cloneTtsInputs.classList.add('hidden');
-                elements.cloneConvertInputs.classList.remove('hidden');
-            });
-
-            // Submission
-            elements.btnCloneVoice.addEventListener('click', async () => {
-                const refFile = elements.cloneRefFile.files ? elements.cloneRefFile.files[0] : null;
-                if (!refFile) {
-                    alert('Please drop or select a Reference Voice file (WAV/MP3).');
-                    return;
-                }
-
-                const formData = new FormData();
-                formData.append('reference_audio', refFile);
-
-                const isTts = elements.modeTtsRadio.checked;
-                formData.append('mode', isTts ? 'tts' : 'convert');
-
-                if (isTts) {
-                    const text = elements.cloneText.value.trim();
-                    if (!text) {
-                        alert('Please enter text to synthesize.');
-                        return;
-                    }
-                    formData.append('text', text);
-                    formData.append('lang', elements.cloneLang.value);
-                } else {
-                    const srcFile = elements.cloneSrcFile.files ? elements.cloneSrcFile.files[0] : null;
-                    if (!srcFile) {
-                        alert('Please drop or select a Source Audio file to re-voice.');
-                        return;
-                    }
-                    formData.append('source_audio', srcFile);
-                }
-
-                const jobId = 'clone_' + Date.now();
-                formData.append('jobId', jobId);
-
-                startPipeline('clone');
-                updateProgress(5, 'Uploading audio and starting generator...');
-
-                try {
-                    const res = await fetch('/api/clone-voice', {
-                        method: 'POST',
-                        body: formData
-                    });
-
-                    if (!res.ok) {
-                        const err = await res.json();
-                        throw new Error(err.error || 'Failed to start cloning');
-                    }
-
-                    // Listen for SSE progress
-                    const evtSource = new EventSource(`/api/progress/${jobId}`);
-
-                    let simulatedProgress = 10;
-                    evtSource.onmessage = (event) => {
-                        const data = JSON.parse(event.data);
-
-                        if (data.message && data.percent !== 100) {
-                            log(data.message, 'info');
-                            if (simulatedProgress < 95) {
-                                simulatedProgress += 2;
-                                updateProgress(simulatedProgress, 'Cloning in progress: ' + data.message.substring(0, 30));
-                            }
-                        }
-
-                        if (data.percent === 100) {
-                            evtSource.close();
-                            finishPipeline('clone', 'Processing Complete!');
-                            log(data.message, 'success');
-
-                            if (data.downloadUrl) {
-                                const a = document.createElement('a');
-                                a.href = data.downloadUrl;
-                                a.download = data.downloadUrl.split('/').pop();
-                                document.body.appendChild(a);
-                                a.click();
-                                document.body.removeChild(a);
-                            }
-                        } else if (data.percent === 0 && data.message.includes('Error')) {
-                            evtSource.close();
-                            failPipeline('clone', data.message);
-                        }
-                    };
-
-                    evtSource.onerror = () => {
-                        evtSource.close();
-                        failPipeline('clone', 'Connection to server lost during Voice Cloning pipeline.');
-                    };
-
-                } catch (e) {
-                    failPipeline('clone', e.message);
-                }
-            });
-        }
 
         function parseDuration(input) {
             if (!input) return null;
@@ -2965,6 +3266,19 @@
                 if (data.percent === 100 || data.downloadUrl) {
                     eventSource.close();
                     if (data.downloadUrl) {
+                        // Extract filename from URL or message if missing
+                        let filename = data.filename;
+                        if (!filename) {
+                            filename = data.downloadUrl.split('/').pop();
+                        }
+                        
+                        // Detect type from JOB ID
+                        let type = 'conversion';
+                        if (jobId.startsWith('merge')) type = 'merge';
+                        if (jobId.startsWith('doc')) type = 'tts';
+                        if (jobId.startsWith('clean')) type = 'cleaning';
+
+                        saveToHistory(type, filename, data.downloadUrl);
                         finishPipeline(data.message || 'Complete', data.downloadUrl);
                     }
                 }
@@ -3012,6 +3326,8 @@
             updateProgress(100, msg || 'Pipeline Complete');
             showToast(msg || 'Success', 'success');
             if (elements.timeRemaining) elements.timeRemaining.classList.add('hidden');
+            const stopBtn = document.getElementById('stopGenerationBtn');
+            if (stopBtn) stopBtn.classList.add('hidden');
 
             if (customUrl) {
                 const a = document.createElement('a');
@@ -3029,6 +3345,8 @@
             elements.progressPercent.textContent = 'Error';
             elements.statusText.textContent = 'Pipeline failed';
             if (elements.timeRemaining) elements.timeRemaining.classList.add('hidden');
+            const stopBtn = document.getElementById('stopGenerationBtn');
+            if (stopBtn) stopBtn.classList.add('hidden');
             showToast(msg, 'error');
         }
 
@@ -3112,8 +3430,13 @@
             if (!fileInput.files.length) return showToast('Select document', 'error');
 
             const jobId = 'job_' + Date.now();
+            state.activeJobId = jobId;
             startPipeline(jobId);
-            log('Initializing Kokoro Local TTS...', 'info');
+            log('Initializing Kokoro Local TTS... (parallel mode enabled)', 'info');
+
+            // Show stop button
+            const stopBtn = document.getElementById('stopGenerationBtn');
+            if (stopBtn) { stopBtn.classList.remove('hidden'); stopBtn.disabled = false; stopBtn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 0.5rem;"><rect x="4" y="4" width="16" height="16" rx="2"/></svg> Stop Generation'; }
 
             const formData = new FormData();
             formData.append('document_file', fileInput.files[0]);
@@ -3188,9 +3511,15 @@
 
                 showToast('Audiobook generated successfully!', 'success');
             } catch (e) {
-                failPipeline(e.message);
-            } finally {
-                state.isProcessing = false;
+                if (e.message === 'CANCELLED' || (e.message && e.message.includes('CANCELLED'))) {
+                    log('Generation stopped by user.', 'info');
+                    showToast('Generation stopped', 'info');
+                    state.isProcessing = false;
+                    const stopBtn = document.getElementById('stopGenerationBtn');
+                    if (stopBtn) stopBtn.classList.add('hidden');
+                } else {
+                    failPipeline(e.message);
+                }
             }
         }
 
@@ -3210,18 +3539,22 @@
                     throw new Error(data.error || 'Analysis failed');
                 }
 
-                state.chapters = data.chapters.map((c, i) => ({
-                    id: Date.now() + i,
-                    originalIndex: i,
-                    title: c.title,
-                    type: c.type,
-                    content: c.content, // Store full content
-                    preview: c.preview,
-                    endPreview: c.endPreview,
-                    selected: true,
-                    duration: 0,
-                    startTime: 0
-                }));
+                state.chapters = data.chapters.map((c, i) => {
+                    // Strip progress strings like "-- fourteen of one hundred sixteen --" or "-- 14 of 116 --"
+                    const cleanedTitle = c.title.replace(/-- .* of .* --/g, '').trim() || `Chapter ${i + 1}`;
+                    return {
+                        id: Date.now() + i,
+                        originalIndex: i,
+                        title: cleanedTitle,
+                        type: c.type,
+                        content: c.content, 
+                        preview: c.preview,
+                        endPreview: c.endPreview,
+                        selected: true,
+                        duration: 0,
+                        startTime: 0
+                    };
+                });
                 renderManifest();
                 showToast(`Detected ${data.chapters.length} chapters`, 'success');
             } catch (e) {
@@ -3287,10 +3620,9 @@
 
         function initBatchHandlers() {
             if (!elements.batchDropZone || !elements.batchFiles || !elements.btnStartMerge) return;
+
             elements.batchDropZone.addEventListener('click', () => elements.batchFiles.click());
-            elements.batchFiles.addEventListener('change', (e) => {
-                addBatchFiles(Array.from(e.target.files));
-            });
+            elements.batchFiles.addEventListener('change', (e) => addBatchFiles(Array.from(e.target.files)));
 
             elements.batchDropZone.addEventListener('dragover', (e) => {
                 e.preventDefault();
@@ -3307,8 +3639,105 @@
                 addBatchFiles(Array.from(e.dataTransfer.files));
             });
 
+            const btnScan = document.getElementById('btn-scan-folder');
+            if (btnScan) {
+                btnScan.addEventListener('click', async () => {
+                    const folderPath = document.getElementById('localFolderPath').value.trim();
+                    if (!folderPath) return showToast('Please enter a folder path', 'error');
+                    
+                    log(`Scanning local folder: ${folderPath}`, 'info');
+                    try {
+                        const res = await fetch('/api/scan-folder', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ folderPath })
+                        });
+                        const data = await res.json();
+                        if (data.error) throw new Error(data.error);
+                        
+                        if (data.files.length === 0) {
+                            showToast('No MP3 files found in this folder', 'warning');
+                            return;
+                        }
+                        
+                        state.isLocalMode = true;
+                        batchFilesArray = data.files.map(f => ({
+                            name: f.name,
+                            path: f.path,
+                            size: f.size,
+                            isLocal: true
+                        }));
+                        renderBatchList();
+                        elements.btnStartMerge.disabled = batchFilesArray.length < 2;
+                        showToast(`Found ${batchFilesArray.length} files`, 'success');
+                    } catch (e) {
+                        showToast('Scan failed: ' + e.message, 'error');
+                    }
+                });
+            }
+
+            // Bulk Rename logic
+            document.getElementById('btn-apply-rename')?.addEventListener('click', () => {
+                const pattern = document.getElementById('bulkRenamePattern').value.trim();
+                if (!pattern) return showToast('Please enter a pattern', 'warning');
+                
+                batchFilesArray.forEach((file, index) => {
+                    file.name = pattern
+                        .replace(/{n}/g, (index + 1).toString().padStart(2, '0'))
+                        .replace(/{title}/g, file.name.split('.')[0]);
+                    if (!file.name.endsWith('.mp3')) file.name += '.mp3';
+                });
+                renderBatchList();
+                showToast('Pattern applied to all files', 'success');
+            });
+
+            // Auto-Split logic (Mock-up for frontend logic)
+            document.getElementById('btn-auto-split')?.addEventListener('click', () => {
+                const mins = parseInt(document.getElementById('splitDuration').value);
+                if (!mins || mins < 5) return showToast('Enter valid duration (min 5)', 'warning');
+                showToast('Auto-split logic initiated (server-side support required for full feature)', 'info');
+            });
+
             elements.btnStartMerge.addEventListener('click', handleStartMerge);
         }
+
+        window.renderBatchList = () => {
+            elements.batchFileList.innerHTML = batchFilesArray.map((file, index) => `
+                <div class="manifest-item" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                    <div class="reorder-handle" onclick="moveBatchItem(${index}, -1)">▲</div>
+                    <div class="reorder-handle" onclick="moveBatchItem(${index}, 1)">▼</div>
+                    <div style="flex: 1;">
+                        <input type="text" class="form-input" style="padding: 0.25rem 0.5rem; font-size: 0.8rem; background: transparent; border-color: transparent;" 
+                               value="${file.name}" onchange="updateBatchFileName(${index}, this.value)">
+                    </div>
+                    <div style="font-size: 0.7rem; color: var(--text-muted);">${(file.size / (1024 * 1024)).toFixed(1)} MB</div>
+                    <button class="btn btn-sm" style="color: var(--error); padding: 0.25rem; width: auto;" onclick="removeBatchFile(${index})">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                    </button>
+                </div>
+            `).join('');
+            
+            elements.btnStartMerge.disabled = batchFilesArray.length < 2;
+        };
+
+        window.moveBatchItem = (index, direction) => {
+            const newIndex = index + direction;
+            if (newIndex < 0 || newIndex >= batchFilesArray.length) return;
+            const temp = batchFilesArray[index];
+            batchFilesArray[index] = batchFilesArray[newIndex];
+            batchFilesArray[newIndex] = temp;
+            renderBatchList();
+        };
+
+        window.updateBatchFileName = (index, newName) => {
+            batchFilesArray[index].name = newName;
+            showToast('Chapter renamed', 'info');
+        };
+
+        window.removeBatchFile = (index) => {
+            batchFilesArray.splice(index, 1);
+            renderBatchList();
+        };
 
         function initConverterHandlers() {
             if (!elements.converterDropZone || !elements.converterFile || !elements.btnConvertAudio) return;
@@ -3424,8 +3853,9 @@
 
                 showToast('Conversion completed!', 'success');
 
-                // Trigger download
+                // Trigger download & Save to history
                 if (data.downloadUrl) {
+                    saveToHistory('conversion', data.filename || `converted.${targetFormat}`, data.downloadUrl);
                     const a = document.createElement('a');
                     a.href = data.downloadUrl;
                     a.download = data.filename || `converted.${targetFormat}`;
@@ -3456,7 +3886,10 @@
                 <div class="manifest-item" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: rgba(255,255,255,0.03); margin-bottom: 0.5rem; border-radius: 6px;">
                     <div style="display: flex; align-items: center; gap: 0.75rem;">
                         <span style="color: var(--text-muted); font-size: 0.8rem; font-family: monospace;">#${i + 1}</span>
-                        <span style="font-weight: 500;">${file.name}</span>
+                        <div style="display: flex; flex-direction: column;">
+                            <span style="font-weight: 500;">${file.name}</span>
+                            ${file.isLocal ? `<span style="font-size: 0.65rem; color: var(--primary);">Local: ${file.path}</span>` : ''}
+                        </div>
                     </div>
                     <button class="btn-icon" onclick="removeBatchFile(${i})" style="color: var(--error);">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
@@ -3525,32 +3958,47 @@
             const jobId = 'merge-' + Date.now();
             setupSSE(jobId);
 
-            const formData = new FormData();
-            batchFilesArray.forEach(file => formData.append('audio_files', file));
-            formData.append('jobId', jobId);
-
-            // Add metadata
             const metadata = {
                 title: elements.metaTitle.value || 'Merged Audiobook',
                 author: elements.metaAuthor.value || 'Various Authors',
                 genre: elements.metaGenre.value || 'Audiobook',
                 description: elements.metaDescription.value || 'Created with BPM4B Batch Merge'
             };
-            formData.append('metadata', JSON.stringify(metadata));
-            if (state.coverBase64) formData.append('cover_base64', state.coverBase64);
+
+            const normalize = document.getElementById('normalizeChapters')?.checked || false;
 
             try {
-                const res = await fetch('/api/batch-merge', { method: 'POST', body: formData });
+                let res;
+                if (state.isLocalMode) {
+                    res = await fetch('/api/batch-merge-local', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            filePaths: batchFilesArray.map(f => f.path),
+                            metadata,
+                            normalize,
+                            cover_base64: state.coverBase64,
+                            jobId
+                        })
+                    });
+                } else {
+                    const formData = new FormData();
+                    batchFilesArray.forEach(file => formData.append('audio_files', file));
+                    formData.append('jobId', jobId);
+                    formData.append('metadata', JSON.stringify(metadata));
+                    formData.append('normalize', normalize);
+                    if (state.coverBase64) formData.append('cover_base64', state.coverBase64);
+
+                    res = await fetch('/api/batch-merge', { method: 'POST', body: formData });
+                }
+
                 if (!res.ok) throw new Error(await res.text());
 
                 const data = await res.json();
                 if (data.success) {
                     showToast('Batch merge complete!', 'success');
                     log('Batch merge completed! File: ' + data.filename, 'success');
-                    // Show download link
-                    if (data.downloadUrl) {
-                        log('Download URL: ' + data.downloadUrl, 'info');
-                    }
+                    saveToHistory('merge', data.filename, data.downloadUrl);
                     batchFilesArray = [];
                     renderBatchList();
                 } else {
@@ -3564,6 +4012,598 @@
                 elements.btnStartMerge.disabled = false;
             }
         }
+
+        // --- Voice Cloning, AI & Utility Tools ---
+
+        // Persist OpenRouter Key & Model
+        const orKeyInput = document.getElementById('openRouterKey');
+        const aiModelInput = document.getElementById('aiModel');
+
+        orKeyInput.addEventListener('input', (e) => {
+            localStorage.setItem('openrouter_key', e.target.value);
+        });
+        aiModelInput.addEventListener('input', (e) => {
+            localStorage.setItem('openrouter_model', e.target.value);
+        });
+
+        if (localStorage.getItem('openrouter_key')) {
+            orKeyInput.value = localStorage.getItem('openrouter_key');
+        }
+        if (localStorage.getItem('openrouter_model')) {
+            aiModelInput.value = localStorage.getItem('openrouter_model');
+        }
+
+        // Fetch Models
+        document.getElementById('refreshModels').addEventListener('click', async () => {
+            const apiKey = orKeyInput.value;
+            if (!apiKey) return showToast('Enter API Key first', 'error');
+            
+            showToast('Fetching models...', 'info');
+            try {
+                const res = await fetch('/api/ai/models', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ apiKey })
+                });
+                const data = await res.json();
+                if (data.models && data.models.length > 0) {
+                    const datalist = document.getElementById('modelList');
+                    datalist.innerHTML = data.models.map(m => `<option value="${m.id}">${m.name} (${m.id})</option>`).join('');
+                    showToast(`Fetched ${data.models.length} models`, 'success');
+                }
+            } catch (e) {
+                showToast('Failed to fetch models', 'error');
+            }
+        });
+
+        // Voice Cloning Mode Toggle
+        const cloneMode = document.getElementById('cloneMode');
+        const cloneSourceGroup = document.getElementById('cloneSourceGroup');
+        const cloneTextGroup = document.getElementById('cloneTextGroup');
+        
+        cloneMode.addEventListener('change', () => {
+            if (cloneMode.value === 'tts') {
+                cloneSourceGroup.style.display = 'none';
+                cloneTextGroup.style.display = 'block';
+            } else {
+                cloneSourceGroup.style.display = 'block';
+                cloneTextGroup.style.display = 'none';
+            }
+        });
+
+        // Start Voice Cloning
+        document.getElementById('startCloneBtn').addEventListener('click', async () => {
+            const refFile = document.getElementById('cloneRefFile').files[0];
+            const sourceFile = document.getElementById('cloneSourceFile').files[0];
+            const text = document.getElementById('cloneText').value;
+            const mode = cloneMode.value;
+            const lang = document.getElementById('cloneLang').value;
+
+            if (!refFile) return showToast('Please select a reference voice file', 'error');
+            if (mode === 'convert' && !sourceFile) return showToast('Please select a source audio file', 'error');
+            if (mode === 'tts' && !text) return showToast('Please enter text to synthesize', 'error');
+
+            const jobId = uuidv4();
+            setupSSE(jobId);
+            state.isProcessing = true;
+            log(`Starting voice cloning (${mode} mode)...`, 'info');
+
+            const formData = new FormData();
+            formData.append('refAudio', refFile);
+            if (mode === 'convert') formData.append('sourceAudio', sourceFile);
+            formData.append('text', text);
+            formData.append('mode', mode);
+            formData.append('lang', lang);
+            formData.append('jobId', jobId);
+
+            try {
+                const res = await fetch('/api/clone-voice', { method: 'POST', body: formData });
+                const data = await res.json();
+                if (data.error) throw new Error(data.error);
+            } catch (e) {
+                log('Cloning failed: ' + e.message, 'error');
+                state.isProcessing = false;
+            }
+        });
+
+        // Audio Cleanup
+        document.getElementById('startCleanBtn').addEventListener('click', async () => {
+            const file = document.getElementById('cleanFile').files[0];
+            const profile = document.getElementById('cleanProfile').value;
+            if (!file) return showToast('Please select an audio file', 'error');
+
+            state.isProcessing = true;
+            log(`Cleaning audio using ${profile} profile...`, 'info');
+            
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('profile', profile);
+
+            try {
+                const res = await fetch('/api/audio-clean', { method: 'POST', body: formData });
+                const data = await res.json();
+                if (data.success) {
+                    log(`Cleaning complete! Download: ${data.downloadUrl}`, 'success');
+                    showToast('Audio cleaned successfully', 'success');
+                } else throw new Error(data.error);
+            } catch (e) {
+                log('Cleaning failed: ' + e.message, 'error');
+            } finally {
+                state.isProcessing = false;
+            }
+        });
+
+        // Quality Lab
+        document.getElementById('startQualityBtn').addEventListener('click', async () => {
+            const file = document.getElementById('qualityFile').files[0];
+            if (!file) return showToast('Please select an M4B file', 'error');
+
+            const resultsDiv = document.getElementById('qualityResults');
+            resultsDiv.style.display = 'block';
+            resultsDiv.innerHTML = '<div style="color: var(--primary);">Analyzing quality...</div>';
+            
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const res = await fetch('/api/verify-quality', { method: 'POST', body: formData });
+                const data = await res.json();
+                if (data.success) {
+                    resultsDiv.innerHTML = `<pre style="font-size: 0.8rem; color: var(--success); white-space: pre-wrap;">${data.result}</pre>`;
+                } else throw new Error(data.error);
+            } catch (e) {
+                resultsDiv.innerHTML = `<div style="color: var(--error);">Analysis failed: ${e.message}</div>`;
+            }
+        });
+
+        document.getElementById('getChecksumBtn').addEventListener('click', async () => {
+            const file = document.getElementById('qualityFile').files[0];
+            if (!file) return showToast('Please select a file', 'error');
+
+            try {
+                const formData = new FormData();
+                formData.append('file', file);
+                const res = await fetch('/api/checksum', { method: 'POST', body: formData });
+                const data = await res.json();
+                if (data.success) {
+                    showToast(`SHA256: ${data.checksum}`, 'info');
+                    log(`Checksum: ${data.checksum}`, 'info');
+                } else throw new Error(data.error);
+            } catch (e) {
+                showToast('Checksum failed: ' + e.message, 'error');
+            }
+        });
+
+        // AI Assistants
+        document.getElementById('ai-meta-btn').addEventListener('click', async () => {
+            const title = elements.metaTitle.value;
+            const author = elements.metaAuthor.value;
+            const apiKey = elements.openRouterKey.value;
+            const model = document.getElementById('aiModel').value;
+            
+            if (!title) return showToast('Please enter a title first', 'error');
+            if (!apiKey) return showToast('Please provide an OpenRouter API Key', 'error');
+
+            log('Requesting AI metadata generation...', 'info');
+            try {
+                const res = await fetch('/api/ai/metadata', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title, author, apiKey, model })
+                });
+                const data = await res.json();
+                if (data.error) throw new Error(data.error);
+
+                elements.metaAuthor.value = data.author || author;
+                elements.metaGenre.value = data.genre || '';
+                elements.metaDescription.value = data.description || '';
+                log('AI metadata updated successfully', 'success');
+                showToast('Metadata auto-filled', 'success');
+            } catch (e) {
+                log('AI Metadata failed: ' + e.message, 'error');
+            }
+        });
+
+        // --- History & Activity Management ---
+        let activityHistory = JSON.parse(localStorage.getItem('production_history') || '[]');
+
+        function saveToHistory(type, name, url) {
+            const entry = {
+                id: Date.now(),
+                timestamp: new Date().toISOString(),
+                type: type, // 'conversion', 'merge', 'cleaning', 'tts'
+                name: name,
+                url: url
+            };
+            activityHistory.unshift(entry);
+            // Keep only last 50 items
+            if (activityHistory.length > 50) activityHistory.pop();
+            localStorage.setItem('production_history', JSON.stringify(activityHistory));
+            renderActivity();
+        }
+
+        // --- 20 Advanced Non-AI Features ---
+
+        function initAdvancedFeatures() {
+            // 1. Sidebar Collapse
+            const sidebar = document.querySelector('aside');
+            const collapseBtn = document.getElementById('sidebarCollapseBtn');
+            if (collapseBtn) {
+                collapseBtn.onclick = () => {
+                    sidebar.classList.toggle('collapsed');
+                    document.querySelector('main').style.marginLeft = sidebar.classList.contains('collapsed') ? '80px' : '300px';
+                };
+            }
+
+            // 2. Blur Intensity
+            const blurSlider = document.getElementById('blurSlider');
+            if (blurSlider) {
+                blurSlider.oninput = (e) => {
+                    document.documentElement.style.setProperty('--blur-intensity', e.target.value + 'px');
+                };
+            }
+
+            // 3. Primary Color Picker
+            const colorPicker = document.getElementById('primaryColorPicker');
+            if (colorPicker) {
+                colorPicker.oninput = (e) => {
+                    document.documentElement.style.setProperty('--primary', e.target.value);
+                    document.documentElement.style.setProperty('--primary-glow', e.target.value + '33');
+                };
+            }
+
+            // 4. Activity Search
+            const activitySearch = document.getElementById('activitySearch');
+            if (activitySearch) {
+                activitySearch.oninput = () => renderActivity(activitySearch.value.toLowerCase());
+            }
+
+            // 5. Download All
+            const downloadAllBtn = document.getElementById('downloadAllBtn');
+            if (downloadAllBtn) {
+                downloadAllBtn.onclick = () => {
+                    activityHistory.forEach(entry => {
+                        const a = document.createElement('a');
+                        a.href = entry.url;
+                        a.download = entry.name;
+                        a.click();
+                    });
+                    showToast(`Started ${activityHistory.length} downloads`, 'info');
+                };
+            }
+
+            // 6. Export Log
+            const exportLogBtn = document.getElementById('exportLogBtn');
+            if (exportLogBtn) {
+                exportLogBtn.onclick = () => {
+                    const logText = Array.from(document.getElementById('processLog').children)
+                        .map(l => `[${new Date().toISOString()}] ${l.textContent}`)
+                        .join('\n');
+                    const blob = new Blob([logText], { type: 'text/plain' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'production_log.txt';
+                    a.click();
+                };
+            }
+
+            // 7 & 8. Quick Switcher & Shortcuts
+            window.addEventListener('keydown', (e) => {
+                if (e.ctrlKey && e.key === 'k') { e.preventDefault(); toggleModal('quickSwitcherModal'); }
+                if (e.ctrlKey && e.key === 'b') { e.preventDefault(); if(collapseBtn) collapseBtn.click(); }
+                if (e.key === '?') { toggleModal('shortcutsModal'); }
+                if (e.key === 'Escape') closeAllModals();
+            });
+
+            // Quick Switcher Search
+            const switcherInput = document.getElementById('quickSwitcherInput');
+            const switcherResults = document.getElementById('quickSwitcherResults');
+            const tools = [
+                { name: 'Audiobook Pro', id: 'audiobook' },
+                { name: 'Batch Merge', id: 'batch' },
+                { name: 'Audio Format Switcher', id: 'converter' },
+                { name: 'Audio Cleanup', id: 'clean' },
+                { name: 'Production Activity', id: 'activity' }
+            ];
+
+            if (switcherInput) {
+                switcherInput.oninput = () => {
+                    const val = switcherInput.value.toLowerCase();
+                    switcherResults.innerHTML = tools.filter(t => t.name.toLowerCase().includes(val))
+                        .map(t => `<div class="manifest-item" style="cursor: pointer;" onclick="switchTool('${t.id}'); closeAllModals();">${t.name}</div>`)
+                        .join('');
+                };
+            }
+
+            // 9 & 10. Chapter Export/Import
+            const exportChaptersBtn = document.getElementById('exportChaptersBtn');
+            if (exportChaptersBtn) {
+                exportChaptersBtn.onclick = () => {
+                    const blob = new Blob([JSON.stringify(state.chapters, null, 2)], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'chapters_manifest.json';
+                    a.click();
+                };
+            }
+
+            const importChaptersBtn = document.getElementById('importChaptersBtn');
+            if (importChaptersBtn) {
+                importChaptersBtn.onclick = () => {
+                    const input = document.createElement('input');
+                    input.type = 'file';
+                    input.accept = '.json';
+                    input.onchange = async (e) => {
+                        const text = await e.target.files[0].text();
+                        state.chapters = JSON.parse(text);
+                        renderManifest();
+                        showToast('Manifest imported', 'success');
+                    };
+                    input.click();
+                };
+            }
+
+            // 11. Project Auto-Save
+            setInterval(() => {
+                localStorage.setItem('bpm4b_project_state', JSON.stringify({
+                    chapters: state.chapters,
+                    activeTool: state.activeTool
+                }));
+            }, 10000);
+
+            // 12. Batch Renamer
+            const applyRenameBtn = document.getElementById('btn-apply-batch-rename');
+            if (applyRenameBtn) {
+                applyRenameBtn.onclick = () => {
+                    const prefix = document.getElementById('renamePrefix').value;
+                    const suffix = document.getElementById('renameSuffix').value;
+                    batchFilesArray.forEach(file => {
+                        const parts = file.name.split('.');
+                        const ext = parts.pop();
+                        file.name = `${prefix}${parts.join('.')}${suffix}.${ext}`;
+                    });
+                    renderBatchList();
+                    showToast('Batch renamed', 'success');
+                };
+            }
+            // 13. Waveform Zoom
+            const zoomSlider = document.getElementById('waveformZoom');
+            if (zoomSlider) {
+                zoomSlider.oninput = (e) => {
+                    if (wavesurfer) wavesurfer.zoom(Number(e.target.value));
+                };
+            }
+
+            // 14. CSV / M3U Export
+            const exportCSVBtn = document.getElementById('exportCSVBtn');
+            if (exportCSVBtn) {
+                exportCSVBtn.onclick = () => {
+                    let csv = "Index,Title,Start,Duration\n";
+                    state.chapters.forEach((c, i) => {
+                        csv += `${i+1},"${c.title}",${c.start},${c.duration}\n`;
+                    });
+                    const blob = new Blob([csv], { type: 'text/csv' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'manifest.csv';
+                    a.click();
+                };
+            }
+
+            const exportM3UBtn = document.getElementById('exportM3UBtn');
+            if (exportM3UBtn) {
+                exportM3UBtn.onclick = () => {
+                    let m3u = "#EXTM3U\n";
+                    state.chapters.forEach(c => {
+                        m3u += `#EXTINF:${Math.round(c.duration)},${c.title}\n`;
+                        m3u += `${c.title}.mp3\n`;
+                    });
+                    const blob = new Blob([m3u], { type: 'text/plain' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'manifest.m3u';
+                    a.click();
+                };
+            }
+
+            // 15. AI Chapter Naming
+            const aiChapterNamesBtn = document.getElementById('aiChapterNamesBtn');
+            if (aiChapterNamesBtn) {
+                aiChapterNamesBtn.onclick = async () => {
+                    const apiKey = document.getElementById('openRouterKey').value;
+                    if (!apiKey) return showToast('OpenRouter API Key required', 'warning');
+                    if (!state.documentText) return showToast('Analyze document first', 'warning');
+
+                    log('AI is naming your chapters...', 'info');
+                    try {
+                        const res = await fetch('/api/ai/metadata', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ 
+                                apiKey, 
+                                model: document.getElementById('aiModel').value,
+                                text: state.documentText.substring(0, 5000),
+                                field: 'chapter_names'
+                            })
+                        });
+                        const data = await res.json();
+                        if (data.names && data.names.length > 0) {
+                            state.chapters.forEach((c, i) => {
+                                if (data.names[i]) c.title = data.names[i];
+                            });
+                            renderManifest();
+                            showToast('Chapters renamed by AI!', 'success');
+                        }
+                    } catch (e) {
+                        log('AI Naming failed: ' + e.message, 'error');
+                    }
+                };
+            }
+
+            // 16. AI Voice Matcher
+            const aiVoiceSuggestBtn = document.getElementById('aiVoiceSuggestBtn');
+            if (aiVoiceSuggestBtn) {
+                aiVoiceSuggestBtn.onclick = async () => {
+                    const apiKey = document.getElementById('openRouterKey').value;
+                    if (!apiKey) return showToast('OpenRouter API Key required', 'warning');
+                    if (!state.documentText) return showToast('Load a document first', 'warning');
+
+                    log('AI is matching voices to your story...', 'info');
+                    try {
+                        const res = await fetch('/api/ai/metadata', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ 
+                                apiKey, 
+                                model: document.getElementById('aiModel').value,
+                                text: state.documentText.substring(0, 2000),
+                                field: 'voice_match'
+                            })
+                        });
+                        const data = await res.json();
+                        if (data.suggestion) {
+                            log('AI Recommendation: ' + data.suggestion, 'success');
+                            showToast('Voice suggested in log', 'info');
+                        }
+                    } catch (e) { log('AI Suggest failed: ' + e.message, 'error'); }
+                };
+            }
+
+            // 17. AI cover blurb, 18. Sentiment, 19. Hard Words
+            ['aiBlurbBtn', 'aiSentimentBtn', 'aiHardWordsBtn'].forEach(id => {
+                const btn = document.getElementById(id);
+                if (!btn) return;
+                btn.onclick = async () => {
+                    const apiKey = document.getElementById('openRouterKey').value;
+                    if (!apiKey) return showToast('API Key required', 'warning');
+                    log(`AI is generating ${id.replace('ai', '').replace('Btn', '')}...`, 'info');
+                    try {
+                        const res = await fetch('/api/ai/metadata', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ 
+                                apiKey, 
+                                model: document.getElementById('aiModel').value,
+                                text: state.documentText.substring(0, 5000),
+                                field: id.replace('ai', '').replace('Btn', '').toLowerCase()
+                            })
+                        });
+                        const data = await res.json();
+                        if (data.result) {
+                            log(`AI Result: ${data.result}`, 'success');
+                            showToast('AI Task Complete', 'success');
+                        }
+                    } catch (e) { log('AI Task failed', 'error'); }
+                };
+            });
+
+            // 20. Quality Shortcut
+            window.setQuality = (q) => {
+                const select = document.getElementById('audioQuality') || document.getElementById('m4bAudioQuality') || document.getElementById('converterQuality');
+                if (select) {
+                    select.value = q;
+                    showToast(`Bitrate set to ${q}`, 'info');
+                }
+            };
+        }
+
+        function toggleModal(id) {
+            const m = document.getElementById(id);
+            if (m) m.classList.toggle('hidden');
+        }
+
+        function closeAllModals() {
+            document.querySelectorAll('.modal-overlay').forEach(m => m.classList.add('hidden'));
+        }
+
+        // --- Updated renderActivity to support search ---
+        function renderActivity(query = '') {
+            const list = document.getElementById('activityList');
+            if (!list) return;
+
+            const filtered = query 
+                ? activityHistory.filter(e => e.name.toLowerCase().includes(query))
+                : activityHistory;
+
+            if (filtered.length === 0) {
+                list.innerHTML = `<div style="padding: 2rem; text-align: center; color: var(--text-muted);">No matching activity.</div>`;
+                return;
+            }
+
+            list.innerHTML = filtered.map(entry => {
+                const date = new Date(entry.timestamp).toLocaleString();
+                const icon = getEntryIcon(entry.type);
+                return `
+                <div class="manifest-item" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; margin-bottom: 0.75rem; background: rgba(255,255,255,0.03); border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div class="card-icon-sm" style="width: 36px; height: 36px; background: rgba(255,255,255,0.05);">
+                            ${icon}
+                        </div>
+                        <div style="display: flex; flex-direction: column;">
+                            <span style="font-weight: 600; font-size: 0.9rem;">${entry.name}</span>
+                            <span style="font-size: 0.7rem; color: var(--text-muted);">${date} • ${entry.type.toUpperCase()}</span>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <a href="${entry.url}" download="${entry.name}" class="btn btn-secondary btn-sm" style="padding: 0.4rem 0.8rem; font-size: 0.75rem;">Download</a>
+                        <button class="btn btn-sm" style="color: var(--error); padding: 0.4rem;" onclick="removeFromHistory(${entry.id})">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                        </button>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        function getEntryIcon(type) {
+            switch (type) {
+                case 'merge': return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"/><path d="m15 5 3 3-3 3M9 13l-3 3 3 3"/></svg>';
+                case 'cleaning': return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v19M5 8h14M8 13h8M11 18h2"/></svg>';
+                case 'tts': return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>';
+                default: return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>';
+            }
+        }
+
+        window.removeFromHistory = (id) => {
+            activityHistory = activityHistory.filter(e => e.id !== id);
+            localStorage.setItem('production_history', JSON.stringify(activityHistory));
+            renderActivity();
+        };
+
+        const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+        if (clearHistoryBtn) {
+            clearHistoryBtn.onclick = () => {
+                if (confirm('Clear all production history?')) {
+                    activityHistory = [];
+                    localStorage.removeItem('production_history');
+                    renderActivity();
+                }
+            };
+        }
+
+        // Initial render
+        renderActivity();
+
+        // Handle file inputs for new tools
+        ['cloneRef', 'cloneSource', 'clean', 'quality'].forEach(prefix => {
+            const dropZone = document.getElementById(prefix + 'DropZone');
+            const fileInput = document.getElementById(prefix + 'File');
+            const fileInfo = document.getElementById(prefix + 'FileInfo');
+
+            if (dropZone) {
+                dropZone.onclick = () => fileInput.click();
+                fileInput.onchange = () => {
+                    if (fileInput.files[0]) {
+                        fileInfo.classList.remove('hidden');
+                        fileInfo.textContent = 'File: ' + fileInput.files[0].name;
+                    }
+                };
+            }
+        });
 
         // --- Bootstrap ---
         document.addEventListener('DOMContentLoaded', init);

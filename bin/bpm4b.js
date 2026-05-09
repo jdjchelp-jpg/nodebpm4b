@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * BPM4B - Professional Multimedia Converter v10.0.0
+ * BPM4B - Professional Multimedia Converter v12.0.0
  * Command-line interface for converting MP3 to M4B, M3U8 to MKV,
  * Documents to Audiobooks (Local Kokoro-82M), and AAX to M4B/M4A
  */
@@ -16,20 +16,20 @@ const program = new Command();
 program
   .name('bpm4b')
   .description('Professional Multimedia Converter - Local Kokoro-82M TTS & Premium Audio Conversion')
-  .version('10.0.0 (AudioBPM4B v10)');
+  .version('12.0.0 (AudioBPM4B v12)');
 
 // Web command
 program
   .command('web')
   .description('Start the web interface')
   .option('--host <host>', 'Host to bind to', '0.0.0.0')
-  .option('--port <port>', 'Port to bind to', '5000')
+  .option('-p, --port <port>', 'Port to bind to', '5000')
   .option('--debug', 'Enable debug mode', false)
   .action(async (options) => {
     console.log(`
 ╔═══════════════════════════════════════════════════════════════╗
-║          BPM4B Professional Converter v10.0.0                ║
-║  (Local Kokoro-82M Engine | No API Keys Required)             ║
+║          BPM4B Professional Converter v12.0.0                ║
+║  (Local Kokoro-82M Engine | API Keys for Openrouter Features)             ║
 ║                                                               ║
 ║  Web interface starting...                                    ║
 ║  URL: http://${options.host !== '0.0.0.0' ? options.host : 'localhost'}:${options.port}                    ║
