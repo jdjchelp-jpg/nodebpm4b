@@ -61,36 +61,21 @@ async function buildAudiobook(inputPath, outputPath, options = {}) {
 
         // Map to custom chapters from UI if provided
         if (options.customChapters && Array.isArray(options.customChapters)) {
-            console.log(`[Audiobook Builder] Custom chapters received: ${options.customChapters.length}`);
-            console.log(`[Audiobook Builder] Detected chapters: ${chapters.length}`);
             const mappedChapters = [];
-            for (let i = 0; i < options.customChapters.length; i++) {
-                const custom = options.customChapters[i];
-                console.log(`[Audiobook Builder] Processing custom chapter ${i}: "${custom.title}" (originalIndex: ${custom.originalIndex})`);
+            for (const custom of options.customChapters) {
                 // Find matching original chapter by index if available, else by title structure
                 let origChapter = chapters[custom.originalIndex];
-                console.log(`[Audiobook Builder] Looking for chapter at index ${custom.originalIndex}: ${origChapter ? `found "${origChapter.title}"` : 'not found'}`);
-                if (!origChapter) {
-                    origChapter = chapters.find(c => c.title === custom.title);
-                    console.log(`[Audiobook Builder] Fallback: searching by title "${custom.title}": ${origChapter ? `found at index ${chapters.indexOf(origChapter)}` : 'not found'}`);
-                }
-                if (!origChapter) {
-                    origChapter = chapters[0];
-                    console.log(`[Audiobook Builder] Final fallback: using chapter 0 "${origChapter?.title || 'N/A'}"`);
-                }
+                if (!origChapter) origChapter = chapters.find(c => c.title === custom.title) || chapters[0];
                 if (origChapter) {
-                    const mappedChapter = {
+                    mappedChapters.push({
                         ...origChapter,
                         title: custom.title || origChapter.title,
                         number: custom.number || origChapter.number
-                    };
-                    console.log(`[Audiobook Builder] Mapped chapter ${i}: "${mappedChapter.title}"`);
-                    mappedChapters.push(mappedChapter);
+                    });
                 }
             }
             if (mappedChapters.length > 0) {
                 chapters = mappedChapters;
-                console.log(`[Audiobook Builder] Using ${mappedChapters.length} mapped chapters`);
             }
         }
 

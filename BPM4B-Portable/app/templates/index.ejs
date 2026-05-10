@@ -3137,40 +3137,17 @@
         }
 
         window.updateChapterTitle = (id, newTitle) => {
-            console.log(`[BPM4B] updateChapterTitle called for ${id} with: "${newTitle}"`);
-            const ch = state.chapters.find(c => c.id == id);
-            if (ch) {
-                const trimmedTitle = newTitle.trim();
-                console.log(`[BPM4B] Found chapter, current title: "${ch.title}", new: "${trimmedTitle}"`);
-                if (trimmedTitle && trimmedTitle !== ch.title) {
-                    ch.title = trimmedTitle;
-                    console.log(`[BPM4B] Chapter ${id} title updated to: "${trimmedTitle}"`);
-                    showToast(`Chapter title updated to: ${trimmedTitle}`, 'success');
-                } else {
-                    console.log(`[BPM4B] Title unchanged or empty`);
-                }
-            } else {
-                console.error(`[BPM4B] Chapter ${id} not found!`);
-            }
-            state.isEditingChapterTitle = false;
+            const ch = state.chapters.find(c => c.id === id);
+            if (ch) ch.title = newTitle.trim() || ch.title;
         };
 
         function renderManifest() {
-            // Don't re-render if user is editing a chapter title
-            if (state.isEditingChapterTitle) {
-                return;
-            }
-            
             elements.chaptersContainer.innerHTML = state.chapters.map((ch, idx) => `
                 <div class="chapter-card ${ch.selected === false ? 'deselected' : ''}" id="ch-card-${ch.id}">
                     <div class="chapter-header">
                         <input type="checkbox" class="ch-select" ${ch.selected !== false ? 'checked' : ''} onchange="toggleChapterSelection('${ch.id}', this.checked)" style="margin-right: 0.5rem;">
                         <div class="chapter-badge">#${idx + 1}</div>
-                        <div class="chapter-name" contenteditable="true" 
-                             onfocus="state.isEditingChapterTitle = true; console.log('[BPM4B] Editing chapter title started')"
-                             onblur="updateChapterTitle('${ch.id}', this.textContent)" 
-                             onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}" 
-                             title="Click to edit chapter title">${ch.title}</div>
+                        <div class="chapter-name" contenteditable="true" onblur="updateChapterTitle('${ch.id}', this.innerText)" title="Click to edit chapter title">${ch.title}</div>
                         <div style="flex:1"></div>
                         <button class="btn-icon" onclick="viewFullText('${ch.id}')" title="View/Edit Full Text" style="margin-right: 0.5rem; color: var(--text-muted);">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>

@@ -57,5 +57,24 @@
     ],
     "overrides": {
         "minimatch": "^10.2.1"
+    },
+    "pkg": {
+        "scripts": [
+            "lib/**/*.js"
+        ],
+        "assets": [
+            "node_modules/ffmpeg-static/**/*",
+            "node_modules/sharp/**/*",
+            "node_modules/@huggingface/transformers/**/*",
+            "node_modules/pdfjs-dist/**/*",
+            "templates/**/*",
+            "package.json"
+        ],
+        "targets": [
+            "node18-win-x64"
+        ]
+    },
+    "devDependencies": {
+        "pkg": "^5.8.1"
     }
 }

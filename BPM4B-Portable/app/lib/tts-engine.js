@@ -189,8 +189,8 @@ function splitTextIntoChunks(text, maxLength = MAX_CHUNK_LENGTH) {
             splitIndex = maxLength;
         }
 
-        chunks.push(remaining.substring(0, splitIndex));
-        remaining = remaining.substring(splitIndex);
+        chunks.push(remaining.substring(0, splitIndex).trim());
+        remaining = remaining.substring(splitIndex).trim();
     }
 
     return chunks.filter(c => c.length > 0);
@@ -282,16 +282,24 @@ async function generateChapterAudio(chapterText, outputDir, config, onProgress =
 
     if (jobId && isJobCancelled(jobId)) throw new Error('CANCELLED');
 
-    const finalPath = path.join(outputDir, `chapter_${chapterId}.wav`);
-    
-    if (audioBuffers.length === 1) {
-        // Single chunk - just write it
-        await fs.writeFile(finalPath, audioBuffers[0]);
-    } else {
-        // Multiple chunks - concatenate raw audio for gapless output
-        console.log(`[TTS Engine] Concatenating ${audioBuffers.length} chunks gaplessly for chapter ${chapterId}`);
-        await concatenateWavBuffers(audioBuffers, finalPath);
+    // Write results in order
+    const chunkPaths = [];
+    for (let i = 0; i < audioBuffers.length; i++) {
+        const chunkPath = path.join(outputDir, `tts_chunk_${chapterId}_${i}.wav`);
+        await fs.writeFile(chunkPath, audioBuffers[i]);
+        chunkPaths.push(chunkPath);
     }
+
+    if (chunkPaths.length === 1) {
+        const finalPath = path.join(outputDir, `chapter_${chapterId}.wav`);
+        await fs.rename(chunkPaths[0], finalPath);
+        const duration = await getAudioDuration(finalPath);
+        return { audioPath: finalPath, durationSeconds: duration };
+    }
+
+    const finalPath = path.join(outputDir, `chapter_${chapterId}.wav`);
+    await concatenateAudioFiles(chunkPaths, finalPath);
+    for (const p of chunkPaths) await fs.unlink(p).catch(() => { });
 
     const duration = await getAudioDuration(finalPath);
     return { audioPath: finalPath, durationSeconds: duration };
@@ -341,63 +349,7 @@ async function generateAllChapterAudio(chapters, outputDir, config, onProgress =
 }
 
 /**
- * Concatenate multiple WAV buffers into a single WAV file.
- * Strips headers from chunks and writes one clean header for gapless audio.
- * @param {Buffer[]} audioBuffers - Array of WAV buffers
- * @param {string} outputPath
- * @returns {Promise<void>}
- */
-async function concatenateWavBuffers(audioBuffers, outputPath) {
-    const HEADER_SIZE = 44;
-    const sampleRate = 24000;
-    const numChannels = 1;
-    const bitsPerSample = 16;
-    
-    // Calculate total PCM data size (excluding headers)
-    let totalPcmSize = 0;
-    const pcmBuffers = [];
-    
-    for (const buf of audioBuffers) {
-        if (buf.length > HEADER_SIZE) {
-            const pcmData = buf.slice(HEADER_SIZE);
-            pcmBuffers.push(pcmData);
-            totalPcmSize += pcmData.length;
-        }
-    }
-    
-    // Create output buffer with single header + all PCM data
-    const outputBuffer = Buffer.alloc(HEADER_SIZE + totalPcmSize);
-    
-    // Write WAV header
-    const byteRate = sampleRate * numChannels * (bitsPerSample / 8);
-    const blockAlign = numChannels * (bitsPerSample / 8);
-    
-    outputBuffer.write('RIFF', 0);
-    outputBuffer.writeUInt32LE(36 + totalPcmSize, 4);
-    outputBuffer.write('WAVE', 8);
-    outputBuffer.write('fmt ', 12);
-    outputBuffer.writeUInt32LE(16, 16);
-    outputBuffer.writeUInt16LE(1, 20); // PCM format
-    outputBuffer.writeUInt16LE(numChannels, 22);
-    outputBuffer.writeUInt32LE(sampleRate, 24);
-    outputBuffer.writeUInt32LE(byteRate, 28);
-    outputBuffer.writeUInt16LE(blockAlign, 32);
-    outputBuffer.writeUInt16LE(bitsPerSample, 34);
-    outputBuffer.write('data', 36);
-    outputBuffer.writeUInt32LE(totalPcmSize, 40);
-    
-    // Concatenate all PCM data
-    let offset = HEADER_SIZE;
-    for (const pcm of pcmBuffers) {
-        pcm.copy(outputBuffer, offset);
-        offset += pcm.length;
-    }
-    
-    await fs.writeFile(outputPath, outputBuffer);
-}
-
-/**
- * Concatenate multiple audio files using ffmpeg (for chapter-level concatenation).
+ * Concatenate multiple audio files using ffmpeg.
  * @param {string[]} inputPaths
  * @param {string} outputPath
  * @returns {Promise<void>}
@@ -407,14 +359,19 @@ function concatenateAudioFiles(inputPaths, outputPath) {
     const ffmpegPath = require('ffmpeg-static');
 
     return new Promise((resolve, reject) => {
+        // Create concat file list
         const concatListPath = outputPath + '.list.txt';
         const concatContent = inputPaths.map(p => `file '${p.replace(/'/g, "'\\''")}'`).join('\n');
 
         fs.writeFile(concatListPath, concatContent)
             .then(() => {
-                const cmd = `"${ffmpegPath}" -f concat -safe 0 -i "${concatListPath}" -c:a pcm_s16le -y "${outputPath}"`;
+                // Use -c copy to perfectly concatenate the raw PCM WAV chunks from Kokoro without re-encoding
+                const cmd = `"${ffmpegPath}" -f concat -safe 0 -i "${concatListPath}" -c copy "${outputPath}" -y`;
+
                 exec(cmd, (error, stdout, stderr) => {
+                    // Cleanup list file
                     fs.unlink(concatListPath).catch(() => { });
+
                     if (error) {
                         reject(new Error(`Audio concatenation failed: ${stderr || error.message}`));
                     } else {
@@ -431,86 +388,55 @@ function concatenateAudioFiles(inputPaths, outputPath) {
  * @param {string} audioPath
  * @returns {Promise<number>} Duration in seconds
  */
-async function getAudioDuration(audioPath) {
+function getAudioDuration(audioPath) {
     const { exec } = require('child_process');
     const ffmpegPath = require('ffmpeg-static');
     // ffprobe is typically alongside ffmpeg - use full path
     const ffprobePath = ffmpegPath.replace(/ffmpeg(\.exe)?$/, 'ffprobe$1');
 
-    // Try ffprobe first with full path
-    try {
-        const { stdout } = await new Promise((resolve, reject) => {
-            exec(`"${ffprobePath}" -v quiet -print_format json -show_format -show_streams "${audioPath}"`, (error, stdout, stderr) => {
-                if (error) reject(error);
-                else resolve({ stdout });
-            });
-        });
-
-        if (stdout) {
-            try {
-                const data = JSON.parse(stdout);
-                if (data.format && data.format.duration) {
-                    return parseFloat(data.format.duration);
+    return new Promise((resolve, reject) => {
+        // Try ffprobe first with full path
+        const ffprobeCmd = `"${ffprobePath}" -v quiet -print_format json -show_format -show_streams "${audioPath}"`;
+        
+        exec(ffprobeCmd, (error, stdout, stderr) => {
+            if (!error && stdout) {
+                try {
+                    const data = JSON.parse(stdout);
+                    if (data.format && data.format.duration) {
+                        resolve(parseFloat(data.format.duration));
+                        return;
+                    }
+                } catch (e) {
+                    // Fall through to ffmpeg method
                 }
-            } catch (e) {
-                // Fall through to fallback
             }
-        }
-    } catch (e) {
-        // Fall through to fallback
-    }
+            
+            // Fallback: Use ffmpeg to get duration
+            const ffmpegCmd = `"${ffmpegPath}" -i "${audioPath}" -hide_banner 2>&1`;
+            exec(ffmpegCmd, (error, stdout, stderr) => {
+                const output = stdout + stderr;
+                const durationMatch = output.match(/Duration:\s*(\d+):(\d+):(\d+)\.(\d+)/);
 
-    // Fallback: Use ffmpeg to get duration from stderr output
-    try {
-        const { stderr } = await new Promise((resolve, reject) => {
-            exec(`"${ffmpegPath}" -i "${audioPath}" -hide_banner 2>&1`, (error, stdout, stderr) => {
-                resolve({ stderr });
+                if (durationMatch) {
+                    const hours = parseInt(durationMatch[1]);
+                    const minutes = parseInt(durationMatch[2]);
+                    const seconds = parseInt(durationMatch[3]);
+                    const ms = parseInt(durationMatch[4]);
+                    resolve(hours * 3600 + minutes * 60 + seconds + ms / 100);
+                } else {
+                    // If we can't determine duration, estimate based on text length
+                    // (~150 words per minute, ~5 chars per word)
+                    resolve(0);
+                }
             });
         });
-
-        const output = stderr;
-        const durationMatch = output.match(/Duration:\s*(\d+):(\d+):(\d+)\.(\d+)/);
-
-        if (durationMatch) {
-            const hours = parseInt(durationMatch[1]);
-            const minutes = parseInt(durationMatch[2]);
-            const seconds = parseInt(durationMatch[3]);
-            const ms = parseInt(durationMatch[4]);
-            return hours * 3600 + minutes * 60 + seconds + ms / 100;
-        }
-    } catch (e) {
-        // Fall through to final fallback
-    }
-
-    // Final fallback: estimate based on file size for WAV files
-    // WAV formula: duration = fileSize / (sampleRate * numChannels * bytesPerSample)
-    try {
-        const stats = await fs.stat(audioPath);
-        if (stats && stats.size > 44) {
-            // Read sample rate from WAV header (bytes 24-27) - only read header portion for efficiency
-            const headerBuffer = await fs.readFile(audioPath, { flag: 'r' });
-            const sampleRate = headerBuffer.readUInt32LE(24);
-            const numChannels = headerBuffer.readUInt16LE(22);
-            const bitsPerSample = headerBuffer.readUInt16LE(34);
-            const bytesPerSample = bitsPerSample / 8;
-            const dataSize = stats.size - 44; // WAV header is 44 bytes
-            const estimatedDuration = dataSize / (sampleRate * numChannels * bytesPerSample);
-            if (estimatedDuration > 0 && isFinite(estimatedDuration)) {
-                return estimatedDuration;
-            }
-        }
-    } catch (e) {
-        // Fall through to last resort
-    }
-
-    return 0;
+    });
 }
 
 module.exports = {
     generateChapterAudio,
     generateAllChapterAudio,
     splitTextIntoChunks,
-    concatenateWavBuffers,
     concatenateAudioFiles,
     getAudioDuration,
     cancelJob,

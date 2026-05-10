@@ -19,28 +19,16 @@ class TTSWorkerPool {
         this.ramThresholdHigh = 75;    // Reduce workers at 75% RAM
         this.ramThresholdLow = 60;     // Restore workers at 60% RAM
         
-        // Check total system RAM to determine safe max workers
-        const totalRamGB = os.totalmem() / (1024 * 1024 * 1024);
+        // Initial worker count based on current RAM usage
         const currentRamUsage = this.getRamUsagePercent();
         let initialWorkers = this.maxWorkers;
-        
-        // Limit max workers based on total system RAM
-        if (totalRamGB < 16) {
-            this.maxWorkers = 1;
-            console.warn(`[TTS Pool] Low total RAM (${totalRamGB.toFixed(1)}GB): Max workers limited to 1`);
-        } else if (totalRamGB < 32) {
-            this.maxWorkers = 2;
-            console.warn(`[TTS Pool] Moderate total RAM (${totalRamGB.toFixed(1)}GB): Max workers limited to 2`);
-        }
         
         if (currentRamUsage >= this.ramThresholdCritical) {
             initialWorkers = this.minWorkers;
             console.warn(`[TTS Pool] CRITICAL RAM usage (${currentRamUsage}%): Starting with ${initialWorkers} worker only`);
         } else if (currentRamUsage >= this.ramThresholdHigh) {
-            initialWorkers = Math.min(2, this.maxWorkers);
+            initialWorkers = 2;
             console.warn(`[TTS Pool] High RAM usage (${currentRamUsage}%): Starting with ${initialWorkers} workers`);
-        } else {
-            initialWorkers = Math.min(initialWorkers, this.maxWorkers);
         }
         
         this.size = size || initialWorkers;
@@ -129,26 +117,17 @@ class TTSWorkerPool {
                 console.warn(`[TTS Pool] High CPU usage: ${cpuLoad1Min.toFixed(1)}%`);
             }
             
-            // Check if any workers are currently busy
-            const busyWorkers = this.workers.filter(w => w.busy).length;
-            
-            // Critical memory situation - emergency scaling (only if workers are idle)
+            // Critical memory situation - emergency scaling
             if (ramUsage >= this.ramThresholdCritical) {
-                if (currentWorkers > this.minWorkers && busyWorkers === 0) {
+                if (currentWorkers > this.minWorkers) {
                     console.error(`[TTS Pool] CRITICAL RAM (${ramUsage}%): Emergency scaling to ${this.minWorkers} worker`);
                     this.scaleWorkers(this.minWorkers);
-                } else if (busyWorkers > 0) {
-                    console.warn(`[TTS Pool] CRITICAL RAM (${ramUsage}%) but ${busyWorkers} workers busy - cannot scale down safely. Waiting...`);
                 }
             }
-            // High memory usage - reduce workers (only if workers are idle)
+            // High memory usage - reduce workers
             else if (ramUsage >= this.ramThresholdHigh && currentWorkers > 2) {
-                if (busyWorkers === 0) {
-                    console.warn(`[TTS Pool] High RAM (${ramUsage}%): Reducing workers from ${currentWorkers} to 2`);
-                    this.scaleWorkers(2);
-                } else {
-                    console.warn(`[TTS Pool] High RAM (${ramUsage}%) but ${busyWorkers} workers busy - deferring scale down`);
-                }
+                console.warn(`[TTS Pool] High RAM (${ramUsage}%): Reducing workers from ${currentWorkers} to 2`);
+                this.scaleWorkers(2);
             }
             // Memory normalized - restore workers gradually
             else if (ramUsage <= this.ramThresholdLow && currentWorkers < this.maxWorkers) {
@@ -208,21 +187,11 @@ class TTSWorkerPool {
     }
     
     async removeWorkers(count) {
-        // Only remove idle workers to prevent losing in-flight chunks
-        const idleWorkers = this.workers.filter(w => !w.busy);
-        const toRemove = idleWorkers.slice(-count);
-        
-        if (toRemove.length === 0) {
-            console.log(`[TTS Pool] Cannot remove workers: all ${this.workers.length} workers are busy. Waiting for chunks to complete.`);
-            return;
-        }
-        
-        for (const state of toRemove) {
-            const idx = this.workers.indexOf(state);
-            if (idx >= 0) this.workers.splice(idx, 1);
+        const removed = this.workers.splice(-count, count);
+        for (const state of removed) {
             state.worker.kill();
         }
-        console.log(`[TTS Pool] Removed ${toRemove.length} idle workers. Total: ${this.workers.length} (requested ${count})`);
+        console.log(`Removed ${count} workers. Total: ${this.workers.length}`);
     }
 
     async init() {
