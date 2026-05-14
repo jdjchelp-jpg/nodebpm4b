@@ -4,10 +4,13 @@ Supports YAML config with environment variable interpolation.
 """
 
 import os
+import logging
 import yaml
 from pathlib import Path
 from dataclasses import dataclass, field
 from typing import Optional, List, Dict, Any
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -53,7 +56,18 @@ class ProcessingConfig:
     memory_mapped_scanning: bool = True
     incremental_processing: bool = True
     zero_copy_passthrough: bool = True
-    gpu_acceleration: bool = False
+    gpu_acceleration: Optional[bool] = None  # None = auto-detect, True/False = user-specified
+
+    def __post_init__(self):
+        """Auto-detect GPU if not explicitly set."""
+        if self.gpu_acceleration is None:
+            try:
+                import torch
+                self.gpu_acceleration = torch.cuda.is_available()
+                if self.gpu_acceleration:
+                    logger.info(f"GPU acceleration auto-enabled (CUDA available: {torch.cuda.get_device_name(0)})")
+            except ImportError:
+                self.gpu_acceleration = False
 
 
 @dataclass
