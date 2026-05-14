@@ -1097,6 +1097,13 @@
                     </svg>
                     <span>Format Switcher</span>
                 </a>
+                <a class="nav-item" data-tool="folderToM4b">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                        <polyline points="12 11 12 17"/><line x1="9" y1="14" x2="15" y2="14"/>
+                    </svg>
+                    <span>Folder to M4B</span>
+                </a>
                 <a class="nav-item" data-tool="activity">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M12 2v20"/><path d="m17 5 3 3-3 3"/><path d="m7 19-3-3 3-3"/><path d="M2 12h20"/>
@@ -1786,16 +1793,26 @@
                                     <polyline points="17 8 12 3 7 8" />
                                     <line x1="12" y1="3" x2="12" y2="15" />
                                 </svg>
-                                <p>Drop audio file here</p>
-                                <span>MP3, WAV, FLAC, AAC, OGG, ALAC</span>
+                                <p>Drop audio/video file here</p>
+                                <span>MP3, WAV, FLAC, AAC, OGG, M4A, MP4, MKV, AVI, MOV, WEBM, and more</span>
                                 <input type="file" id="converterFile" class="hidden"
-                                    accept=".mp3,.wav,.flac,.aac,.ogg,.m4a,.alac">
+                                    accept=".mp3,.wav,.flac,.aac,.ogg,.m4a,.m4b,.mp4,.mkv,.avi,.mov,.webm,.m4v,.3gp,.wma,.opus,.aiff">
                             </div>
                             <div id="converterFileInfo" class="active-file-indicator hidden">
                                 <span id="converterFileName"></span>
                                 <button id="clearConverterFile" class="btn btn-secondary"
                                     style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Clear</button>
                             </div>
+                            <div id="converterProgress" class="hidden" style="margin-top: 0.75rem;">
+                                <div class="progress-bar-container">
+                                    <div class="progress-fill" id="converterProgressBar" style="width: 0%;"></div>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">
+                                    <span id="converterStatusText">Initializing...</span>
+                                    <span id="converterPercent">0%</span>
+                                </div>
+                            </div>
+
                         </div>
 
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
@@ -1814,6 +1831,7 @@
                                     <option value="aac">AAC</option>
                                     <option value="ogg">OGG</option>
                                     <option value="alac">ALAC</option>
+                                    <option value="m4b">M4B (Audiobook)</option>
                                 </select>
                             </div>
                         </div>
@@ -1842,6 +1860,72 @@
                             </svg>
                             Convert Audio
                         </button>
+                    </div>
+                </div>
+
+                <!-- Folder to M4B Panel -->
+                <div id="folderToM4bPanel" class="tool-content">
+                    <div class="bento-card col-span-8">
+                        <div class="card-header">
+                            <h2 class="card-title">
+                                <div class="card-icon-sm" style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(124, 58, 237, 0.2)); color: var(--primary);">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                                        <polyline points="12 11 12 17"/><line x1="9" y1="14" x2="15" y2="14"/>
+                                    </svg>
+                                </div>
+                                Folder to M4B Audiobook
+                            </h2>
+                        </div>
+                        <div class="input-group">
+                            <label>Local Folder Path</label>
+                            <div style="display: flex; gap: 0.75rem;">
+                                <input type="text" id="folderToM4bPath" class="form-input" placeholder="e.g. C:\Users\Name\Music\MyAudiobookFolder">
+                                <button class="btn btn-secondary" id="btn-browse-folder-m4b" style="width: auto;">Browse</button>
+                            </div>
+                            <span style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.25rem;">Server must be running on this machine. All audio & video files in the folder will be combined into one M4B with chapter markers.</span>
+                        </div>
+                        <div class="input-group" style="margin-top: 1rem;">
+                            <label>Title / Output Name</label>
+                            <input type="text" id="folderToM4bTitle" class="form-input" placeholder="Audiobook Title (defaults to folder name)">
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+                            <div class="input-group">
+                                <label>Author</label>
+                                <input type="text" id="folderToM4bAuthor" class="form-input" placeholder="Author name">
+                            </div>
+                            <div class="input-group">
+                                <label>Audio Quality</label>
+                                <select id="folderToM4bQuality" class="form-select">
+                                    <option value="64k">Mobile (64k)</option>
+                                    <option value="128k" selected>Standard (128k)</option>
+                                    <option value="256k">Hi-Fi (256k)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="input-group" style="margin-top: 1rem;">
+                            <label>Supported Formats</label>
+                            <span style="font-size: 0.8rem; color: var(--text-muted);">
+                                Audio: MP3, WAV, FLAC, AAC, OGG, OPUS, AIFF, WMA, M4A, M4B<br>
+                                Video: MP4, MKV, AVI, MOV, WEBM, M4V, 3GP (audio will be extracted)
+                            </span>
+                        </div>
+                        <button class="btn btn-primary" id="btn-folder-to-m4b" style="margin-top: 1.5rem;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                                <polyline points="12 11 12 17"/><line x1="9" y1="14" x2="15" y2="14"/>
+                            </svg>
+                            Convert Folder to M4B
+                        </button>
+                        <div id="folderToM4bProgress" class="hidden" style="margin-top: 1rem;">
+                            <div class="progress-bar-container">
+                                <div class="progress-fill" id="folderToM4bProgressBar" style="width: 0%;"></div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">
+                                <span id="folderToM4bStatusText">Initializing...</span>
+                                <span id="folderToM4bPercent">0%</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -2302,7 +2386,23 @@
                 sourceFormat: document.getElementById('sourceFormat'),
                 targetFormat: document.getElementById('targetFormat'),
                 converterQuality: document.getElementById('converterQuality'),
-                btnConvertAudio: document.getElementById('btn-convert-audio'),
+                                btnConvertAudio: document.getElementById('btn-convert-audio'),
+                converterProgress: document.getElementById('converterProgress'),
+                converterProgressBar: document.getElementById('converterProgressBar'),
+                converterStatusText: document.getElementById('converterStatusText'),
+                converterPercent: document.getElementById('converterPercent'),
+
+                // Folder to M4B
+                folderToM4bPath: document.getElementById('folderToM4bPath'),
+                folderToM4bTitle: document.getElementById('folderToM4bTitle'),
+                folderToM4bAuthor: document.getElementById('folderToM4bAuthor'),
+                folderToM4bQuality: document.getElementById('folderToM4bQuality'),
+                                folderToM4bQuality: document.getElementById('folderToM4bQuality'),
+                btnFolderToM4b: document.getElementById('btn-folder-to-m4b'),
+                folderToM4bProgress: document.getElementById('folderToM4bProgress'),
+                folderToM4bProgressBar: document.getElementById('folderToM4bProgressBar'),
+                folderToM4bStatusText: document.getElementById('folderToM4bStatusText'),
+                folderToM4bPercent: document.getElementById('folderToM4bPercent'),
 
                 // Waveform
                 waveformContainer: document.getElementById('waveform-container'),
@@ -2316,6 +2416,7 @@
                     metadata: document.getElementById('metadataPanel'),
                     batch: document.getElementById('batchPanel'),
                     converter: document.getElementById('converterPanel'),
+                    folderToM4b: document.getElementById('folderToM4bPanel'),
                     activity: document.getElementById('activityPanel'),
                     settings: document.getElementById('settingsPanel'),
                     waveform: document.getElementById('waveformPanel')
@@ -2332,6 +2433,7 @@
                 initMultiVoiceHandlers();
                 initBatchHandlers();
                 initConverterHandlers();
+                initFolderToM4bHandlers();
                 initWaveform();
                 checkEngineHealth();
                 initializeVoices();
@@ -3303,6 +3405,8 @@
                         if (jobId.startsWith('merge')) type = 'merge';
                         if (jobId.startsWith('doc')) type = 'tts';
                         if (jobId.startsWith('clean')) type = 'cleaning';
+                        if (jobId.startsWith('folderm4b')) type = 'folderToM4b';
+                        if (jobId.startsWith('convert')) type = 'convert';
 
                         saveToHistory(type, filename, data.downloadUrl);
                         finishPipeline(data.message || 'Complete', data.downloadUrl);
@@ -3310,6 +3414,7 @@
                         // Handle completion without download URL
                         finishPipeline(data.message || 'Complete');
                     }
+
                 }
             };
 
@@ -3327,6 +3432,14 @@
         function updateProgress(percent, status) {
             elements.progressBar.style.width = `${percent}%`;
             elements.progressPercent.textContent = `${Math.round(percent)}%`;
+            // Also update converter inline progress if visible
+            if (elements.converterProgress && !elements.converterProgress.classList.contains('hidden')) {
+                elements.converterProgressBar.style.width = `${percent}%`;
+                elements.converterPercent.textContent = `${Math.round(percent)}%`;
+                if (status) {
+                    elements.converterStatusText.textContent = status;
+                }
+            }
             if (status) {
                 elements.statusText.textContent = status;
                 log(status, 'info');
@@ -3831,11 +3944,11 @@
         }
 
         function handleConverterFile(file) {
-            const validExtensions = ['.mp3', '.wav', '.flac', '.aac', '.ogg', '.m4a', '.alac'];
+            const validExtensions = ['.mp3', '.wav', '.flac', '.aac', '.ogg', '.m4a', '.m4b', '.alac', '.mp4', '.mkv', '.avi', '.mov', '.webm', '.m4v', '.3gp', '.wma', '.opus', '.aiff'];
             const ext = '.' + file.name.split('.').pop().toLowerCase();
 
             if (!validExtensions.includes(ext)) {
-                showToast('Please upload a valid audio file (MP3, WAV, FLAC, AAC, OGG, ALAC)', 'error');
+                showToast('Please upload a valid media file (audio or video)', 'error');
                 return;
             }
 
@@ -3853,7 +3966,20 @@
                 '.m4a': 'AAC (M4A)',
                 '.alac': 'ALAC'
             };
-            elements.sourceFormat.value = formatMap[ext] || ext.toUpperCase();
+            var videoFormatMap = {
+                '.mp4': 'MP4 Video',
+                '.mkv': 'MKV Video',
+                '.avi': 'AVI Video',
+                '.mov': 'MOV Video',
+                '.webm': 'WEBM Video',
+                '.m4v': 'M4V Video',
+                '.3gp': '3GP Video',
+                '.wma': 'WMA Audio',
+                '.opus': 'OPUS Audio',
+                '.aiff': 'AIFF Audio',
+                '.m4b': 'M4B Audio'
+            };
+            elements.sourceFormat.value = formatMap[ext] || videoFormatMap[ext] || ext.toUpperCase();
 
             elements.btnConvertAudio.disabled = !elements.targetFormat.value;
             showToast('File loaded: ' + file.name, 'success');
@@ -3878,17 +4004,23 @@
             elements.btnConvertAudio.disabled = true;
             elements.btnConvertAudio.innerHTML = '<svg class="animate-spin" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Converting...';
 
+            // Show inline progress bar
+            elements.converterProgress.classList.remove('hidden');
+            elements.converterProgressBar.style.width = '0%';
+            elements.converterPercent.textContent = '0%';
+            elements.converterStatusText.textContent = 'Starting conversion...';
+
             const formData = new FormData();
-            formData.append('file', state.converterFile);
+            formData.append('source_file', state.converterFile);
             formData.append('target_format', targetFormat);
-            formData.append('quality', quality);
+            formData.append('audioQuality', quality);
 
             const jobId = 'convert-' + Date.now();
             setupSSE(jobId);
-            formData.append('job_id', jobId);
+            formData.append('jobId', jobId);
 
             try {
-                const res = await fetch('/api/convert-audio', {
+                const res = await fetch('/api/convert', {
                     method: 'POST',
                     body: formData
                 });
@@ -3898,6 +4030,7 @@
                 if (data.error) throw new Error(data.error);
 
                 showToast('Conversion completed!', 'success');
+                elements.converterStatusText.textContent = 'Conversion complete!';
 
                 // Trigger download & Save to history
                 if (data.downloadUrl) {
@@ -3911,12 +4044,139 @@
                 }
             } catch (e) {
                 showToast('Conversion failed: ' + e.message, 'error');
+                elements.converterStatusText.textContent = 'Conversion failed: ' + e.message;
+                elements.converterProgressBar.style.background = 'var(--danger, #ef4444)';
             } finally {
                 state.isProcessing = false;
                 elements.btnConvertAudio.disabled = false;
                 elements.btnConvertAudio.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4" /></svg> Convert Audio';
             }
         }
+        function initFolderToM4bHandlers() {
+            if (!elements.folderToM4bPath || !elements.btnFolderToM4b) return;
+
+            elements.btnFolderToM4b.addEventListener('click', handleFolderToM4b);
+
+            var browseBtn = document.getElementById('btn-browse-folder-m4b');
+            if (browseBtn) {
+                browseBtn.addEventListener('click', function() {
+                    var path = prompt('Enter the full path to the folder:', elements.folderToM4bPath.value || '');
+                    if (path) {
+                        elements.folderToM4bPath.value = path;
+                    }
+                });
+            }
+        }
+
+        async function handleFolderToM4b() {
+            var folderPath = elements.folderToM4bPath.value.trim();
+            if (!folderPath) {
+                showToast('Please enter a folder path', 'error');
+                return;
+            }
+
+            state.isProcessing = true;
+            elements.btnFolderToM4b.disabled = true;
+            elements.btnFolderToM4b.innerHTML = '<svg class="animate-spin" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Converting...';
+
+            // Show inline progress bar
+            elements.folderToM4bProgress.classList.remove('hidden');
+            elements.folderToM4bProgressBar.style.width = '0%';
+            elements.folderToM4bPercent.textContent = '0%';
+            elements.folderToM4bStatusText.textContent = 'Starting folder conversion...';
+
+            var metadata = {};
+            var title = elements.folderToM4bTitle.value.trim();
+            var author = elements.folderToM4bAuthor.value.trim();
+            if (title) metadata.title = title;
+            if (author) metadata.author = author;
+
+            var jobId = 'folderm4b-' + Date.now();
+
+            // Custom SSE handler with inline progress updates
+            state.activeJobId = jobId;
+            var eventSource = new EventSource('/api/progress/' + jobId);
+            eventSource.onmessage = function(event) {
+                var data = JSON.parse(event.data);
+                if (data.percent !== undefined && data.percent !== null) {
+                    elements.folderToM4bProgressBar.style.width = data.percent + '%';
+                    elements.folderToM4bPercent.textContent = Math.round(data.percent) + '%';
+                    // Also update global pipeline progress bar
+                    elements.progressBar.style.width = data.percent + '%';
+                    elements.progressPercent.textContent = Math.round(data.percent) + '%';
+                    if (data.message) {
+                        elements.folderToM4bStatusText.textContent = data.message;
+                        elements.statusText.textContent = data.message;
+                        log(data.message, 'info');
+                    }
+                }
+
+                if (data.percent === 100 || data.downloadUrl) {
+                    eventSource.close();
+                    state.isProcessing = false;
+                    state.activeJobId = null;
+                    elements.btnFolderToM4b.disabled = false;
+                    elements.btnFolderToM4b.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><polyline points="12 11 12 17"/><line x1="9" y1="14" x2="15" y2="14"/></svg> Convert Folder to M4B';
+
+                    if (data.downloadUrl) {
+                        var filename = data.filename || data.downloadUrl.split('/').pop();
+                        saveToHistory('folderToM4b', filename, data.downloadUrl);
+                        showToast('Folder conversion complete: ' + filename, 'success');
+                        elements.folderToM4bStatusText.textContent = 'Complete: ' + filename;
+                        var a = document.createElement('a');
+                        a.href = data.downloadUrl;
+                        a.download = filename;
+                        document.body.appendChild(a);
+                        a.click();
+                        a.remove();
+                    } else {
+                        showToast('Folder conversion completed!', 'success');
+                        elements.folderToM4bStatusText.textContent = 'Conversion complete!';
+                    }
+                }
+            };
+
+            eventSource.onerror = function() {
+                eventSource.close();
+                if (state.isProcessing && state.activeJobId === jobId) {
+                    state.isProcessing = false;
+                    state.activeJobId = null;
+                    elements.btnFolderToM4b.disabled = false;
+                    elements.btnFolderToM4b.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><polyline points="12 11 12 17"/><line x1="9" y1="14" x2="15" y2="14"/></svg> Convert Folder to M4B';
+                    elements.folderToM4bStatusText.textContent = 'Connection lost';
+                    elements.folderToM4bProgressBar.style.background = 'var(--danger, #ef4444)';
+                    log('Folder-to-M4B SSE connection lost', 'warning');
+                }
+            };
+
+            try {
+                var res = await fetch('/api/folder-to-m4b', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        folderPath: folderPath,
+                        metadata: Object.keys(metadata).length > 0 ? JSON.stringify(metadata) : null,
+                        audioQuality: elements.folderToM4bQuality.value,
+                        jobId: jobId
+                    })
+                });
+
+                var data = await res.json();
+                if (data.error) throw new Error(data.error);
+
+                log('Folder-to-M4B started: ' + folderPath, 'info');
+            } catch (e) {
+                eventSource.close();
+                showToast('Failed: ' + e.message, 'error');
+                log('Folder-to-M4B error: ' + e.message, 'error');
+                elements.folderToM4bStatusText.textContent = 'Error: ' + e.message;
+                elements.folderToM4bProgressBar.style.background = 'var(--danger, #ef4444)';
+                state.isProcessing = false;
+                elements.btnFolderToM4b.disabled = false;
+                elements.btnFolderToM4b.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><polyline points="12 11 12 17"/><line x1="9" y1="14" x2="15" y2="14"/></svg> Convert Folder to M4B';
+            }
+        }
+
 
         function addBatchFiles(files) {
             const mp3s = files.filter(f => f.name.toLowerCase().endsWith('.mp3'));
