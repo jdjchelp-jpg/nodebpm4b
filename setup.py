@@ -8,7 +8,7 @@ with open("requirements.txt", encoding="utf-8") as f:
 
 setup(
     name="bpm4b",
-    version="10.0.0",
+    version="12.0.0",
     author="Jdjchelp",
     author_email="JDJCHELP@proton.me",
     description="Professional Multimedia Converter - 20 Advanced Audiobook Processing Features",

@@ -1,29 +1,24 @@
-# BPM4B - Professional Multimedia Suite
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/) ![NPM Version](https://img.shields.io/npm/v/bpm4b)
+![PyPI - Version](https://img.shields.io/pypi/v/bpm4b)
 
-A professional multimedia converter for creating audiobooks with high-fidelity TTS, automatic chapter support, and blazing-fast processing.
+# BPM4B
 
-**Version:** 12.0.0
+A professional multimedia processing suite for converting MP3 to M4B, M4B to MP3, and generating AI Audiobooks with high-fidelity TTS and interactive chapter editing.
 
 ## Installation
 
-### Node.js (Recommended)
+Install bpm4b with npm
+
 ```bash
-npm install -g bpm4b
-bpm4b
+  npm install bpm4b
+  cd bpm4b
 ```
 
-### Python (Alternative)
-```bash
-pip install bpm4b
-bpm4b
-```
+Install bpm4b with pypi
 
-### From GitHub
 ```bash
-git clone https://github.com/yourusername/bpm4b.git
-cd bpm4b
-npm install
-npm start
+  pip install bpm4b
+  cd bpm4b
 ```
 
 ## Features
@@ -42,6 +37,28 @@ npm start
 - **Reduced Overhead**: Optimized garbage collection and memory management
 - **Better Truncation Detection**: 50% threshold with detailed logging
 
+### 📚 EPUB to Audiobook (NEW in v12)
+- **Dual Engine Support**: Choose between Audiblez (default) or BPM4B TTS
+- **Auto-Installation**: Audiblez automatically installs via pip if not detected
+- **Multi-Language Support**: 9 languages (English, Spanish, French, Hindi, Italian, Japanese, Portuguese, Chinese)
+- **50+ Voice Options**: Male and female voices for each language
+- **Auto Voice Selection**: Automatically selects voice based on EPUB language
+- **Chapter Selection**: Choose specific chapters to convert
+- **Speed Control**: Adjust playback speed (0.5x to 2.0x)
+- **Metadata Extraction**: Automatically extracts title, author, and chapter information
+- **Progress Tracking**: Real-time progress updates for each chapter
+- **Audiblez Default**: Uses Audiblez as default TTS engine
+- **BPM4B Option**: BPM4B's optimized TTS available as alternative
+
+### 📄 Document to EPUB (NEW in v12)
+- **50+ Document Formats**: PDF, DOCX, DOC, DOCM, DOT, DOTX, TXT, TEXT, ASC, ANSI, LOG, ME, 0, 1ST, 600, 602, INFO, MD, MARKDOWN, HTML, HTM, XHTML, XHT, XML, RTF, TEX, BIB, CSV, ODT, ODM, OTT, ABW, WPD to EPUB
+- **Enhanced Chapter Detection**: Recognizes 15+ chapter patterns including Roman numerals, numbered lists, Markdown headers, HTML headings
+- **Smart Encoding**: Auto-detects UTF-8 and Latin-1 encodings
+- **Format-Specific Parsing**: Specialized chapter detection for Markdown (## headers), HTML (h1-h3 tags), TeX, and XML
+- **Audiblez Compatibility**: Convert documents for use with Audiblez or other EPUB tools
+- **Metadata Support**: Add custom title, author, and language
+- **Flexible Workflow**: Use BPM4B's TTS or export EPUB for external tools
+
 ### 🎯 Unified Smart Mode
 - Single toggle switch: Conversion Mode vs Chapter Builder Only
 - Automatic chapter attachment to MKV/M4B output when conversion mode is ON
@@ -52,9 +69,120 @@ npm start
 - **M4B to MP3**: High-fidelity conversion from M4B/M4A containers to MP3 (NEW in v10)
 - **Document to Audiobook**: Generate high-quality voiceovers from PDF/Text using Kokoro-82M AI (NEW in v10)
 - **Folder to M4B**: Convert entire folders to audiobooks with automatic chapter markers (5x faster)
+- **EPUB to Audiobook**: Convert e-books to audiobooks with multi-language support (NEW in v12)
+
 - Drag-and-drop file upload with visual feedback
 - Real-time progress monitoring with SSE (Server-Sent Events)
 - Visual progress bar and live terminal logging
+
+### 📚 EPUB to Audiobook (NEW in v12)
+
+Convert EPUB files to audiobooks with dual engine support:
+
+```bash
+# Using the web interface
+# Upload your EPUB file
+# Select engine: Audiblez (default) or BPM4B
+# Select voice and language
+# Choose chapters (optional)
+# Set speed (0.5x to 2.0x)
+# Convert to M4B
+# Download audiobook
+
+# Using the API with Audiblez engine (default)
+curl -X POST http://localhost:5000/api/epub-to-audiobook \
+  -F "document_file=@book.epub" \
+  -F "voice=default" \
+  -F "language=en" \
+  -F "speed=1.0"
+
+# Using the API with BPM4B engine
+curl -X POST http://localhost:5000/api/epub-to-audiobook \
+  -F "document_file=@book.epub" \
+  -F "voice=af_sky" \
+  -F "language=en" \
+  -F "speed=1.0" \
+  -F "engine=bpm4b"
+```
+
+**Engine Options:**
+- **Audiblez** (default): Uses Audiblez as a subprocess
+  - Alternative TTS engine
+  - **Auto-installs via pip if not detected**
+  - Useful if you prefer Audiblez's voice options
+  - Progress tracking via subprocess output
+
+- **BPM4B**: Uses BPM4B's optimized Kokoro-82M TTS engine
+  - Faster processing with parallel workers
+  - 50+ voices across 9 languages
+  - Better text coverage and chunking
+  - Lower memory footprint
+
+**Supported Languages:**
+- 🇺🇸 American English (20 voices)
+- 🇬🇧 British English (8 voices)
+- 🇪🇸 Spanish (3 voices)
+- 🇫🇷 French (1 voice)
+- 🇮🇳 Hindi (4 voices)
+- 🇮🇹 Italian (2 voices)
+- 🇯🇵 Japanese (5 voices)
+- 🇧🇷 Portuguese (3 voices)
+- 🇨🇳 Chinese (8 voices)
+
+### 📄 Document to EPUB (NEW in v12)
+
+Convert ANY document or text file to EPUB format for use with Audiblez or other tools:
+
+```bash
+# Using the web interface
+# Upload your document (50+ formats supported)
+# Add metadata (title, author, language)
+# Convert to EPUB
+# Download EPUB file
+
+# Using the API
+curl -X POST http://localhost:5000/api/document-to-epub \
+  -F "document_file=@document.pdf" \
+  -F "title=My Book" \
+  -F "author=Author Name" \
+  -F "language=en"
+```
+
+**Supported Formats (50+):**
+
+**Document Formats:**
+- PDF (.pdf)
+- Word Documents (.docx, .doc, .docm, .dot, .dotx)
+- OpenDocument (.odt, .odm, .ott)
+- AbiWord (.abw)
+- WordPerfect (.wpd)
+
+**Text Formats:**
+- Plain Text (.txt, .text, .asc, .ansi, .log, .me, .0, .1st, .600, .602, .info)
+- Markdown (.md, .markdown)
+- HTML (.html, .htm, .xhtml, .xht)
+- XML (.xml)
+- Rich Text Format (.rtf)
+- TeX/LaTeX (.tex, .bib)
+- CSV (.csv)
+
+**Chapter Detection Patterns:**
+- "Chapter 1", "CHAPTER 1", "Chapter I", "CHAPTER I"
+- "Part 1", "PART 1", "Part I", "PART I"
+- "Book 1", "BOOK 1", "Volume 1", "VOLUME 1"
+- "1. Chapter Title" (numbered lists)
+- Markdown headers (##, ###)
+- HTML headings (h1, h2, h3)
+- Roman numerals (I, II, III, IV, V, etc.)
+
+**Use Cases:**
+- Convert documents to EPUB for use with Audiblez
+- Prepare documents for EPUB readers
+- Create EPUB files from various document formats
+- Export content for external TTS tools
+- Convert technical documentation to audiobooks
+- Convert academic papers (TeX, PDF) to audiobooks
+- Convert spreadsheets (CSV) to readable EPUB format
 
 ### ⏱ Automatic Chapter Builder
 - **Always enabled** - core functionality
@@ -100,7 +228,7 @@ npm start
 
 ## Prerequisites
 
-- Node.js 14+
+- Node.js 18+
 
 **Good news!** FFmpeg is now automatically bundled with bpm4b. No separate FFmpeg installation needed. Just install the package and it works out of the box on:
 

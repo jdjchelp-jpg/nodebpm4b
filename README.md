@@ -1,21 +1,24 @@
-# BPM4B - Professional Multimedia Suite (v11.0.0 "The Editor's Cut")
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/) ![NPM Version](https://img.shields.io/npm/v/bpm4b)
+![PyPI - Version](https://img.shields.io/pypi/v/bpm4b)
+
+# BPM4B
 
 A professional multimedia processing suite for converting MP3 to M4B, M4B to MP3, and generating AI Audiobooks with high-fidelity TTS and interactive chapter editing.
 
 ## Installation
 
-### Standard Installation
+Install bpm4b with npm
+
 ```bash
-npm install -g bpm4b
-bpm4b web
+  npm install bpm4b
+  cd bpm4b
 ```
 
-**Or for local development:**
+Install bpm4b with pypi
+
 ```bash
-git clone https://github.com/jdjchelp-jpg/nodebpm4b.git
-cd nodebpm4b
-npm install
-npm start
+  pip install bpm4b
+  cd bpm4b
 ```
 
 **Update:**
@@ -104,7 +107,7 @@ npm update -g bpm4b
 
 ## Prerequisites
 
-**No additional prerequisites needed!** FFmpeg is bundled with the Node.js version, so it works out of the box.
+**No additional prerequisites needed!** Node.js 18+ is required. FFmpeg is bundled with the Node.js version, so it works out of the box.
 
 ## Usage
 

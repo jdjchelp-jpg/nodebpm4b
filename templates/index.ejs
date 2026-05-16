@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="BPM4B, audiobook creator, EPUB generator, PDF to EPUB, voice cloning, audio cleaning, production suite, v12.0.0, AI metadata, smart conversion">
     <title>BPM4B v12 | Ultimate Production Suite</title>
     <script src="https://unpkg.com/wavesurfer.js@7"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -33,6 +34,7 @@
             --text-primary: #f8fafc;
             --text-secondary: #94a3b8;
             --text-muted: #64748b;
+            --blur-intensity: 20px;
 
             /* Theme colors - Mesh Gradient logic */
             --bg-app: #020617;
@@ -1104,6 +1106,13 @@
                     </svg>
                     <span>Folder to M4B</span>
                 </a>
+                <a class="nav-item" data-tool="epubCreator">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                        <line x1="12" y1="7" x2="16" y2="7"/><line x1="12" y1="11" x2="16" y2="11"/><line x1="12" y1="15" x2="14" y2="15"/>
+                    </svg>
+                    <span>EPUB Creator</span>
+                </a>
                 <a class="nav-item" data-tool="activity">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M12 2v20"/><path d="m17 5 3 3-3 3"/><path d="m7 19-3-3 3-3"/><path d="M2 12h20"/>
@@ -1200,6 +1209,8 @@
                     <label style="font-size: 0.65rem;">Primary Color</label>
                     <input type="color" id="primaryColorPicker" value="#4f46e5" style="width: 100%; height: 30px; border: none; padding: 0; background: transparent; cursor: pointer;">
                 </div>
+
+                <!-- Mobile Alerts Toggle moved to a cleaner spot or auto-prompt -->
                 <div class="version-tag">
                     <span>Engine v12.0.0</span>
                     <span>Stable Release</span>
@@ -1350,6 +1361,26 @@
                                 </svg>
                                 AI Narration Director
                             </button>
+                        </div>
+
+                        <div style="margin-top: 1.5rem; margin-bottom: 1.5rem;">
+                            <div style="background: rgba(99, 102, 241, 0.05); padding: 1.25rem; border-radius: 12px; border: 1px solid rgba(99, 102, 241, 0.1); margin-bottom: 1rem;">
+                                <label style="display: flex; align-items: center; gap: 0.5rem; font-weight: 700; color: var(--primary); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.025em; margin-bottom: 0.75rem;">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                                        <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                                        <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                                    </svg>
+                                    Narration Engine Selection
+                                </label>
+                                <select id="audiobookEngine" class="form-select" style="background: var(--card-bg); border-color: rgba(99, 102, 241, 0.2); width: 100%;">
+                                    <option value="bpm4b">🚀 BPM4B Fast (Local Worker Pool)</option>
+                                    <option value="audiblez" selected>✨ Audiblez Premium (Recommended - Higher Quality)</option>
+                                </select>
+                                <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.75rem; line-height: 1.5;">
+                                    * <strong>Audiblez (Recommended)</strong> offers superior prosody, natural pacing, and professional-grade audio fidelity for long-form audiobooks.
+                                </div>
+                            </div>
                         </div>
 
                         <div class="dashboard-grid" style="gap: 1rem; margin-bottom: 1.5rem;">
@@ -1929,6 +1960,172 @@
                     </div>
                 </div>
 
+                <!-- EPUB Creator Panel -->
+                <div id="epubCreatorPanel" class="tool-content">
+                    <div class="bento-card col-span-8">
+                        <div class="card-header">
+                            <h2 class="card-title">
+                                <div class="card-icon-sm" style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.25), rgba(99, 102, 241, 0.25)); color: #a78bfa;">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                                        <line x1="12" y1="7" x2="16" y2="7"/>
+                                        <line x1="12" y1="11" x2="16" y2="11"/>
+                                        <line x1="12" y1="15" x2="14" y2="15"/>
+                                    </svg>
+                                </div>
+                                EPUB Creator
+                            </h2>
+                            <span style="font-size: 0.75rem; color: var(--text-muted);">Convert any document to a portable EPUB ebook</span>
+                        </div>
+
+                        <div class="input-group" style="margin-top: 1.25rem;">
+                            <label>Source Document</label>
+                            <div class="drop-zone" id="epubDocDropZone">
+                                <svg class="drop-zone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                                </svg>
+                                <p>Drop your document here</p>
+                                <span>PDF, DOCX, TXT, MD, HTML, RTF, ODT &amp; more</span>
+                                <input type="file" id="epubDocFile" class="hidden"
+                                    accept=".pdf,.docx,.doc,.docm,.dot,.dotx,.txt,.text,.md,.markdown,.html,.htm,.xhtml,.rtf,.xml,.tex,.csv,.odt,.odm,.ott,.abw,.wpd">
+                            </div>
+                            <div id="epubDocFileInfo" class="active-file-indicator hidden"></div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.25rem;">
+                            <div class="input-group">
+                                <label>Title</label>
+                                <input type="text" id="epubTitle" class="form-input" placeholder="Book or document title">
+                            </div>
+                            <div class="input-group">
+                                <label>Author</label>
+                                <input type="text" id="epubAuthor" class="form-input" placeholder="Author name">
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+                            <div class="input-group">
+                                <label>Genre / Subject</label>
+                                <input type="text" id="epubGenre" class="form-input" placeholder="e.g. Fiction, Science, History">
+                            </div>
+                            <div class="input-group">
+                                <label>Language</label>
+                                <select id="epubLanguage" class="form-select">
+                                    <option value="en">English (en)</option>
+                                    <option value="es">Spanish (es)</option>
+                                    <option value="fr">French (fr)</option>
+                                    <option value="de">German (de)</option>
+                                    <option value="it">Italian (it)</option>
+                                    <option value="pt">Portuguese (pt)</option>
+                                    <option value="ja">Japanese (ja)</option>
+                                    <option value="zh">Chinese (zh)</option>
+                                    <option value="ar">Arabic (ar)</option>
+                                    <option value="ru">Russian (ru)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="input-group" style="margin-top: 1rem;">
+                            <label>Description / Synopsis</label>
+                            <textarea id="epubDescription" class="form-input" rows="3"
+                                placeholder="A brief description or synopsis of the book..." style="resize: vertical;"></textarea>
+                        </div>
+
+                        <div style="display: flex; gap: 1rem; margin-top: 1.5rem; align-items: center;">
+                            <button class="btn btn-primary" id="btn-create-epub" disabled style="flex: 1;">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                                </svg>
+                                Create EPUB
+                            </button>
+                            <button class="btn btn-secondary" id="btn-epub-cancel" style="display:none; width: auto; padding: 0.75rem 1.5rem;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
+                                </svg>
+                                Stop
+                            </button>
+                        </div>
+
+                        <div id="epubProgress" class="hidden" style="margin-top: 1.25rem;">
+                            <div class="progress-bar-container">
+                                <div class="progress-fill" id="epubProgressBar" style="width: 0%;"></div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">
+                                <span id="epubStatusText">Preparing conversion...</span>
+                                <span id="epubProgressPct">0%</span>
+                            </div>
+                        </div>
+
+                        <div id="epubResultArea" class="hidden" style="margin-top: 1.25rem; padding: 1rem; background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.2); border-radius: var(--radius-md);">
+                            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+                                </svg>
+                                <span style="font-weight: 600; color: var(--text-primary);">EPUB created successfully!</span>
+                            </div>
+                            <a id="epubDownloadLink" href="#" class="btn btn-primary" style="margin-top: 0.75rem; display: inline-flex; align-items: center; gap: 0.5rem; width: auto; padding: 0.6rem 1.25rem; font-size: 0.85rem;" download>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+                                </svg>
+                                Download EPUB
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- EPUB Creator Info Sidebar -->
+                    <div class="bento-card col-span-4" style="height: fit-content;">
+                        <div class="card-header">
+                            <h3 class="card-title">Supported Formats</h3>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 0.6rem; margin-top: 1rem; font-size: 0.8rem; color: var(--text-secondary);">
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span style="background: rgba(139,92,246,0.2); color: #a78bfa; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 600;">DOC</span>
+                                PDF, DOCX, DOC, DOCM, DOT
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span style="background: rgba(99,102,241,0.2); color: #818cf8; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 600;">TXT</span>
+                                TXT, TEXT, ASC, ANSI, LOG
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span style="background: rgba(16,185,129,0.2); color: #10b981; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 600;">WEB</span>
+                                HTML, HTM, XHTML, XML
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span style="background: rgba(245,158,11,0.2); color: #f59e0b; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 600;">MKD</span>
+                                Markdown (.md, .markdown)
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span style="background: rgba(239,68,68,0.2); color: #ef4444; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 600;">OTH</span>
+                                RTF, TEX, BIB, CSV, ODT, ABW, WPD
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+                            <h4 style="font-size: 0.8rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;">CLI Usage</h4>
+                            <code style="font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--text-secondary); display: block; background: rgba(0,0,0,0.2); padding: 0.75rem; border-radius: var(--radius-sm); line-height: 1.6;">
+bpm4b epub input.pdf \<br>
+&nbsp;&nbsp;--title "My Book" \<br>
+&nbsp;&nbsp;--author "J. Doe" \<br>
+&nbsp;&nbsp;--genre "Fiction" \<br>
+&nbsp;&nbsp;-o output.epub
+                            </code>
+                        </div>
+
+                        <div style="margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+                            <h4 style="font-size: 0.8rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;">Then use with…</h4>
+                            <ul style="list-style: none; font-size: 0.78rem; color: var(--text-secondary); display: flex; flex-direction: column; gap: 0.4rem;">
+                                <li>📖 Audiobook Gen → EPUB tab</li>
+                                <li>🔊 Audiblez TTS engine</li>
+                                <li>📱 Any e-reader app</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Recent Activity Panel -->
                 <div id="activityPanel" class="tool-content">
                     <div class="bento-card col-span-12">
@@ -2437,10 +2634,114 @@
                 initWaveform();
                 checkEngineHealth();
                 initializeVoices();
+                initApiKeyHandler();
+                initAudiblezPathHandler();
+                initNotificationHandler();
                 initAdvancedFeatures(); // New 20 features
                 setInterval(checkEngineHealth, 30000);
             } catch (e) {
                 console.error('[BPM4B] init() FAILED:', e);
+            }
+        }
+
+        function initApiKeyHandler() {
+            const keyInput = document.getElementById('openrouterKey');
+            const saveBtn = document.getElementById('saveApiKeyBtn');
+            if (!keyInput || !saveBtn) return;
+            
+            // Load saved key
+            const savedKey = localStorage.getItem('openrouter_api_key');
+            if (savedKey) {
+                keyInput.value = savedKey;
+            }
+            
+            saveBtn.addEventListener('click', () => {
+                const key = keyInput.value.trim();
+                if (key) {
+                    localStorage.setItem('openrouter_api_key', key);
+                    showToast('OpenRouter API Key saved securely', 'success');
+                } else {
+                    localStorage.removeItem('openrouter_api_key');
+                    showToast('API Key cleared', 'info');
+                }
+            });
+        }
+
+        function initAudiblezPathHandler() {
+            const pathInput = document.getElementById('audiblezPath');
+            const saveBtn = document.getElementById('saveAudiblezPathBtn');
+            if (!pathInput || !saveBtn) return;
+            
+            // Load saved path
+            const savedPath = localStorage.getItem('audiblez_venv_path');
+            if (savedPath) {
+                pathInput.value = savedPath;
+            }
+            
+            saveBtn.addEventListener('click', () => {
+                const path = pathInput.value.trim();
+                if (path) {
+                    localStorage.setItem('audiblez_venv_path', path);
+                    showToast('Audiblez Path saved successfully', 'success');
+                } else {
+                    localStorage.removeItem('audiblez_venv_path');
+                    showToast('Custom Path cleared', 'info');
+                }
+            });
+        }
+
+        function initNotificationHandler() {
+            const btn = document.getElementById('enableNotificationsBtn');
+            if (!btn) return;
+            
+            if (window.Notification && Notification.permission === 'granted') {
+                btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right: 0.5rem;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Alerts Ready';
+                btn.classList.replace('btn-secondary', 'btn-primary');
+            }
+
+            btn.addEventListener('click', async () => {
+                try {
+                    const permission = await Notification.requestPermission();
+                    if (permission === 'granted') {
+                        showToast('Mobile alerts enabled! Keep this tab open.', 'success');
+                        btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right: 0.5rem;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Alerts Ready';
+                        btn.classList.replace('btn-secondary', 'btn-primary');
+                        
+                        // Test notification
+                        new Notification('BPM4B Production Studio', {
+                            body: 'Notifications are now active!',
+                            icon: 'https://cdn-icons-png.flaticon.com/512/3602/3602123.png'
+                        });
+                    } else {
+                        showToast('Notification permission denied', 'error');
+                    }
+                } catch (e) {
+                    showToast('Notifications not supported on this browser/connection', 'warning');
+                }
+            });
+        }
+
+        function notifyUser(title, body) {
+            if (window.Notification && Notification.permission === 'granted') {
+                new Notification(title, {
+                    body: body,
+                    icon: 'https://cdn-icons-png.flaticon.com/512/3602/3602123.png'
+                });
+            }
+            
+            // "Alarm" effect: Play distinct chime 3 times
+            try {
+                const playChime = () => {
+                    const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
+                    audio.volume = 0.8;
+                    audio.play().catch(e => console.warn('Autoplay blocked or audio error', e));
+                };
+                
+                playChime();
+                setTimeout(playChime, 800);
+                setTimeout(playChime, 1600);
+            } catch (e) {
+                console.warn('Audio alert failed', e);
             }
         }
 
@@ -2492,6 +2793,10 @@
                 const res = await fetch('/api/voices');
                 const data = await res.json();
 
+                if (!data || !data.voices) {
+                    throw new Error('Malformed voice data received from server');
+                }
+
                 const selects = [document.getElementById('ttsVoice'), document.getElementById('dialogueVoice')];
                 selects.forEach(s => {
                     if (!s) return;
@@ -2508,7 +2813,16 @@
 
                 log('Professional voice list loaded', 'success');
             } catch (e) {
+                console.error('[BPM4B] Voice initialization failed:', e);
                 log('Failed to load voices: ' + e.message, 'error');
+                
+                // Fallback to local default if API fails
+                const selects = [document.getElementById('ttsVoice'), document.getElementById('dialogueVoice')];
+                selects.forEach(s => {
+                    if (s && s.innerHTML.includes('Loading')) {
+                        s.innerHTML = '<option value="af_heart">Heart (F) ❤️ [Grade A] (Fallback)</option>';
+                    }
+                });
             }
         }
 
@@ -3487,6 +3801,8 @@
                 a.click();
                 a.remove();
             }
+
+            notifyUser('BPM4B Production Complete', msg || 'Your audiobook is ready for download!');
         }
 
         function failPipeline(msg) {
@@ -3582,7 +3898,24 @@
             const jobId = 'job_' + Date.now();
             state.activeJobId = jobId;
             startPipeline(jobId);
-            log('Initializing Kokoro Local TTS... (parallel mode enabled)', 'info');
+            
+            const engine = document.getElementById('audiobookEngine').value;
+            
+            // Notification request if not granted
+            if (window.Notification && Notification.permission === 'default') {
+                log('Tip: Click anywhere to enable mobile alerts for this conversion', 'info');
+                Notification.requestPermission();
+            }
+
+            // Path check for Audiblez
+            if (engine === 'audiblez' && !localStorage.getItem('audiblez_venv_path')) {
+                const customPath = prompt("Enter the path to your Audiblez folder (e.g. C:\\Users\\johns\\Downloads\\audilz):", "C:\\Users\\johns\\Downloads\\audilz");
+                if (customPath) {
+                    localStorage.setItem('audiblez_venv_path', customPath);
+                }
+            }
+
+            log(`Initializing ${engine === 'audiblez' ? 'Audiblez High-Quality' : 'Kokoro Local'} TTS...`, 'info');
 
             // Show stop button
             const stopBtn = document.getElementById('stopGenerationBtn');
@@ -3592,7 +3925,13 @@
             formData.append('document_file', fileInput.files[0]);
             formData.append('voice', document.getElementById('ttsVoice').value);
             formData.append('speed', document.getElementById('ttsSpeed').value);
+            formData.append('engine', engine);
             formData.append('jobId', jobId);
+            
+            const savedAudiblezPath = localStorage.getItem('audiblez_venv_path');
+            if (savedAudiblezPath) {
+                formData.append('audiblezPath', savedAudiblezPath);
+            }
 
             // Multi-Voice settings
             if (document.getElementById('enableMultiVoice').checked) {
@@ -4544,6 +4883,8 @@
             // 2. Blur Intensity
             const blurSlider = document.getElementById('blurSlider');
             if (blurSlider) {
+                // Initialize with current value
+                document.documentElement.style.setProperty('--blur-intensity', blurSlider.value + 'px');
                 blurSlider.oninput = (e) => {
                     document.documentElement.style.setProperty('--blur-intensity', e.target.value + 'px');
                 };
@@ -4910,6 +5251,129 @@
                 };
             }
         });
+
+        // ── EPUB Creator Logic ──
+        (function initEpubCreator() {
+            const dropZone   = document.getElementById('epubDocDropZone');
+            const fileInput  = document.getElementById('epubDocFile');
+            const fileInfo   = document.getElementById('epubDocFileInfo');
+            const createBtn  = document.getElementById('btn-create-epub');
+            const cancelBtn  = document.getElementById('btn-epub-cancel');
+            const progressEl = document.getElementById('epubProgress');
+            const progressBar= document.getElementById('epubProgressBar');
+            const statusText = document.getElementById('epubStatusText');
+            const progressPct= document.getElementById('epubProgressPct');
+            const resultArea = document.getElementById('epubResultArea');
+            const dlLink     = document.getElementById('epubDownloadLink');
+
+            if (!dropZone) return; // panel not in DOM
+
+            // Drop zone click & drag
+            dropZone.addEventListener('click', () => fileInput.click());
+            dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+            dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('drag-over');
+                if (e.dataTransfer.files[0]) {
+                    fileInput.files = e.dataTransfer.files;
+                    onFileChosen(e.dataTransfer.files[0]);
+                }
+            });
+
+            fileInput.addEventListener('change', () => {
+                if (fileInput.files[0]) onFileChosen(fileInput.files[0]);
+            });
+
+            function onFileChosen(file) {
+                fileInfo.classList.remove('hidden');
+                fileInfo.textContent = `📄 ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+                createBtn.disabled = false;
+                resultArea.classList.add('hidden');
+            }
+
+            createBtn.addEventListener('click', async () => {
+                const file = fileInput.files[0];
+                if (!file) return showToast('Please select a document first', 'error');
+
+                const formData = new FormData();
+                formData.append('document_file', file);
+                formData.append('title',       document.getElementById('epubTitle').value.trim());
+                formData.append('author',      document.getElementById('epubAuthor').value.trim());
+                formData.append('genre',       document.getElementById('epubGenre').value.trim());
+                formData.append('description', document.getElementById('epubDescription').value.trim());
+                formData.append('language',    document.getElementById('epubLanguage').value);
+
+                // UI — start state
+                createBtn.disabled = true;
+                cancelBtn.style.display = 'inline-flex';
+                progressEl.classList.remove('hidden');
+                resultArea.classList.add('hidden');
+                progressBar.style.width = '0%';
+                statusText.textContent = 'Uploading document…';
+                progressPct.textContent = '0%';
+
+                // Animate progress bar (the server route is synchronous, so fake intermediate progress)
+                let fakeProgress = 0;
+                const progressTimer = setInterval(() => {
+                    if (fakeProgress < 85) {
+                        fakeProgress += Math.random() * 8;
+                        fakeProgress = Math.min(fakeProgress, 85);
+                        progressBar.style.width = fakeProgress.toFixed(0) + '%';
+                        progressPct.textContent = fakeProgress.toFixed(0) + '%';
+                        statusText.textContent = fakeProgress < 30 ? 'Parsing document…'
+                            : fakeProgress < 60 ? 'Splitting into chapters…'
+                            : 'Building EPUB…';
+                    }
+                }, 500);
+
+                let abortController = new AbortController();
+                cancelBtn.onclick = () => {
+                    abortController.abort();
+                    clearInterval(progressTimer);
+                    resetEpubUI();
+                    showToast('Conversion cancelled', 'info');
+                };
+
+                try {
+                    const res = await fetch('/api/document-to-epub', {
+                        method: 'POST',
+                        body: formData,
+                        signal: abortController.signal
+                    });
+                    clearInterval(progressTimer);
+
+                    const data = await res.json();
+                    if (!res.ok || data.error) throw new Error(data.error || 'Conversion failed');
+
+                    // Success
+                    progressBar.style.width = '100%';
+                    progressPct.textContent = '100%';
+                    statusText.textContent = 'EPUB created!';
+
+                    dlLink.href = data.downloadUrl;
+                    dlLink.download = (document.getElementById('epubTitle').value || data.filename || 'document') + '.epub';
+                    resultArea.classList.remove('hidden');
+
+                    saveToHistory('epub', dlLink.download, data.downloadUrl);
+                    showToast('EPUB created successfully!', 'success');
+                    log(`EPUB created: ${dlLink.download}`, 'success');
+                } catch (err) {
+                    clearInterval(progressTimer);
+                    if (err.name !== 'AbortError') {
+                        showToast('EPUB creation failed: ' + err.message, 'error');
+                        log('EPUB error: ' + err.message, 'error');
+                    }
+                } finally {
+                    resetEpubUI();
+                }
+            });
+
+            function resetEpubUI() {
+                createBtn.disabled = false;
+                cancelBtn.style.display = 'none';
+            }
+        })();
 
         // --- Bootstrap ---
         document.addEventListener('DOMContentLoaded', init);

@@ -26,13 +26,27 @@ program
   .option('-p, --port <port>', 'Port to bind to', '5000')
   .option('--debug', 'Enable debug mode', false)
   .action(async (options) => {
+    const os = require('os');
+    const getLocalIp = () => {
+      const interfaces = os.networkInterfaces();
+      for (const name of Object.keys(interfaces)) {
+        for (const iface of interfaces[name]) {
+          if (iface.family === 'IPv4' && !iface.internal) {
+            return iface.address;
+          }
+        }
+      }
+      return '127.0.0.1';
+    };
+    
+    const localIp = getLocalIp();
+
     console.log(`
 ╔═══════════════════════════════════════════════════════════════╗
 ║          BPM4B Professional Converter v12.0.0                ║
-║  (Local Kokoro-82M Engine | API Keys for Openrouter Features)             ║
 ║                                                               ║
 ║  Web interface starting...                                    ║
-║  URL: http://${options.host !== '0.0.0.0' ? options.host : 'localhost'}:${options.port}                    ║
+║  URL: http://localhost:${options.port}                        ║
 ║  Debug mode: ${options.debug ? 'ON' : 'OFF'}                                   ║
 ╚═══════════════════════════════════════════════════════════════╝
     `);
@@ -47,8 +61,8 @@ program
       });
 
       server.listen(options.port, options.host, () => {
-        console.log(`Server is running at http://${options.host === '0.0.0.0' ? 'localhost' : options.host}:${options.port}/`);
-        console.log('Press Ctrl+C to stop the server');
+        console.log(`Server is running at http://localhost:${options.port}/`);
+        console.log(`\nPress Ctrl+C to stop the server\n`);
       });
 
       // Handle graceful shutdown
@@ -213,6 +227,53 @@ program
     }
   });
 
+
+// EPUB command (Document -> EPUB)
+program
+  .command('epub')
+  .description('Convert a document (PDF/DOCX/TXT/MD/HTML/RTF) to a standalone EPUB file')
+  .argument('<input>', 'Input document file path')
+  .argument('[output]', 'Output EPUB file path (optional, defaults to outputs/)')
+  .option('-t, --title <title>', 'EPUB title')
+  .option('-a, --author <author>', 'EPUB author')
+  .option('-g, --genre <genre>', 'EPUB genre/subject')
+  .option('-d, --description <desc>', 'EPUB description')
+  .option('-l, --language <lang>', 'EPUB language (e.g., en, fr)', 'en')
+  .action(async (input, output, options) => {
+    try {
+      const { convertToEpub } = require('../lib/epub-tool');
+      
+      if (!fs.existsSync(input)) {
+        console.error(`Error: Input file '${input}' not found`);
+        process.exit(1);
+      }
+
+      // If output is not provided, use outputs/ directory
+      if (!output) {
+        const inputBase = path.basename(input, path.extname(input));
+        output = path.join('outputs', `${inputBase}.epub`);
+      }
+
+      console.log(`\nGenerating EPUB: ${input} -> ${output}`);
+      const result = await convertToEpub(input, output, {
+        title: options.title,
+        author: options.author,
+        genre: options.genre,
+        description: options.description,
+        language: options.language
+      });
+
+      if (result.success) {
+        console.log(`\n\u2713 EPUB created successfully: ${result.path}`);
+      } else {
+        console.error(`\n\u2717 Failed to create EPUB: ${result.error}`);
+        process.exit(1);
+      }
+    } catch (error) {
+      console.error('Error during EPUB generation:', error.message);
+      process.exit(1);
+    }
+  });
 
 // Parse command line arguments
 program.parse();

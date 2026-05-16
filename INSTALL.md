@@ -1,4 +1,4 @@
-# Installation & Quick Start Guide - BPM4B v7.0.0
+# Installation & Quick Start Guide - BPM4B v12.0.0
 
 ## For Users
 
@@ -95,7 +95,7 @@ nodebpm4b/
 ## Prerequisites
 
 ### Node.js Version
-**Good news!** FFmpeg is automatically bundled with the Node.js version. No separate installation needed. Just install the package and it works!
+**Node.js 18+ is required.** Good news! FFmpeg is automatically bundled with the Node.js version. No separate installation needed. Just install the package and it works!
 
 ### Python Version
 **FFmpeg is required** for MP3 to M4B conversion. Install it first:
@@ -145,6 +145,25 @@ npm uninstall -g bpm4b
 cd nodebpm4b
 npm unlink
 ```
+
+## Premium Narration (Audiblez)
+Audiblez provides high-fidelity narration for long-form audiobooks.
+
+### Windows (Recommended Setup)
+After many trials, we recommend installing Audiblez in a Python virtual environment to avoid dependency conflicts:
+1. Open a Windows terminal (PowerShell)
+2. Create a folder for Audiblez: `mkdir audiblez && cd audiblez`
+3. Create a venv: `python -m venv venv`
+4. Activate the venv: `.\venv\Scripts\Activate.ps1 or venv\Scripts\activate.bat for cmd`
+5. Install dependencies: `pip install audiblez pillow wxpython`
+6. For CUDA support (NVIDIA GPUs): [Follow Pytorch install guide](https://pytorch.org/get-started/locally/) This is from [Audiblez](https://claudio.uk/posts/audiblez-v4.html)
+
+### Linux/macOS
+```bash
+pip install audiblez
+```
+
+---
 
 ## Getting Help
 
