@@ -209,7 +209,7 @@ async function previewChapters(inputPath, onProgress = null) {
     const mins = estimatedMinutes % 60;
     const estimatedDuration = hours > 0 ? `${hours}h ${mins}m` : `${mins}m`;
 
-    // Generation time estimates (Audiblez benchmarks)
+    // Generation time estimates (Abogen benchmarks)
     // GPU: ~600 chars/s, CPU: ~60 chars/s
     const genTimeSecondsGPU = Math.ceil(totalChars / 600);
     const genTimeSecondsCPU = Math.ceil(totalChars / 60);

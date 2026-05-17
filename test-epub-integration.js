@@ -88,7 +88,7 @@ async function testIntegration() {
 
 async function runAllTests() {
     console.log('🚀 EPUB Integration Test Suite\n');
-    console.log('This script tests the Audiblez-inspired EPUB integration:\n');
+    console.log('This script tests the Abogen-inspired EPUB integration:\n');
     
     await testVoiceConfiguration();
     await testEpubParser();
@@ -110,7 +110,7 @@ async function runAllTests() {
     console.log('- Speed control (0.5x to 2.0x)');
     console.log('- Metadata extraction');
     console.log('- Real-time progress tracking');
-    console.log('- Uses BPM4B\'s optimized TTS engine (faster than Audiblez)');
+    console.log('- Uses BPM4B\'s optimized TTS engine (faster than Abogen)');
 }
 
 // Run tests

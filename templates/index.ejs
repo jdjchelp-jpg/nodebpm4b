@@ -985,6 +985,26 @@
         </div>
     </div>
 
+    <!-- Abogen Venv Path Modal -->
+    <div id="abogenPathModal" class="modal-overlay hidden">
+        <div class="modal-content bento-card" style="max-width: 500px; padding: 1.5rem;">
+            <div class="card-header">
+                <h3 class="card-title">Abogen Environment Setup</h3>
+            </div>
+            <div style="margin-top: 1rem; display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.9rem;">
+                <p style="color: var(--slate-400);">To use Abogen Premium Narration, please specify the directory of your virtual environment (venv) or the folder where Abogen is installed.</p>
+                <div class="input-group">
+                    <label style="font-size: 0.7rem;">Virtual Environment / Abogen Folder Path</label>
+                    <input type="text" id="abogenVenvPathInput" class="form-input" placeholder="e.g. C:\Users\johns\Downloads\abogen" style="width: 100%;">
+                </div>
+                <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                    <button class="btn btn-secondary" onclick="closeAllModals()">Cancel</button>
+                    <button class="btn btn-primary" id="saveAbogenPathModalBtn">Save & Continue</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Full Text Viewer Modal -->
     <div id="textViewerModal" class="modal-overlay hidden">
         <div class="modal-content bento-card">
@@ -1375,10 +1395,10 @@
                                 </label>
                                 <select id="audiobookEngine" class="form-select" style="background: var(--card-bg); border-color: rgba(99, 102, 241, 0.2); width: 100%;">
                                     <option value="bpm4b">🚀 BPM4B Fast (Local Worker Pool)</option>
-                                    <option value="audiblez" selected>✨ Audiblez Premium (Recommended - Higher Quality)</option>
+                                    <option value="abogen" selected>✨ Abogen Premium (Recommended - Higher Quality)</option>
                                 </select>
                                 <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.75rem; line-height: 1.5;">
-                                    * <strong>Audiblez (Recommended)</strong> offers superior prosody, natural pacing, and professional-grade audio fidelity for long-form audiobooks.
+                                    * <strong>Abogen (Recommended)</strong> offers superior prosody, natural pacing, and professional-grade audio fidelity for long-form audiobooks.
                                 </div>
                             </div>
                         </div>
@@ -2119,7 +2139,7 @@ bpm4b epub input.pdf \<br>
                             <h4 style="font-size: 0.8rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;">Then use with…</h4>
                             <ul style="list-style: none; font-size: 0.78rem; color: var(--text-secondary); display: flex; flex-direction: column; gap: 0.4rem;">
                                 <li>📖 Audiobook Gen → EPUB tab</li>
-                                <li>🔊 Audiblez TTS engine</li>
+                                <li>🔊 Abogen TTS engine</li>
                                 <li>📱 Any e-reader app</li>
                             </ul>
                         </div>
@@ -2635,7 +2655,7 @@ bpm4b epub input.pdf \<br>
                 checkEngineHealth();
                 initializeVoices();
                 initApiKeyHandler();
-                initAudiblezPathHandler();
+                initAbogenPathHandler();
                 initNotificationHandler();
                 initAdvancedFeatures(); // New 20 features
                 setInterval(checkEngineHealth, 30000);
@@ -2667,13 +2687,13 @@ bpm4b epub input.pdf \<br>
             });
         }
 
-        function initAudiblezPathHandler() {
-            const pathInput = document.getElementById('audiblezPath');
-            const saveBtn = document.getElementById('saveAudiblezPathBtn');
+        function initAbogenPathHandler() {
+            const pathInput = document.getElementById('abogenPath');
+            const saveBtn = document.getElementById('saveAbogenPathBtn');
             if (!pathInput || !saveBtn) return;
             
             // Load saved path
-            const savedPath = localStorage.getItem('audiblez_venv_path');
+            const savedPath = localStorage.getItem('abogen_venv_path');
             if (savedPath) {
                 pathInput.value = savedPath;
             }
@@ -2681,10 +2701,10 @@ bpm4b epub input.pdf \<br>
             saveBtn.addEventListener('click', () => {
                 const path = pathInput.value.trim();
                 if (path) {
-                    localStorage.setItem('audiblez_venv_path', path);
-                    showToast('Audiblez Path saved successfully', 'success');
+                    localStorage.setItem('abogen_venv_path', path);
+                    showToast('Abogen Path saved successfully', 'success');
                 } else {
-                    localStorage.removeItem('audiblez_venv_path');
+                    localStorage.removeItem('abogen_venv_path');
                     showToast('Custom Path cleared', 'info');
                 }
             });
@@ -3890,16 +3910,69 @@ bpm4b epub input.pdf \<br>
             }
         }
 
+        function promptForAbogenPath() {
+            return new Promise((resolve) => {
+                const modal = document.getElementById('abogenPathModal');
+                const input = document.getElementById('abogenVenvPathInput');
+                const saveBtn = document.getElementById('saveAbogenPathModalBtn');
+                
+                modal.classList.remove('hidden');
+                
+                const saved = localStorage.getItem('abogen_venv_path');
+                if (saved) {
+                    input.value = saved;
+                } else {
+                    input.value = "C:\\Users\\johns\\Downloads\\abogen";
+                }
+                
+                const handleSave = () => {
+                    const val = input.value.trim();
+                    if (val) {
+                        localStorage.setItem('abogen_venv_path', val);
+                        const settingsInput = document.getElementById('abogenPath');
+                        if (settingsInput) settingsInput.value = val;
+                        modal.classList.add('hidden');
+                        cleanup();
+                        resolve(true);
+                    } else {
+                        showToast('Please enter a valid path', 'error');
+                    }
+                };
+                
+                const handleCancel = () => {
+                    modal.classList.add('hidden');
+                    cleanup();
+                    resolve(false);
+                };
+                
+                const cleanup = () => {
+                    saveBtn.removeEventListener('click', handleSave);
+                };
+                
+                saveBtn.addEventListener('click', handleSave);
+                modal.querySelector('.btn-secondary').onclick = handleCancel;
+            });
+        }
+
         async function handleAudiobookGeneration() {
             console.log('[BPM4B] handleAudiobookGeneration clicked');
             const fileInput = elements.docFile;
             if (!fileInput.files.length) return showToast('Select document', 'error');
 
+            const engine = document.getElementById('audiobookEngine').value;
+            
+            // Path check for Abogen
+            if (engine === 'abogen' && !localStorage.getItem('abogen_venv_path')) {
+                const success = await promptForAbogenPath();
+                if (!success) {
+                    showToast('Abogen virtual environment path is required for Premium Narration', 'error');
+                    return;
+                }
+            }
+
             const jobId = 'job_' + Date.now();
             state.activeJobId = jobId;
             startPipeline(jobId);
-            
-            const engine = document.getElementById('audiobookEngine').value;
             
             // Notification request if not granted
             if (window.Notification && Notification.permission === 'default') {
@@ -3907,15 +3980,7 @@ bpm4b epub input.pdf \<br>
                 Notification.requestPermission();
             }
 
-            // Path check for Audiblez
-            if (engine === 'audiblez' && !localStorage.getItem('audiblez_venv_path')) {
-                const customPath = prompt("Enter the path to your Audiblez folder (e.g. C:\\Users\\johns\\Downloads\\audilz):", "C:\\Users\\johns\\Downloads\\audilz");
-                if (customPath) {
-                    localStorage.setItem('audiblez_venv_path', customPath);
-                }
-            }
-
-            log(`Initializing ${engine === 'audiblez' ? 'Audiblez High-Quality' : 'Kokoro Local'} TTS...`, 'info');
+            log(`Initializing ${engine === 'abogen' ? 'Abogen High-Quality' : 'Kokoro Local'} TTS...`, 'info');
 
             // Show stop button
             const stopBtn = document.getElementById('stopGenerationBtn');
@@ -3928,9 +3993,9 @@ bpm4b epub input.pdf \<br>
             formData.append('engine', engine);
             formData.append('jobId', jobId);
             
-            const savedAudiblezPath = localStorage.getItem('audiblez_venv_path');
-            if (savedAudiblezPath) {
-                formData.append('audiblezPath', savedAudiblezPath);
+            const savedAbogenPath = localStorage.getItem('abogen_venv_path');
+            if (savedAbogenPath) {
+                formData.append('abogenPath', savedAbogenPath);
             }
 
             // Multi-Voice settings

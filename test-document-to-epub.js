@@ -170,7 +170,7 @@ async function testIntegration() {
     console.log('- wpdToEpub: WordPerfect to EPUB');
     
     console.log('\n--- Use Cases ---');
-    console.log('1. Convert PDF to EPUB for Audiblez');
+    console.log('1. Convert PDF to EPUB for Abogen');
     console.log('2. Convert DOCX to EPUB for EPUB readers');
     console.log('3. Convert TXT to EPUB for external TTS tools');
     console.log('4. Convert MD to EPUB for technical documentation');
@@ -212,7 +212,7 @@ async function runAllTests() {
     console.log('- Format-specific chapter parsing');
     console.log('- Smart encoding detection (UTF-8, Latin-1)');
     console.log('- Metadata support (title, author, language)');
-    console.log('- Audiblez compatibility');
+    console.log('- Abogen compatibility');
     console.log('- Flexible workflow options');
     
     console.log('\nNext steps:');
@@ -220,7 +220,7 @@ async function runAllTests() {
     console.log('2. Start the server: npm start');
     console.log('3. Upload any document via the web interface');
     console.log('4. Convert to EPUB');
-    console.log('5. Use with Audiblez or BPM4B EPUB to audiobook');
+    console.log('5. Use with Abogen or BPM4B EPUB to audiobook');
 }
 
 // Run tests

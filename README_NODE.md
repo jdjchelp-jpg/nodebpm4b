@@ -38,8 +38,8 @@ Install bpm4b with pypi
 - **Better Truncation Detection**: 50% threshold with detailed logging
 
 ### 📚 EPUB to Audiobook (NEW in v12)
-- **Dual Engine Support**: Choose between Audiblez (default) or BPM4B TTS
-- **Auto-Installation**: Audiblez automatically installs via pip if not detected
+- **Dual Engine Support**: Choose between Abogen (default) or BPM4B TTS
+- **Auto-Installation**: Abogen automatically installs via pip if not detected
 - **Multi-Language Support**: 9 languages (English, Spanish, French, Hindi, Italian, Japanese, Portuguese, Chinese)
 - **50+ Voice Options**: Male and female voices for each language
 - **Auto Voice Selection**: Automatically selects voice based on EPUB language
@@ -47,7 +47,7 @@ Install bpm4b with pypi
 - **Speed Control**: Adjust playback speed (0.5x to 2.0x)
 - **Metadata Extraction**: Automatically extracts title, author, and chapter information
 - **Progress Tracking**: Real-time progress updates for each chapter
-- **Audiblez Default**: Uses Audiblez as default TTS engine
+- **Abogen Default**: Uses Abogen as default TTS engine
 - **BPM4B Option**: BPM4B's optimized TTS available as alternative
 
 ### 📄 Document to EPUB (NEW in v12)
@@ -55,7 +55,7 @@ Install bpm4b with pypi
 - **Enhanced Chapter Detection**: Recognizes 15+ chapter patterns including Roman numerals, numbered lists, Markdown headers, HTML headings
 - **Smart Encoding**: Auto-detects UTF-8 and Latin-1 encodings
 - **Format-Specific Parsing**: Specialized chapter detection for Markdown (## headers), HTML (h1-h3 tags), TeX, and XML
-- **Audiblez Compatibility**: Convert documents for use with Audiblez or other EPUB tools
+- **Abogen Compatibility**: Convert documents for use with Abogen or other EPUB tools
 - **Metadata Support**: Add custom title, author, and language
 - **Flexible Workflow**: Use BPM4B's TTS or export EPUB for external tools
 
@@ -82,14 +82,14 @@ Convert EPUB files to audiobooks with dual engine support:
 ```bash
 # Using the web interface
 # Upload your EPUB file
-# Select engine: Audiblez (default) or BPM4B
+# Select engine: Abogen (default) or BPM4B
 # Select voice and language
 # Choose chapters (optional)
 # Set speed (0.5x to 2.0x)
 # Convert to M4B
 # Download audiobook
 
-# Using the API with Audiblez engine (default)
+# Using the API with Abogen engine (default)
 curl -X POST http://localhost:5000/api/epub-to-audiobook \
   -F "document_file=@book.epub" \
   -F "voice=default" \
@@ -106,10 +106,10 @@ curl -X POST http://localhost:5000/api/epub-to-audiobook \
 ```
 
 **Engine Options:**
-- **Audiblez** (default): Uses Audiblez as a subprocess
+- **Abogen** (default): Uses Abogen as a subprocess
   - Alternative TTS engine
   - **Auto-installs via pip if not detected**
-  - Useful if you prefer Audiblez's voice options
+  - Useful if you prefer Abogen's voice options
   - Progress tracking via subprocess output
 
 - **BPM4B**: Uses BPM4B's optimized Kokoro-82M TTS engine
@@ -131,7 +131,7 @@ curl -X POST http://localhost:5000/api/epub-to-audiobook \
 
 ### 📄 Document to EPUB (NEW in v12)
 
-Convert ANY document or text file to EPUB format for use with Audiblez or other tools:
+Convert ANY document or text file to EPUB format for use with Abogen or other tools:
 
 ```bash
 # Using the web interface
@@ -176,7 +176,7 @@ curl -X POST http://localhost:5000/api/document-to-epub \
 - Roman numerals (I, II, III, IV, V, etc.)
 
 **Use Cases:**
-- Convert documents to EPUB for use with Audiblez
+- Convert documents to EPUB for use with Abogen
 - Prepare documents for EPUB readers
 - Create EPUB files from various document formats
 - Export content for external TTS tools
@@ -253,6 +253,28 @@ npm link
 ```bash
 npm install
 ```
+
+### Premium Narration (Abogen)
+Abogen is the default and recommended text-to-speech conversion tool for generating high-quality audio with matching subtitles using Kokoro-82M.
+
+**Windows Installation:**
+1. Install espeak-ng from their latest release.
+2. Install using `uv` (Recommended for NVIDIA GPUs):
+```bash
+uv tool install --python 3.12 abogen[cuda] --extra-index-url https://download.pytorch.org/whl/cu128 --index-strategy unsafe-best-match
+```
+*(For AMD or no GPU, see `INSTALL.md` or use Linux for ROCm support)*
+
+**Mac Installation:**
+```bash
+brew install espeak-ng
+# Silicon Mac
+uv tool install --python 3.13 abogen --with "kokoro @ git+https://github.com/hexgrad/kokoro.git,numpy<2"
+# Intel Mac
+uv tool install --python 3.12 abogen --with "kokoro @ git+https://github.com/hexgrad/kokoro.git,numpy<2"
+```
+
+For more detailed installation options (including `pip`), please see [INSTALL.md](INSTALL.md).
 
 ## Usage
 

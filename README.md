@@ -1,283 +1,743 @@
-[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/) ![NPM Version](https://img.shields.io/npm/v/bpm4b)
-![PyPI - Version](https://img.shields.io/pypi/v/bpm4b)
+
+<div align="center">
+
+<img src="https://img.shields.io/badge/BPM4B-v12-black?style=for-the-badge&logo=npm&logoColor=white" alt="BPM4B"/>
 
 # BPM4B
 
-A professional multimedia processing suite for converting MP3 to M4B, M4B to MP3, and generating AI Audiobooks with high-fidelity TTS and interactive chapter editing.
+### Professional Multimedia Processing Suite
 
-## Installation
+Convert MP3 ↔ M4B · Generate AI Audiobooks · Process Documents to Audio
 
-Install bpm4b with npm
+<br/>
+
+[![MIT License](https://img.shields.io/badge/License-MIT-22c55e?style=flat-square)](https://choosealicense.com/licenses/mit/)
+![NPM Version](https://img.shields.io/npm/v/bpm4b?style=flat-square&color=cb3837&logo=npm)
+![PyPI Version](https://img.shields.io/pypi/v/bpm4b?style=flat-square&color=3776ab&logo=python&logoColor=white)
+![Node](https://img.shields.io/badge/Node.js-18+-339933?style=flat-square&logo=node.js&logoColor=white)
+![FFmpeg](https://img.shields.io/badge/FFmpeg-bundled-007808?style=flat-square&logo=ffmpeg)
+
+<br/>
 
 ```bash
-  npm install bpm4b
-  cd bpm4b
+npm install bpm4b
+# Node.js
+
+pip install bpm4b
+# Python
 ```
 
-Install bpm4b with pypi
+</div>
+
+---
+
+# What's New
+
+| Version | Feature                                                                                           |
+| ------- | ------------------------------------------------------------------------------------------------- |
+| **v12** | ⚡ 5x faster processing · EPUB to Audiobook · 50+ doc formats · Google Colab · 99.8%+ TTS coverage |
+| **v11** | ✍️ Interactive Pro Editor · Neural Narration Studio · Multi-voice dialogue                        |
+| **v10** | 📚 M4B → MP3 · Document to Audiobook · Audio Format Converter                                     |
+
+---
+
+# Installation
+
+## npm
 
 ```bash
-  pip install bpm4b
-  cd bpm4b
+npm install bpm4b
+cd bpm4b
 ```
 
-**Update:**
+## PyPI
+
 ```bash
-# Update Node.js version
+pip install bpm4b
+cd bpm4b
+```
+
+## Global CLI
+
+```bash
+npm install -g bpm4b
+
+# Development
+npm link
+```
+
+## Update
+
+```bash
 npm update -g bpm4b
 ```
 
-## Features
+---
 
-### ✍️ Interactive Pro Editor (v11)
-- **Full Text Viewer (Word-to-Word)**: Review and edit chapter content before generation.
-- **Manual Manifest Control**: Merge chapters, rename titles, and exclude segments with one click.
-- **Dual Boundary Verification**: Preview the exact start and end snippets of every chapter card.
-- **Universal Document Engine**: Support for ANY text-based file (PDF, EPUB, DOCX, TXT, MD, etc.).
+# Premium Narration (Abogen)
 
-### 🎙️ Neural Narration Studio (v11)
-- **Professional Chapter Announcements**: Automatically injects "Chapter X: [Title]" or "Episode X" audio headers.
-- **Multi-Voice Dialogue**: Differentiate narrative text from dialogue using unique neural voices.
-- **Kokoro-82M High Fidelity**: Powered by local, high-speed neural TTS for human-like narration.
+Abogen is the recommended TTS engine powered by Kokoro-82M.
 
-### 📝 Metadata Editor
-- **Edit M4B Metadata**: Upload an M4B file and edit its metadata (title, author, genre, description)
-- **Auto-Fill from Open Library**: Search for book titles and automatically fetch metadata
-- **Cover Art Management**: Upload and embed cover art into your audiobook files
-- **Apply Changes**: One-click button to apply metadata changes directly to your M4B file
-- **Download Updated File**: Automatically download the M4B file with updated metadata
-- **Requires FFmpeg**: FFmpeg is bundled with the Node version
+<details>
+<summary><b>Windows</b></summary>
 
-### 📁 File Conversion Section
-- **MP3 to M4B**: Convert MP3 files to audiobook format with embedded chapters
-- **M4B to MP3**: High-fidelity conversion from M4B/M4A containers to MP3 (NEW in v10)
-- **Document to Audiobook**: Generate high-quality voiceovers from PDF/Text using Kokoro-82M AI (NEW in v10)
-- **Audio Format Converter**: Convert between multiple audio formats (NEW in v10)
-  - MP3 ↔ WAV (bidirectional)
-  - FLAC → MP3
-  - AAC → OGG
-  - OGG → WAV
-  - ALAC → FLAC
-  - Adjustable quality settings (128k, 192k, 256k, 320k, lossless)
-- Drag-and-drop file upload for all tools
-- Real-time progress monitoring with SSE (Server-Sent Events)
-- Visual progress bar and live terminal logging
+## Install espeak-ng
 
-### 🎨 Theme System
-- **25+ Color Themes**: Choose from a variety of beautiful color schemes
-- **Dark Mode**: Original dark theme for low-light environments
-- **Classic**: Clean light theme for traditional look
-- **Specialty Themes**: Matrix, Cyberpunk, Dracula, Monokai, Vaporwave, and more
-- **Custom Themes**: Emerald Forest, Purple Galaxy, Sunset Orange, Blue Ocean, Cherry Blossom, Golden Hour, Midnight Depth, Royal Velvet, Arctic Frost, Volcanic Ash, Coffee House, Leafy Greens, Ocean Breeze, Lavender Dream, Steel City, Ruby Red, Solarized Light, High Contrast
-- **Persistent Selection**: Theme choice saved to localStorage
-- **Real-time Switching**: Change themes instantly without page reload
+[https://github.com/espeak-ng/espeak-ng/releases](https://github.com/espeak-ng/espeak-ng/releases)
 
-### ⏱ Automatic Chapter Builder
-- **Always enabled** - core functionality
-- Enter chapter title and duration (minutes or seconds toggle)
-- System automatically:
-  - Converts input to proper format
-  - Accumulates duration to cumulative total
-  - Calculates next chapter start timestamp
-  - Generates proper HH:MM:SS format
-- No manual math required - all timestamps auto-generate
-- Batch import/export chapter lists
-- Real-time preview updates
+---
 
-### ⚙ Settings Panel
-- Dark / Light mode toggle
-- Modern toggle switches (not checkboxes)
-- Glassmorphism card design
-- Smooth animations and transitions
-- Responsive layout optimized for desktop
-
-### 🚀 Performance Improvements
-- Faster parsing with optimized algorithms
-- Non-blocking UI with background conversion
-- Proper error handling and validation
-- File size validation before processing
-- Automatic cleanup of temporary files
-
-### 📋 Professional Features
-- Copy-to-clipboard buttons for generated commands
-- Real-time updating preview panel
-- FFmpeg command preview (self-service mode)
-- Export chapters to .txt format
-- Modern, clean, professional SaaS-like interface
-
-## Prerequisites
-
-**No additional prerequisites needed!** Node.js 18+ is required. FFmpeg is bundled with the Node.js version, so it works out of the box.
-
-## Usage
-
-### Web Interface
-
-Start the web server and open your browser to http://localhost:5000:
+## Option 1 — Install using uv (Recommended)
 
 ```bash
-# Start the server
+# NVIDIA CUDA 12.8 — recommended
+uv tool install --python 3.12 abogen[cuda] \
+  --extra-index-url https://download.pytorch.org/whl/cu128 \
+  --index-strategy unsafe-best-match
+
+# NVIDIA CUDA 12.6 — older drivers
+uv tool install --python 3.12 abogen[cuda126] \
+  --extra-index-url https://download.pytorch.org/whl/cu126 \
+  --index-strategy unsafe-best-match
+
+# NVIDIA CUDA 13.0 — newer drivers
+uv tool install --python 3.12 abogen[cuda130] \
+  --extra-index-url https://download.pytorch.org/whl/cu130 \
+  --index-strategy unsafe-best-match
+
+# CPU only / AMD on Windows
+uv tool install --python 3.12 abogen
+```
+
+---
+
+<details>
+<summary><b>Option 2 — Install using pip</b></summary>
+
+```bash
+mkdir abogen
+cd abogen
+
+python -m venv venv
+
+# CMD
+venv\Scripts\activate.bat
+
+# PowerShell
+venv\Scripts\activate.ps1
+
+# NVIDIA GPUs
+pip install torch==2.8.0+cu128 torchvision==0.23.0+cu128 torchaudio==2.8.0 \
+  --index-url https://download.pytorch.org/whl/cu128
+```
+
+</details>
+
+> For more install methods, see `INSTALL.md`
+
+</details>
+
+---
+
+<details>
+<summary><b>macOS</b></summary>
+
+```bash
+brew install espeak-ng
+
+# Apple Silicon
+uv tool install --python 3.13 abogen \
+  --with "kokoro @ git+https://github.com/hexgrad/kokoro.git,numpy<2"
+
+# Intel
+uv tool install --python 3.12 abogen \
+  --with "kokoro @ git+https://github.com/hexgrad/kokoro.git,numpy<2"
+```
+
+> For additional setup methods including `pip`, see `INSTALL.md`
+
+</details>
+
+---
+
+# Usage
+
+## Web Interface
+
+```bash
 bpm4b web
 
-# Or with custom options
+# Custom port
 bpm4b web --port 8080
+
+# Custom host
 bpm4b web --host 127.0.0.1 --debug
 ```
 
-The web interface allows you to:
-- Upload MP3 files through a simple form
-- Add custom chapter markers with titles and timestamps
-- Download the converted M4B audiobook
+Default URL:
 
-### Command Line (No Web Interface)
+```txt
+http://localhost:5000
+```
 
-Convert MP3 to M4B directly from the terminal:
+---
+
+# Google Colab
 
 ```bash
-# Basic conversion
+# Auto-detect tunnel
+bpm4b web --enable-tunnel
+
+# LocalTunnel
+bpm4b web --enable-tunnel --tunnel-service localtunnel
+
+# ngrok
+bpm4b web --enable-tunnel --tunnel-service ngrok
+```
+
+> See `COLAB_USAGE.md` for the full Colab setup guide.
+
+---
+
+# CLI — MP3 to M4B
+
+## Basic
+
+```bash
 bpm4b convert input.mp3 output.m4b
+```
 
-# With chapter markers
-bpm4b convert input.mp3 output.m4b --chapter "Introduction" 0
-bpm4b convert input.mp3 output.m4b --chapter "Chapter 1" 3600 --chapter "Chapter 2" 7200
+## Chapters (Seconds)
 
-# Multiple chapters
-bpm4b convert book.mp3 book.m4b \\
-  --chapter "Prologue" 0 \\
-  --chapter "Chapter 1" 300 \\
+```bash
+bpm4b convert book.mp3 book.m4b \
+  --chapter "Prologue" 0 \
+  --chapter "Chapter 1" 300 \
   --chapter "Chapter 2" 1800
-
-# Multiple chapters with MM:SS format
-bpm4b convert book.mp3 book.m4b \\
- --chapter "Prologue" "0:00" \\
- --chapter "Chapter 1" "5:00" \\
- --chapter "Chapter 2" "30:00"
-
-# Mixed formats (seconds and MM:SS)
-bpm4b convert book.mp3 book.m4b \\
- --chapter "Intro" 0 \\
- --chapter "Chapter 1" "6:30" \\
- --chapter "Chapter 2" 3600
 ```
 
-Chapter start times accept:
-- Seconds as integer (e.g., `390`)
-- Minutes:seconds format (e.g., `"6:30"` or `"6:30.5"` for fractional seconds)
-
-### Using the CLI
-
-After installing with `npm install -g bpm4b`, use the `bpm4b` command:
+## Chapters (MM:SS)
 
 ```bash
-# Start web interface
-bpm4b web
+bpm4b convert book.mp3 book.m4b \
+  --chapter "Prologue" "0:00" \
+  --chapter "Chapter 1" "5:00" \
+  --chapter "Chapter 2" "30:00"
+```
 
-# Web interface with options
-bpm4b web --port 8080
-bpm4b web --host 127.0.0.1 --debug
+## Mixed Formats
 
-# Convert MP3 to M4B directly
-bpm4b convert input.mp3 output.m4b
-bpm4b convert input.mp3 output.m4b --chapter "Chapter 1" 0
+```bash
+bpm4b convert book.mp3 book.m4b \
+  --chapter "Intro" 0 \
+  --chapter "Chapter 1" "6:30" \
+  --chapter "Chapter 2" 3600
+```
 
-# Show help
+## Help
+
+```bash
 bpm4b --help
 bpm4b web --help
 bpm4b convert --help
 ```
 
-### Using the Traditional Method
+> Chapter timestamps accept:
+>
+> * Integers (`seconds`)
+> * `"MM:SS"`
+> * `"MM:SS.f"`
 
-If you installed dependencies only (without the package):
+---
+
+# npm Scripts
 
 ```bash
-python app.py
+npm start
+
+npm run web
+
+npm run convert -- input.mp3 output.m4b
 ```
 
-Then open your browser and navigate to:
+---
+
+# Programmatic Usage (Node.js)
+
+```javascript
+const { convertMp3ToM4b } = require('bpm4b');
+
+await convertMp3ToM4b(
+  'input.mp3',
+  'output.m4b',
+  [
+    {
+      title: 'Chapter 1',
+      start_time: 0
+    },
+    {
+      title: 'Chapter 2',
+      start_time: 3600
+    }
+  ]
+);
 ```
-http://localhost:5000
+
+---
+
+# Features
+
+## ✍️ Interactive Pro Editor (v11)
+
+* Full text viewer for editing chapter content
+* Manual manifest controls
+* Merge chapters instantly
+* Rename titles
+* Exclude segments with one click
+* Dual boundary verification
+* Universal document support:
+
+  * PDF
+  * EPUB
+  * DOCX
+  * TXT
+  * Markdown
+  * More
+
+---
+
+## 🎙️ Neural Narration Studio (v11)
+
+* Automatic chapter announcements
+* Multi-voice dialogue generation
+* Narrative vs dialogue voice separation
+* Powered by Kokoro-82M
+
+---
+
+## ⚡ Performance (v12)
+
+Parallel audio processing with configurable concurrency.
+
+| Method               | 100 Files   |
+| -------------------- | ----------- |
+| Sequential           | ~10 min     |
+| Parallel (8 workers) | ~2 min      |
+| Fast Mode + Parallel | ~1.5 min    |
+| TTS Synthesis        | 2–3x faster |
+| Text Coverage        | 99.8%+      |
+
+---
+
+# 🎙️ EPUB to Audiobook (v12)
+
+## Abogen Engine (Default)
+
+```bash
+curl -X POST http://localhost:5000/api/epub-to-audiobook \
+  -F "document_file=@book.epub" \
+  -F "voice=default" \
+  -F "language=en" \
+  -F "speed=1.0"
 ```
 
-### Using the Tool
+## BPM4B Engine
 
-Once the server is running:
+```bash
+curl -X POST http://localhost:5000/api/epub-to-audiobook \
+  -F "document_file=@book.epub" \
+  -F "voice=af_sky" \
+  -F "language=en" \
+  -F "speed=1.0" \
+  -F "engine=bpm4b"
+```
 
-**MP3 to M4B**: Upload an MP3 file, add chapters using the automatic chapter builder, and click "Convert to M4B"
-- Automatically converts to M4B format (iTunes/Apple Books compatible)
-- Chapters automatically embedded with titles and timestamps
-- Uses FFmpeg for high-quality AAC audio (64kbps - 256kbps)
+---
 
-**M4B to MP3**: Upload an M4B/M4A file and convert it to a standard MP3
-- High-fidelity conversion using the libmp3lame encoder
-- Perfect for playback on legacy devices or sharing
+# Engine Comparison
 
-**Audiobook Gen**: Upload a PDF or Text document to generate a full audiobook
-- Powered by Kokoro-82M Local TTS engine
-- High-quality, human-like voice synthesis
-- Automatic chapter detection and manifest generation
+| Feature          | Abogen         | BPM4B               |
+| ---------------- | -------------- | ------------------- |
+| Stability        | ✅ Reliable     | ⚠️ Inconsistent     |
+| Speed            | Standard       | ⚡ Faster            |
+| Auto-install     | ✅ Yes          | —                   |
+| Parallel workers | —              | ✅ Up to 8           |
+| Voices           | 50+ Kokoro Voices | 50+ Kokoro Voices   |
+| Memory Usage     | Standard       | Lower               |
+| Recommended      | ✅ Yes          | Speed-critical only |
 
-**Metadata Editor**: Edit metadata on existing M4B/M4A files
-- Upload an M4B file to load its current metadata
-- Edit title, author, genre, and description fields
-- Use "Auto-Fill" to fetch metadata from Open Library by title
-- Upload and embed cover art
-- Click "Apply Metadata to M4B" to save changes and download the updated file
+> BPM4B engine may be faster for large files but can produce inconsistent results.
+> Abogen is recommended for reliability.
 
-**Voice Cloning (KokoClone)**: Generate speech in a cloned voice
-- Upload a 3-10 second reference voice sample
-- Enter text to synthesize or upload source audio
-- Select language (English, Hindi, French, Japanese, Chinese, Italian, Portuguese, Spanish)
-- Generate cloned speech or re-voice existing audio recordings
-- Powered by Kokoro-ONNX and Kanade voice conversion models
+---
 
-**Batch Merge (Audio Glue)**: Combine multiple audio files into one
-- Upload multiple MP3 files to merge them sequentially
-- Add metadata (title, author, genre, description) to the merged file
-- Upload and embed cover art
-- Download the merged audio file
-- Perfect for combining chapter files or creating compilations
+# Supported Languages & Voices
 
-## API Endpoints
+| Language              | Voices |
+| --------------------- | ------ |
+| 🇺🇸 American English | 20     |
+| 🇬🇧 British English  | 8      |
+| 🇨🇳 Chinese          | 8      |
+| 🇯🇵 Japanese         | 5      |
+| 🇮🇳 Hindi            | 4      |
+| 🇧🇷 Portuguese       | 3      |
+| 🇪🇸 Spanish          | 3      |
+| 🇮🇹 Italian          | 2      |
+| 🇫🇷 French           | 1      |
 
-### POST /api/mp3-to-m4b
-Converts an MP3 file to M4B with optional chapters.
+Playback speed range:
 
-**Form Data:**
-- `mp3_file`: The MP3 file to convert
-- `chapters` (optional): JSON array of chapter objects. `start_time` accepts seconds (number) or MM:SS format (string):
+```txt
+0.5x → 2.0x
+```
+
+---
+
+# 📄 Document to EPUB (v12)
+
+```bash
+curl -X POST http://localhost:5000/api/document-to-epub \
+  -F "document_file=@document.pdf" \
+  -F "title=My Book" \
+  -F "author=Author Name" \
+  -F "language=en"
+```
+
+---
+
+<details>
+<summary><b>Supported Formats (50+)</b></summary>
+
+## Documents
+
+* PDF
+* DOCX
+* DOC
+* DOCM
+* DOT
+* DOTX
+* ODT
+* ODM
+* OTT
+* ABW
+* WPD
+
+## Text
+
+* TXT
+* TEXT
+* ASC
+* ANSI
+* LOG
+* ME
+* MD
+* MARKDOWN
+* RTF
+* CSV
+
+## Web
+
+* HTML
+* HTM
+* XHTML
+* XHT
+* XML
+
+## Academic
+
+* TEX
+* BIB
+
+</details>
+
+---
+
+<details>
+<summary><b>Chapter Detection Patterns (15+)</b></summary>
+
+* Chapter 1
+* CHAPTER I
+* Part 1
+* Book 1
+* Volume 1
+* Markdown headers (`##`, `###`)
+* HTML headings (`h1`, `h2`, `h3`)
+* Roman numerals (`I`, `II`, `III`)
+* Numbered lists (`1. Title`)
+
+</details>
+
+---
+
+# 🗂️ File Conversion
+
+| Feature                | Description                         | Since |
+| ---------------------- | ----------------------------------- | ----- |
+| MP3 → M4B              | Embedded chapters                   | v1    |
+| M4B → MP3              | High-fidelity extraction            | v10   |
+| Document → Audiobook   | PDF/Text via Kokoro-82M             | v10   |
+| Audio Format Converter | MP3/WAV/FLAC/AAC/OGG/ALAC           | v10   |
+| Folder → M4B           | Batch conversion with auto chapters | v10   |
+| EPUB → Audiobook       | Multi-language dual-engine support  | v12   |
+
+---
+
+# Audio Format Converter
+
+Supported conversions:
+
+* MP3 ↔ WAV
+* FLAC → MP3
+* AAC → OGG
+* OGG → WAV
+* ALAC → FLAC
+
+Supported quality:
+
+* 128k
+* 192k
+* 256k
+* 320k
+* Lossless
+
+---
+
+# 🎨 Theme System (v11)
+
+25+ themes with real-time switching.
+
+## Included Themes
+
+* Dark
+* Light
+* Matrix
+* Cyberpunk
+* Dracula
+* Monokai
+* Vaporwave
+* Emerald Forest
+* Purple Galaxy
+* Sunset Orange
+* Blue Ocean
+* Cherry Blossom
+* Golden Hour
+* Midnight Depth
+* Royal Velvet
+* Arctic Frost
+* Volcanic Ash
+* Coffee House
+* Leafy Greens
+* Ocean Breeze
+* Lavender Dream
+* Steel City
+* Ruby Red
+* Solarized Light
+* High Contrast
+
+---
+
+# 📝 Metadata Editor
+
+* Edit title
+* Edit author
+* Edit genre
+* Edit description
+* Auto-fill from Open Library
+* Upload and embed cover art
+* One-click apply + download
+
+---
+
+# 🎤 Voice Cloning — KokoClone
+
+* Upload a 3–10 second voice sample
+* Synthesize text
+* Re-voice existing audio
+* Multi-language support:
+
+  * English
+  * Hindi
+  * French
+  * Japanese
+  * Chinese
+  * Italian
+  * Portuguese
+  * Spanish
+
+Powered by:
+
+* Kokoro-ONNX
+* Kanade voice conversion
+
+---
+
+# 🔀 Batch Merge — Audio Glue
+
+* Upload multiple MP3s
+* Merge sequentially
+* Add metadata
+* Add cover art
+* Download a single combined file
+
+---
+
+# ⏱️ Automatic Chapter Builder
+
+* Enter title + duration
+* Automatic timestamp generation
+* HH:MM:SS support
+* Batch import/export
+* Real-time preview
+* Minutes or seconds toggle
+
+---
+
+# 🌐 Google Colab Defaults (v12)
+
+| Setting            | Value         |
+| ------------------ | ------------- |
+| Concurrency        | All CPU cores |
+| Fast Mode          | Enabled       |
+| Audio Quality      | 128k          |
+| Max Parallel Files | 16            |
+
+---
+
+# ⚙️ UI & Settings
+
+* 25+ real-time themes
+* Glassmorphism design
+* Drag-and-drop upload
+* SSE progress bars
+* Live terminal logs
+* Copy-to-clipboard commands
+* FFmpeg command preview
+
+---
+
+# Web Interface Guide
+
+| Tool            | Usage                                  |
+| --------------- | -------------------------------------- |
+| MP3 → M4B       | Upload MP3 and add chapters            |
+| M4B → MP3       | Convert M4B/M4A to MP3                 |
+| Audiobook Gen   | Upload PDF/Text and generate narration |
+| Metadata Editor | Edit metadata and embed covers         |
+| KokoClone       | Voice cloning and synthesis            |
+| Audio Glue      | Merge multiple MP3 files               |
+
+---
+
+# Advanced — Folder to M4B
+
+```javascript
+const { folderToM4b } = require('bpm4b');
+
+await folderToM4b(
+  '/path/to/folder',
+  '/path/to/output.m4b',
+  {
+    concurrency: 8,
+    fastMode: true,
+    audioQuality: '128k',
+
+    metadata: {
+      title: 'My Audiobook',
+      author: 'Author Name',
+      genre: 'Audiobook'
+    },
+
+    onProgress: (percent, msg) => {
+      console.log(`${percent}% - ${msg}`);
+    }
+  }
+);
+```
+
+---
+
+# API Reference
+
+## `POST /api/mp3-to-m4b`
+
+| Field      | Type | Description            |
+| ---------- | ---- | ---------------------- |
+| `mp3_file` | file | Input MP3              |
+| `chapters` | JSON | Optional chapter array |
+
+Example:
+
 ```json
 [
-  {"title": "Chapter 1", "start_time": 0},
-  {"title": "Chapter 2", "start_time": "6:30"},
-  {"title": "Chapter 3", "start_time": 3600}
+  {
+    "title": "Chapter 1",
+    "start_time": 0
+  },
+  {
+    "title": "Chapter 2",
+    "start_time": "6:30"
+  },
+  {
+    "title": "Chapter 3",
+    "start_time": 3600
+  }
 ]
 ```
 
-### POST /api/convert
-Converts MP3 to M4B or M4B to MP3.
+---
 
-**Form Data:**
-- `source_file`: The file to convert
-- `output_name`: Custom filename
-- `audio_quality`: Bitrate (e.g., '128k', '256k')
-- `chapters` (optional): JSON array of chapter objects.
+## `POST /api/convert`
 
-### POST /api/generate-audiobook
-Generates an audiobook from a document.
+| Field           | Type   | Description       |
+| --------------- | ------ | ----------------- |
+| `source_file`   | file   | MP3 or M4B        |
+| `output_name`   | string | Custom filename   |
+| `audio_quality` | string | Bitrate           |
+| `chapters`      | JSON   | Optional chapters |
 
-**Form Data:**
-- `doc_file`: The PDF or Text file
-- `voice`: Selection from available Kokoro voices
-- `output_name`: Custom filename
+---
 
-### POST /api/metadata/extract
-Extracts metadata from an M4B/M4A file.
+## `POST /api/generate-audiobook`
 
-**Form Data:**
-- `file`: The M4B/M4A file to extract metadata from
+| Field         | Type   | Description     |
+| ------------- | ------ | --------------- |
+| `doc_file`    | file   | PDF or Text     |
+| `voice`       | string | Kokoro voice    |
+| `output_name` | string | Output filename |
 
-**Response:**
+---
+
+## `POST /api/epub-to-audiobook`
+
+| Field           | Type   | Description         |
+| --------------- | ------ | ------------------- |
+| `document_file` | file   | EPUB file           |
+| `voice`         | string | Voice name          |
+| `language`      | string | Language code       |
+| `speed`         | float  | 0.5–2.0             |
+| `engine`        | string | `abogen` or `bpm4b` |
+
+---
+
+## `POST /api/document-to-epub`
+
+| Field           | Type   | Description        |
+| --------------- | ------ | ------------------ |
+| `document_file` | file   | Supported document |
+| `title`         | string | Book title         |
+| `author`        | string | Author             |
+| `language`      | string | Language code      |
+
+---
+
+## `POST /api/metadata/extract`
+
+| Field  | Type | Description    |
+| ------ | ---- | -------------- |
+| `file` | file | M4B/M4A source |
+
+Example response:
+
 ```json
 {
   "title": "Book Title",
@@ -288,92 +748,114 @@ Extracts metadata from an M4B/M4A file.
 }
 ```
 
-### POST /api/metadata/apply
-Applies metadata to an M4B/M4A file.
+---
 
-**Form Data:**
-- `file`: The M4B/M4A file to update
-- `metadata`: JSON object with metadata fields:
-```json
-{
-  "title": "New Title",
-  "author": "New Author",
-  "genre": "New Genre",
-  "description": "New description..."
-}
-```
-- `cover_base64` (optional): Base64-encoded cover art image
+## `POST /api/metadata/apply`
 
-**Response:**
-```json
-{
-  "success": true,
-  "downloadUrl": "/api/download/updated_metadata.m4b",
-  "filename": "updated_metadata.m4b"
-}
-```
+| Field          | Type   | Description          |
+| -------------- | ------ | -------------------- |
+| `file`         | file   | M4B/M4A source       |
+| `metadata`     | JSON   | Metadata object      |
+| `cover_base64` | string | Optional cover image |
 
-### POST /api/convert-audio
-Converts audio files between different formats.
+---
 
-**Form Data:**
-- `file`: The audio file to convert
-- `target_format`: Target format (mp3, wav, flac, aac, ogg, alac)
-- `quality`: Audio quality/bitrate (128k, 192k, 256k, 320k, lossless)
-- `job_id` (optional): Job ID for SSE progress updates
+## `POST /api/convert-audio`
 
-**Supported Conversions:**
-- MP3 ↔ WAV (bidirectional)
-- FLAC → MP3
-- AAC → OGG
-- OGG → WAV
-- ALAC → FLAC
+| Field           | Type   | Description               |
+| --------------- | ------ | ------------------------- |
+| `file`          | file   | Audio source              |
+| `target_format` | string | mp3/wav/flac/aac/ogg/alac |
+| `quality`       | string | Bitrate or lossless       |
+| `job_id`        | string | Optional SSE job ID       |
 
-**Response:**
-```json
-{
-  "success": true,
-  "downloadUrl": "/api/download/converted_file.mp3",
-  "filename": "converted_file.mp3"
-}
-```
+---
 
-### GET /api/health
-Health check endpoint. Returns JSON with status and FFmpeg availability.
+## `GET /api/health`
 
-**Response:**
-Returns an M4B file as a download.
+Returns:
 
-## Project Structure
+* Service health status
+* FFmpeg availability
 
-```
-.
+---
+
+# Project Structure
+
+```txt
+bpm4b/
 ├── bin/
-│   └── bpm4b.js       # CLI entry point
+│   └── bpm4b.js
 ├── lib/
-│   ├── core.js        # Core conversion functions
-│   ├── server.js      # Express web server
-│   ├── audiobook-builder.js # TTS Narration Logic
-│   └── chapter-detector.js # Regex Chapter Parsing
+│   ├── core.js
+│   ├── server.js
+│   ├── audiobook-builder.js
+│   └── chapter-detector.js
 ├── templates/
-│   └── index.ejs      # Frontend dashboard
+│   └── index.ejs
 ├── api/
-│   └── index.js       # Vercel serverless function
-├── package.json       # NPM package configuration
-├── uploads/           # Temporary uploaded files
-└── outputs/           # Generated files
+│   └── index.js
+├── uploads/
+├── outputs/
+├── vercel.json
+└── package.json
 ```
 
+---
 
-## Notes
+# Deploying to Vercel
 
-- Maximum file size for uploads: 2GB
-- SSE (Server-Sent Events) used for real-time progress updates
-- Kokoro AI engine runs locally (no API keys or external costs)
-- M4B output files can be large (typically 0.96-2GB per hour of audio depending on bitrate)
-- Optimized for high-speed conversion on Windows/macOS/Linuxion:
-- **X (Twitter)**: [@jdjchelp](https://x.com/jdjchelp)
+1. Push project to GitHub
+2. Import into Vercel
+3. Deploy
 
-## License
+> `vercel.json` is auto-detected.
 
-MIT
+### Important
+
+Serverless functions may time out:
+
+* Hobby: 10s
+* Pro: 60s
+
+For large files:
+
+* Use `bpm4b web`
+* Deploy on a dedicated server
+* Or upgrade Vercel plan
+
+---
+
+# Notes
+
+* Max upload size: **2GB**
+* Real-time SSE progress tracking
+* Kokoro AI runs locally
+* No API keys required
+* No external costs
+* FFmpeg bundled
+* Windows / macOS / Linux support
+
+Typical M4B output size:
+
+```txt
+0.96GB – 2GB per hour
+```
+
+Depends on bitrate.
+
+---
+
+# Contact
+
+## X (Twitter)
+
+[@jdjchelp](https://x.com/jdjchelp)
+
+---
+
+# License
+
+[MIT License](https://choosealicense.com/licenses/mit/)
+
+© jdjchelp
