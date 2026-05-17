@@ -35,7 +35,7 @@ pip install bpm4b
 
 | Version | Feature                                                                                           |
 | ------- | ------------------------------------------------------------------------------------------------- |
-| **v12** | ⚡ 5x faster processing · EPUB to Audiobook · 50+ doc formats · Google Colab · 99.8%+ TTS coverage |
+| **v12** | ⚡ 5x faster processing · EPUB to Audiobook · 50+ doc formats · Google Colab · 99.8%+ TTS coverage OCR Pdfs but will be introduced in v13 |
 | **v11** | ✍️ Interactive Pro Editor · Neural Narration Studio · Multi-voice dialogue                        |
 | **v10** | 📚 M4B → MP3 · Document to Audiobook · Audio Format Converter                                     |
 

@@ -2053,6 +2053,14 @@
                                 placeholder="A brief description or synopsis of the book..." style="resize: vertical;"></textarea>
                         </div>
 
+                        <div class="input-group" style="margin-top: 1rem;">
+                            <label class="toggle-container" style="display: flex; align-items: center; cursor: pointer; font-size: 0.9rem;">
+                                <input type="checkbox" id="epubOcrToggle" style="margin-right: 0.5rem; width: 1.1rem; height: 1.1rem;">
+                                Enable OCR for Scanned PDFs
+                            </label>
+                            <span style="font-size: 0.75rem; color: var(--text-muted); margin-left: 1.6rem; display: block;">Slower process. Converts image-based PDFs into raw text before building EPUB.</span>
+                        </div>
+
                         <div style="display: flex; gap: 1rem; margin-top: 1.5rem; align-items: center;">
                             <button class="btn btn-primary" id="btn-create-epub" disabled style="flex: 1;">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -5368,6 +5376,7 @@ bpm4b epub input.pdf \<br>
                 formData.append('genre',       document.getElementById('epubGenre').value.trim());
                 formData.append('description', document.getElementById('epubDescription').value.trim());
                 formData.append('language',    document.getElementById('epubLanguage').value);
+                formData.append('use_ocr',     document.getElementById('epubOcrToggle').checked);
 
                 // UI — start state
                 createBtn.disabled = true;
